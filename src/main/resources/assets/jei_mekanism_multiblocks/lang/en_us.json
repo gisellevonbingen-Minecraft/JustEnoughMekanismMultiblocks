@@ -1,0 +1,16 @@
+{
+	"text.jei_mekanism_multiblocks.recipe_category.title": "Building - [%s]",
+	"text.jei_mekanism_multiblocks.multiblock.dynamic_tank": "Dynamic Tank",
+	"text.jei_mekanism_multiblocks.multiblock.thermal_evaporation_plant": "Thermal Evaporation Plant",
+	"text.jei_mekanism_multiblocks.click.normal": "Click: %s",
+	"text.jei_mekanism_multiblocks.click.shift": "Shift+Click: %s",
+	"text.jei_mekanism_multiblocks.specs": "Specs",
+	"text.jei_mekanism_multiblocks.costs": "Costs",
+	"text.jei_mekanism_multiblocks.others": "Others",
+	"text.jei_mekanism_multiblocks.dimensions": "Dimensions",
+	"text.jei_mekanism_multiblocks.dimensions.width": "Width: %s",
+	"text.jei_mekanism_multiblocks.dimensions.length": "Length: %s",
+	"text.jei_mekanism_multiblocks.dimensions.height": "Height: %s",
+	"text.jei_mekanism_multiblocks.valves": "Valves: %s",
+	"text.jei_mekanism_multiblocks.use_things": "Use '%s'"
+}

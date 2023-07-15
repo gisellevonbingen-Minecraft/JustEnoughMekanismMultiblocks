@@ -1,0 +1,16 @@
+{
+	"text.jei_mekanism_multiblocks.recipe_category.title": "건축 - [%s]",
+	"text.jei_mekanism_multiblocks.multiblock.dynamic_tank": "다이나믹 탱크",
+	"text.jei_mekanism_multiblocks.multiblock.thermal_evaporation_plant": "열적 증발 시설",
+	"text.jei_mekanism_multiblocks.click.normal": "클릭: %s",
+	"text.jei_mekanism_multiblocks.click.shift": "시프트+클릭: %s",
+	"text.jei_mekanism_multiblocks.specs": "사양",
+	"text.jei_mekanism_multiblocks.costs": "재료",
+	"text.jei_mekanism_multiblocks.others": "기타",
+	"text.jei_mekanism_multiblocks.dimensions": "치수",
+	"text.jei_mekanism_multiblocks.dimensions.width": "가로: %s",
+	"text.jei_mekanism_multiblocks.dimensions.length": "세로: %s",
+	"text.jei_mekanism_multiblocks.dimensions.height": "높이: %s",
+	"text.jei_mekanism_multiblocks.valves": "밸브: %s",
+	"text.jei_mekanism_multiblocks.use_things": "'%s' 사용"
+}
