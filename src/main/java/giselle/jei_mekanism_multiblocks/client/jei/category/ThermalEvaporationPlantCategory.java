@@ -54,9 +54,9 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 
 	public static class ThermalEvaporationPlantWidget extends MultiblockWidget
 	{
-		private IntSliderWithButtons valvesWidget;
 		private CheckBoxWidget useStructuralGlassCheckBox;
 		private CheckBoxWidget useAdvancedSolarGeneratorCheckBox;
+		private IntSliderWithButtons valvesWidget;
 
 		public ThermalEvaporationPlantWidget()
 		{
@@ -67,10 +67,6 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 		protected void collectOtherConfigs(Consumer<Widget> consumer)
 		{
 			super.collectOtherConfigs(consumer);
-
-			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.valves", 0, 0, 0, this::onValvesChanged));
-			this.updateValveSliderLimit();
-			this.valvesWidget.getSlider().setIntValue(2);
 
 			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true, this::onUseStructuralGlassChanged));
 
@@ -83,6 +79,9 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 				this.useAdvancedSolarGeneratorCheckBox = new CheckBoxWidget(0, 0, 0, 0, StringTextComponent.EMPTY, false, this::onUseStructuralGlassChanged);
 			}
 
+			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.valves", 0, 0, 0, this::onValvesChanged));
+			this.updateValveSliderLimit();
+			this.valvesWidget.getSlider().setIntValue(2);
 		}
 
 		@Override
@@ -94,18 +93,18 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 		}
 
 		@Override
-		public int getInnerBlocks()
+		public int getSideBlocks()
 		{
 			// 1 Controller
-			// 4 Empty Top
-			return super.getInnerBlocks() - 5;
+			// 4 Empty top inner
+			return super.getSideBlocks() - 5;
 		}
 
 		private void updateValveSliderLimit()
 		{
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
 			int valves = valvesSlider.getIntValue();
-			valvesSlider.setMaxValue(this.getInnerBlocks());
+			valvesSlider.setMaxValue(this.getSideBlocks());
 			valvesSlider.setIntValue(valves);
 		}
 
@@ -130,9 +129,9 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 			super.collectCost(consumer);
 
 			int corners = this.getCornerBlocks();
-			int inners = this.getInnerBlocks();
-
+			int sides = this.getSideBlocks();
 			int valves = this.getValveCount();
+
 			int blocks = 0;
 			int structuralGlasses = 0;
 			int advancedSolarGenerators = 0;
@@ -140,17 +139,32 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 			if (this.isUseStruturalGlass())
 			{
 				blocks = corners;
-				structuralGlasses = inners - valves;
+				structuralGlasses = sides - valves;
+
+				if (this.isUseAdvancedSolarGenerator())
+				{
+					// Replace top corner to solar generator
+					blocks -= 4;
+					advancedSolarGenerators += 4;
+				}
+				else
+				{
+					// Replace top side to glass
+					blocks -= 8;
+					structuralGlasses += 8;
+				}
+
 			}
 			else
 			{
-				blocks = corners + inners - valves;
-			}
+				// Remove top vertices
+				blocks = corners + sides - valves - 4;
 
-			if (this.isUseAdvancedSolarGenerator())
-			{
-				blocks -= 4;
-				advancedSolarGenerators += 4;
+				if (this.isUseAdvancedSolarGenerator())
+				{
+					advancedSolarGenerators += 4;
+				}
+
 			}
 
 			consumer.accept(new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER, 1));

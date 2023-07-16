@@ -10,21 +10,14 @@ import net.minecraft.util.text.ITextComponent;
 
 public class LabelWidget extends Widget
 {
-	public enum Alignment
-	{
-		Left,
-		Center,
-		Right,
-	}
-
-	private Alignment alignment;
+	private TextAlignment alignment;
 
 	public LabelWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage)
 	{
-		this(pX, pY, pWidth, pHeight, pMessage, Alignment.Center);
+		this(pX, pY, pWidth, pHeight, pMessage, TextAlignment.CENTER);
 	}
 
-	public LabelWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, Alignment alignment)
+	public LabelWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, TextAlignment alignment)
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.alignment = alignment;
@@ -37,38 +30,22 @@ public class LabelWidget extends Widget
 		FontRenderer font = minecraft.font;
 		int color = this.getFGColor() | MathHelper.ceil(this.alpha * 255.0F) << 24;
 		ITextComponent message = this.getMessage();
-		Alignment alignment = this.getAlignment();
-
-		float textX = 0.0F;
 		float textWidth = font.width(message);
-
-		if (alignment == Alignment.Left)
-		{
-			textX = this.x;
-		}
-		else if (alignment == Alignment.Center)
-		{
-			textX = this.x + (this.width - textWidth) / 2.0F;
-		}
-		else if (alignment == Alignment.Right)
-		{
-			textX = this.x + (this.width - textWidth);
-		}
-
+		float textX = this.x + (float) this.getAlignment().align(this.width, textWidth);
 		float textY = this.y + (this.height - font.lineHeight) / 2.0F;
 		font.drawShadow(pMatrixStack, message, textX, textY, color);
 	}
 
-	public Alignment getAlignment()
+	public TextAlignment getAlignment()
 	{
 		return alignment;
 	}
 
-	public void setAlignment(Alignment alignment)
+	public void setAlignment(TextAlignment alignment)
 	{
 		if (alignment == null)
 		{
-			alignment = Alignment.Center;
+			alignment = TextAlignment.CENTER;
 		}
 
 		this.alignment = alignment;

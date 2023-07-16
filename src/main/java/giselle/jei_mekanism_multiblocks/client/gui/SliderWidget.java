@@ -3,10 +3,10 @@ package giselle.jei_mekanism_multiblocks.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import it.unimi.dsi.fastutil.doubles.DoubleConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.IFormattableTextComponent;
@@ -55,17 +55,11 @@ public class SliderWidget extends Widget
 	public void renderButton(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 		Minecraft minecraft = Minecraft.getInstance();
-		minecraft.getTextureManager().bind(WIDGETS_LOCATION);
-
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
-		int u0 = 0;
-		int u1 = u0 + 200;
-		int v0 = 46 + this.getYImage(this.isHovered()) * 20;
-		int v1 = v0 + 20;
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.enableDepthTest();
-		blit9Patch(pMatrixStack, this.x, this.y, this.width, this.height, u0, u1, v0, v1, 8, 8, 8, 8, 256, 256);
+		GuiHelper.blitButton(pMatrixStack, this.x, this.y, this.width, this.height, false, false);
 
 		this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
 		int j = getFGColor();
@@ -81,12 +75,6 @@ public class SliderWidget extends Widget
 			return;
 		}
 
-		pMinecraft.getTextureManager().bind(WIDGETS_LOCATION);
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		int u0 = 0;
-		int u1 = u0 + 200;
-		int v0 = 46 + (this.isHovered() ? 2 : 1) * 20;
-		int v1 = v0 + 20;
 		int cursorX = 0;
 		int cursorY = 0;
 		int cursorWidth = 0;
@@ -107,50 +95,11 @@ public class SliderWidget extends Widget
 			cursorHeight = 8;
 		}
 
-		blit9Patch(pMatrixStack, cursorX, cursorY, cursorWidth, cursorHeight, u0, u1, v0, v1, 8, 8, 8, 8, 256, 256);
-	}
-
-	private void blit9Patch(MatrixStack pMatrixStack, int x, int y, int width, int height, int textureL, int textureR, int textureT, int textureB, int uL, int vT, int uR, int vB, int textureWidth, int textureHeight)
-	{
-		uL = Math.min(uL, width / 2);
-		uR = Math.min(uR, width / 2);
-		vT = Math.min(vT, height / 2);
-		vB = Math.min(vB, height / 2);
-
-		int inL = x + uL;
-		int inR = x + width - uR;
-		int inT = y + vT;
-		int inB = y + height - vB;
-		int inW = width - uL - uR;
-		int inH = height - vT - vB;
-
-		int textureInL = textureL + uL;
-		int textureInR = textureR - uR;
-		int textureInT = textureT + vT;
-		int textureInB = textureB - vB;
-		int textureInW = textureInR - textureInL;
-		int textureInH = textureInB - textureInT;
-
-		// Left -Top
-		AbstractGui.blit(pMatrixStack, x, y, uL, vT, textureL, textureT, uL, vT, textureWidth, textureHeight);
-		// Right - Top
-		AbstractGui.blit(pMatrixStack, inR, y, uR, vT, textureInR, textureT, uR, vT, textureWidth, textureHeight);
-		// Right - Bottom
-		AbstractGui.blit(pMatrixStack, x, inB, uL, vB, textureL, textureInB, uL, vB, textureWidth, textureHeight);
-		// Left - Bottom
-		AbstractGui.blit(pMatrixStack, inR, inB, uR, vB, textureInR, textureInB, uR, vB, textureWidth, textureHeight);
-
-		// Top
-		AbstractGui.blit(pMatrixStack, inL, y, inW, vT, textureInL, textureT, textureInW, vT, textureWidth, textureHeight);
-		// Right
-		AbstractGui.blit(pMatrixStack, inR, inT, uR, inH, textureInR, textureInT, uR, textureInH, textureWidth, textureHeight);
-		// Bottom
-		AbstractGui.blit(pMatrixStack, inL, inB, inW, vT, textureInL, textureInB, textureInW, vB, textureWidth, textureHeight);
-		// Left
-		AbstractGui.blit(pMatrixStack, x, inT, uL, inH, textureL, textureInT, uL, textureInH, textureWidth, textureHeight);
-
-		// Inner
-		AbstractGui.blit(pMatrixStack, inL, inT, inW, inH, textureInL, textureInT, textureInW, textureInH, textureWidth, textureHeight);
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.enableBlend();
+		RenderSystem.defaultBlendFunc();
+		RenderSystem.enableDepthTest();
+		GuiHelper.blitButton(pMatrixStack, cursorX, cursorY, cursorWidth, cursorHeight, true, this.isHovered());
 	}
 
 	protected void setValueFromMouse(double pMouseX, double pMouseY)

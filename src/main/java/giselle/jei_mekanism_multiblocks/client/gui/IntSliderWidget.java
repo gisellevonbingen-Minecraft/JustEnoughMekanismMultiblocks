@@ -50,7 +50,7 @@ public class IntSliderWidget extends SliderWidget
 	{
 		int min = this.getMinValue();
 		int max = this.getMaxValue();
-		
+
 		if (min == max)
 		{
 			return min;

@@ -44,8 +44,8 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 
 	public static class DynamicTankWidget extends MultiblockWidget
 	{
-		private IntSliderWithButtons valvesWidget;
 		private CheckBoxWidget useStructuralGlassCheckBox;
+		private IntSliderWithButtons valvesWidget;
 
 		public DynamicTankWidget()
 		{
@@ -57,11 +57,11 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		{
 			super.collectOtherConfigs(consumer);
 
+			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true, this::onUseStructuralGlassChanged));
+
 			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.valves", 0, 0, 0, this::onValvesChanged));
 			this.updateValveSliderLimit();
 			this.valvesWidget.getSlider().setIntValue(2);
-
-			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true, this::onUseStructuralGlassChanged));
 		}
 
 		@Override
@@ -76,7 +76,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		{
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
 			int valves = valvesSlider.getIntValue();
-			valvesSlider.setMaxValue(this.getInnerBlocks());
+			valvesSlider.setMaxValue(this.getSideBlocks());
 			valvesSlider.setIntValue(valves);
 		}
 
@@ -96,20 +96,20 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 			super.collectCost(consumer);
 
 			int corners = this.getCornerBlocks();
-			int inners = this.getInnerBlocks();
+			int sides = this.getSideBlocks();
+			int valves = this.getValveCount();
 
 			int tanks = 0;
 			int structuralGlasses = 0;
-			int valves = this.getValveCount();
 
 			if (this.isUseStruturalGlass())
 			{
 				tanks = corners;
-				structuralGlasses = inners - valves;
+				structuralGlasses = sides - valves;
 			}
 			else
 			{
-				tanks = corners + inners - valves;
+				tanks = corners + sides - valves;
 			}
 
 			consumer.accept(new ItemStack(MekanismBlocks.DYNAMIC_TANK, tanks));

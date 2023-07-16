@@ -3,6 +3,7 @@ package giselle.jei_mekanism_multiblocks.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
@@ -29,7 +30,7 @@ public class ButtonWidget extends AbstractButton
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.onPress = pOnPress;
-		this.onTooltip = pOnTooltip;
+		this.onTooltip = pOnTooltip != null ? pOnTooltip : null;
 	}
 
 	@Override
@@ -43,19 +44,16 @@ public class ButtonWidget extends AbstractButton
 	public void renderButton(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 		Minecraft minecraft = Minecraft.getInstance();
-		FontRenderer fontrenderer = minecraft.font;
-		minecraft.getTextureManager().bind(WIDGETS_LOCATION);
+		FontRenderer font = minecraft.font;
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
-		int i = this.getYImage(this.isHovered());
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.enableDepthTest();
+		GuiHelper.blitButton(pMatrixStack, this.x, this.y, this.width, this.height, this.active, this.isHovered());
 
-		AbstractGui.blit(pMatrixStack, this.x, this.y, this.width / 2, this.height, 0, 46 + i * 20, this.width / 2, 20, 256, 256);
-		AbstractGui.blit(pMatrixStack, this.x + this.width / 2, this.y, this.width / 2, this.height, 200 - this.width / 2, 46 + i * 20, this.width / 2, 20, 256, 256);
 		this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
 		int j = getFGColor();
-		AbstractGui.drawCenteredString(pMatrixStack, fontrenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
+		AbstractGui.drawCenteredString(pMatrixStack, font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
 
 		if (this.isHovered())
 		{
@@ -79,4 +77,5 @@ public class ButtonWidget extends AbstractButton
 	{
 		void onTooltip(AbstractButton pButton, MatrixStack pMatrixStack, int pMouseX, int pMouseY);
 	}
+
 }

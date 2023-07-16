@@ -12,19 +12,24 @@ import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import giselle.jei_mekanism_multiblocks.client.gui.ContainerWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
-import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget.Alignment;
 import giselle.jei_mekanism_multiblocks.client.gui.ListWidget;
+import giselle.jei_mekanism_multiblocks.client.gui.TabButtonWidget;
+import giselle.jei_mekanism_multiblocks.client.gui.TextAlignment;
 import mezz.jei.gui.recipes.IRecipeLogicStateListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public abstract class MultiblockWidget extends ContainerWidget
 {
-	private final ListWidget configList;
-	private final CostList costList;
+	private final ListWidget configsList;
+	private final TabButtonWidget costsButton;
+	private final TabButtonWidget resultsButton;
+	private final CostList costsList;
+	private final ListWidget resultsList;
 
 	private IntSliderWithButtons widthWidget;
 	private IntSliderWithButtons lengthWidget;
@@ -36,27 +41,49 @@ public abstract class MultiblockWidget extends ContainerWidget
 	{
 		super(0, 0, 0, 0);
 
-		this.addChild(new LabelWidget(00, 00, 100, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs"), Alignment.Left));
-		this.addChild(this.configList = new ListWidget(00, 10, 100, 110, 10));
-		this.configList.setItemsPadding(2);
-		this.configList.setItemOffset(2);
+		this.addChild(new LabelWidget(00, 00, 100, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs"), TextAlignment.LEFT));
+		this.addChild(this.configsList = new ListWidget(00, 10, 100, 110, 10));
+		this.configsList.setItemsPadding(2);
+		this.configsList.setItemOffset(2);
 
-		this.addChild(new LabelWidget(100, 0, 80, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.costs"), Alignment.Left));
-		this.addChild(this.costList = new CostList(100, 10, 80, 110, 20));
+		this.addChild(this.costsButton = new TabButtonWidget(99, 0, 41, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.costs"), this::onCostsButtonClick));
+		this.addChild(this.resultsButton = new TabButtonWidget(139, 0, 41, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.results"), this::onResultsButtonClick));
+		this.addChild(this.costsList = new CostList(100, 10, 80, 110, 20));
+		this.addChild(this.resultsList = new CostList(100, 10, 80, 110, 20));
 
 		this.createSpecDimension();
 
-		LabelWidget othersLabel = new LabelWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.others"), Alignment.Left);
+		LabelWidget othersLabel = new LabelWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.others"), TextAlignment.LEFT);
 		List<Widget> otherWidgets = new ArrayList<>();
 		this.collectOtherConfigs(otherWidgets::add);
 
 		if (otherWidgets.size() > 0)
 		{
-			this.configList.addChild(othersLabel);
-			otherWidgets.forEach(this.configList::addChild);
+			this.configsList.addChild(othersLabel);
+			otherWidgets.forEach(this.configsList::addChild);
 		}
 
 		this.needNotifyStateChange = true;
+		this.showRightPanel(true);
+	}
+
+	private void showRightPanel(boolean costs)
+	{
+		boolean results = !costs;
+		this.costsButton.setSelected(costs);
+		this.resultsButton.setSelected(results);
+		this.costsList.visible = costs;
+		this.resultsList.visible = results;
+	}
+
+	private void onCostsButtonClick(AbstractButton button)
+	{
+		this.showRightPanel(true);
+	}
+
+	private void onResultsButtonClick(AbstractButton button)
+	{
+		this.showRightPanel(false);
 	}
 
 	protected void collectOtherConfigs(Consumer<Widget> consumer)
@@ -66,7 +93,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	private void createSpecDimension()
 	{
-		LabelWidget dimensionLabel = new LabelWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.dimensions"), Alignment.Left);
+		LabelWidget dimensionLabel = new LabelWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.dimensions"), TextAlignment.LEFT);
 
 		List<IntSliderWithButtons> widgets = new ArrayList<>();
 		widgets.add(this.widthWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.dimensions.width", this.getDimensionWidthMin(), this.getDimensionWidthMin(), this.getDimensionWidthMax(), this::onWidthChanged));
@@ -77,8 +104,8 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 		if (list.size() > 0)
 		{
-			this.configList.addChild(dimensionLabel);
-			list.forEach(this.configList::addChild);
+			this.configsList.addChild(dimensionLabel);
+			list.forEach(this.configsList::addChild);
 		}
 
 	}
@@ -105,14 +132,14 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	public List<ItemStack> getCosts()
 	{
-		return this.costList.getCosts();
+		return this.costsList.getCosts();
 	}
 
 	private void updateCost()
 	{
 		List<ItemStack> costs = new ArrayList<>();
 		this.collectCost(costs::add);
-		this.costList.updateCosts(costs);
+		this.costsList.updateCosts(costs);
 	}
 
 	protected void collectCost(Consumer<ItemStack> consumer)
@@ -123,6 +150,22 @@ public abstract class MultiblockWidget extends ContainerWidget
 	@Override
 	public void render(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks)
 	{
+		int lineTop = this.y + this.configsList.y;
+		GuiHelper.fillRectagleBlack(pMatrixStack, this.x, lineTop, this.configsList.getWidth(), 1);
+
+		if (!this.costsButton.isSelected())
+		{
+			GuiHelper.fillRectagleBlack(pMatrixStack, this.x + this.costsButton.x, lineTop, this.costsButton.getWidth(), 1);
+		}
+
+		if (!this.resultsButton.isSelected())
+		{
+			GuiHelper.fillRectagleBlack(pMatrixStack, this.x + this.resultsButton.x, lineTop, this.resultsButton.getWidth(), 1);
+		}
+
+		GuiHelper.fillRectagleBlack(pMatrixStack, this.x, this.y + this.configsList.y, 1, this.height - this.configsList.y);
+		GuiHelper.fillRectagleBlack(pMatrixStack, this.x, this.y + this.height - 1, this.width, 1);
+
 		super.render(pMatrixStack, pMouseX, pMouseY, pPartialTicks);
 
 		if (this.needNotifyStateChange)
@@ -132,14 +175,11 @@ public abstract class MultiblockWidget extends ContainerWidget
 			this.notifyStateChange();
 		}
 
-		GuiHelper.fillRectagleBlack(pMatrixStack, this.x, this.y + this.configList.y, this.width, 1);
-		GuiHelper.fillRectagleBlack(pMatrixStack, this.x, this.y + this.configList.y, 1, this.height - this.configList.y);
-		GuiHelper.fillRectagleBlack(pMatrixStack, this.x, this.y + this.height, this.width, 1);
 	}
 
 	public Optional<Object> getIngredientUnderMouse(double pMouseX, double pMouseY)
 	{
-		return this.costList.getIngredientUnderMouse(this.toChildX(pMouseX), this.toChildY(pMouseY));
+		return this.costsList.getIngredientUnderMouse(this.toChildX(pMouseX), this.toChildY(pMouseY));
 	}
 
 	protected void markNeedUpdateCost()
@@ -164,7 +204,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		return 8 + (innerDimension.getX() * 4) + (innerDimension.getZ() * 4) + (innerDimension.getY() * 4);
 	}
 
-	public int getDimensionInnerBlocks()
+	public int getDimensionSideBlocks()
 	{
 		Vector3i innerDimension = this.getDimensionInner();
 		return (innerDimension.getX() * innerDimension.getZ() * 2) + (innerDimension.getX() * innerDimension.getY() * 2) + (innerDimension.getZ() * innerDimension.getY() * 2);
@@ -175,9 +215,9 @@ public abstract class MultiblockWidget extends ContainerWidget
 		return this.getDimensionCornerBlocks();
 	}
 
-	public int getInnerBlocks()
+	public int getSideBlocks()
 	{
-		return this.getDimensionInnerBlocks();
+		return this.getDimensionSideBlocks();
 	}
 
 	public Vector3i getDimensionInner()

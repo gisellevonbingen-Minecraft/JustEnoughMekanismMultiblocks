@@ -6,6 +6,7 @@
 	"text.jei_mekanism_multiblocks.click.shift": "시프트+클릭: %s",
 	"text.jei_mekanism_multiblocks.specs": "사양",
 	"text.jei_mekanism_multiblocks.costs": "재료",
+	"text.jei_mekanism_multiblocks.result": "결과값",
 	"text.jei_mekanism_multiblocks.others": "기타",
 	"text.jei_mekanism_multiblocks.dimensions": "치수",
 	"text.jei_mekanism_multiblocks.dimensions.width": "가로: %s",
