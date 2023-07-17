@@ -3,8 +3,7 @@
 	"package": "giselle.jei_mekanism_multiblocks.client.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"client": [
-		"minecraft.ScreenMixin",
-		"jei.RecipesGuiMixin"
+		"minecraft.ScreenMixin"
 	],
 	"mixins": [],
 	"injectors": {

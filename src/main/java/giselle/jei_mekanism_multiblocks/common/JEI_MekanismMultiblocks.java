@@ -30,6 +30,7 @@ public class JEI_MekanismMultiblocks
 		fml_bus.addListener(JEI_MekanismMultiblocks::onCommonSetup);
 
 		IEventBus forge_bus = MinecraftForge.EVENT_BUS;
+		forge_bus.register(JEI_MekanismMultiblocks.class);
 	}
 
 	private static void onCommonSetup(FMLCommonSetupEvent e)
