@@ -194,9 +194,9 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 			long inputCapacity = dimHeight * 4 * EvaporationMultiblockData.FLUID_PER_TANK;
 			long outputCapacity = 10_000;
 			double outputMultiplier = (EvaporationMultiblockData.MAX_MULTIPLIER_TEMP - HeatAPI.AMBIENT_TEMP) * MekanismConfig.general.evaporationTempMultiplier.get() * ((double) dimHeight / this.getDimensionHeightMax());
-			consumer.accept(new ResultWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.result.processing_speed"), new StringTextComponent("x" + TextUtils.format(outputMultiplier))));
-			consumer.accept(new ResultWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMilliBuckets(inputCapacity)));
-			consumer.accept(new ResultWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMilliBuckets(outputCapacity)));
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.processing_speed"), new StringTextComponent("x" + TextUtils.format(outputMultiplier))));
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMilliBuckets(inputCapacity)));
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMilliBuckets(outputCapacity)));
 		}
 
 		public int getValveCount()

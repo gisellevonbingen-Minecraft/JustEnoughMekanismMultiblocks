@@ -10,6 +10,11 @@ public class ResultWidget extends ContainerWidget
 	private final LabelWidget textLabel;
 	private final LabelWidget valueLabel;
 
+	public ResultWidget(ITextComponent text, ITextComponent value)
+	{
+		this(0, 0, 0, 0, text, value);
+	}
+
 	public ResultWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent text, ITextComponent value)
 	{
 		super(pX, pY, pWidth, pHeight);
