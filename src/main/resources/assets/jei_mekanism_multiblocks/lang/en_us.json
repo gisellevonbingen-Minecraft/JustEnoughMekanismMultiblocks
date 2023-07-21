@@ -23,5 +23,6 @@
 	"text.jei_mekanism_multiblocks.result.chemical_tank": "Chemical Tank",
 	"text.jei_mekanism_multiblocks.result.processing_speed": "Processing Speed",
 	"text.jei_mekanism_multiblocks.result.maximum_burn_rate": "Max Burn Rate",
-	"text.jei_mekanism_multiblocks.result.stable_temp_with": "Stable Temp with '%s'"
+	"text.jei_mekanism_multiblocks.result.stable_temp_with": "Stable Temp with '%s'",
+	"text.jei_mekanism_multiblocks.result.reactor_will_damage": "※ Reactor will be damaged"
 }

@@ -18,13 +18,16 @@ import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.UnitDisplayUtils.TemperatureUnit;
 import mekanism.generators.common.GeneratorsLang;
 import mekanism.generators.common.config.MekanismGeneratorsConfig;
+import mekanism.generators.common.content.fission.FissionReactorMultiblockData;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -175,12 +178,31 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			double waterCoolingTemp = this.getCoolingStableTemp(0.5D);
 			double sodiumCoolingTemp = this.getCoolingStableTemp(Coolants.SODIUM_COOLANT.getConductivity());
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.maximum_burn_rate"), VolumeTextHelper.format(maxBurnRate, VolumeUnit.MILLI, "B/t")));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.stable_temp_with", new FluidStack(Fluids.WATER, 1).getDisplayName()), MekanismUtils.getTemperatureDisplay(waterCoolingTemp, TemperatureUnit.KELVIN, false)));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.stable_temp_with", MekanismGases.SODIUM.getTextComponent()), MekanismUtils.getTemperatureDisplay(sodiumCoolingTemp, TemperatureUnit.KELVIN, false)));
+			consumer.accept(this.createStableTempWidget(new FluidStack(Fluids.WATER, 1).getDisplayName(), waterCoolingTemp));
+			consumer.accept(this.createStableTempWidget(MekanismGases.SODIUM.getTextComponent(), sodiumCoolingTemp));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_COOLANT_TANK.translate(), VolumeTextHelper.formatMilliBuckets(coolantCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_FUEL_TANK.translate(), VolumeTextHelper.formatMilliBuckets(fuelCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_HEATED_COOLANT_TANK.translate(), VolumeTextHelper.formatMilliBuckets(heatedCoolantCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_WASTE_TANK.translate(), VolumeTextHelper.formatMilliBuckets(fuelCapacity)));
+		}
+
+		private ResultWidget createStableTempWidget(ITextComponent with, double temp)
+		{
+			ResultWidget widget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.stable_temp_with", with), MekanismUtils.getTemperatureDisplay(temp, TemperatureUnit.KELVIN, false));
+
+			if (Double.isInfinite(temp))
+			{
+				widget.getValueLabel().setFGColor(0xFF0000);
+			}
+			else if (temp >= FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE)
+			{
+				double ratio = MathHelper.inverseLerp(temp, FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE, FissionReactorMultiblockData.MAX_DAMAGE_TEMPERATURE);
+				int g = (int) MathHelper.clampedLerp(255, 0, ratio);
+				widget.getValueLabel().setFGColor(0xFF0000 + g * 256);
+				widget.getValueLabel().setTooltips(new ITextComponent[]{new TranslationTextComponent("text.jei_mekanism_multiblocks.result.reactor_will_damage")});
+			}
+
+			return widget;
 		}
 
 		private void simulateTemp(double coolantConductivity)
