@@ -74,23 +74,18 @@ public class IntSliderWithButtons extends ContainerWidget
 	}
 
 	@Override
-	public void setWidth(int value)
+	protected void onWidthChanged()
 	{
-		super.setWidth(value);
+		super.onWidthChanged();
 
 		this.updateChildrenBounds();
 	}
 
 	@Override
-	public void setHeight(int value)
+	protected void onHeightChanged()
 	{
-		super.setHeight(value);
+		super.onHeightChanged();
 
-		this.onHeightChanged();
-	}
-
-	private void onHeightChanged()
-	{
 		int height = this.getHeight();
 
 		ButtonWidget minusButton = this.getMinusButton();

@@ -29,7 +29,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 	private final TabButtonWidget costsButton;
 	private final TabButtonWidget resultsButton;
 	private final CostList costsList;
-	private final ListWidget resultsList;
+	private final ListLineWidget resultsList;
 
 	private IntSliderWithButtons widthWidget;
 	private IntSliderWithButtons lengthWidget;
@@ -49,7 +49,11 @@ public abstract class MultiblockWidget extends ContainerWidget
 		this.addChild(this.costsButton = new TabButtonWidget(99, 0, 41, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.costs"), this::onCostsButtonClick));
 		this.addChild(this.resultsButton = new TabButtonWidget(139, 0, 41, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.results"), this::onResultsButtonClick));
 		this.addChild(this.costsList = new CostList(100, 10, 80, 110, 20));
-		this.addChild(this.resultsList = new CostList(100, 10, 80, 110, 20));
+		this.costsList.setItemsTop(2);
+		this.costsList.setItemOffset(1);
+		this.addChild(this.resultsList = new ListLineWidget(100, 10, 80, 110, 20));
+		this.resultsList.setItemsPadding(2);
+		this.resultsList.setItemOffset(1);
 
 		this.createSpecDimension();
 
@@ -135,7 +139,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		return this.costsList.getCosts();
 	}
 
-	private void updateCost()
+	private void updateCosts()
 	{
 		List<ItemStack> costs = new ArrayList<>();
 		this.collectCost(costs::add);
@@ -143,6 +147,20 @@ public abstract class MultiblockWidget extends ContainerWidget
 	}
 
 	protected void collectCost(Consumer<ItemStack> consumer)
+	{
+
+	}
+
+	private void updateResults()
+	{
+		List<Widget> costs = new ArrayList<>();
+		this.collectResult(costs::add);
+
+		this.resultsList.clearChildren();
+		costs.forEach(this.resultsList::addChild);
+	}
+
+	protected void collectResult(Consumer<Widget> consumer)
 	{
 
 	}
@@ -172,6 +190,8 @@ public abstract class MultiblockWidget extends ContainerWidget
 		{
 			this.needNotifyStateChange = false;
 			this.updateCost();
+			this.updateCosts();
+			this.updateResults();
 			this.notifyStateChange();
 		}
 
@@ -196,6 +216,12 @@ public abstract class MultiblockWidget extends ContainerWidget
 			((IRecipeLogicStateListener) minecraft.screen).onStateChange();
 		}
 
+	}
+
+	public int getDimensionVolume()
+	{
+		Vector3i dimension = this.getDimension();
+		return dimension.getX() * dimension.getY() * dimension.getZ();
 	}
 
 	public int getDimensionCornerBlocks()

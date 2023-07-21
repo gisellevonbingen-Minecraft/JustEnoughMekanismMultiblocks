@@ -219,31 +219,17 @@ public class ListWidget extends ContainerWidget
 	}
 
 	@Override
-	public void setWidth(int value)
+	protected void onWidthChanged()
 	{
-		int prev = this.getWidth();
-		super.setWidth(value);
-		int next = this.getWidth();
-
-		if (prev != next)
-		{
-			this.scrollBarHorizontalChanged = true;
-		}
-
+		super.onWidthChanged();
+		this.scrollBarHorizontalChanged = true;
 	}
 
 	@Override
-	public void setHeight(int value)
+	protected void onHeightChanged()
 	{
-		int prev = this.getHeight();
-		super.setHeight(value);
-		int next = this.getHeight();
-
-		if (prev != next)
-		{
-			this.scrollBarVerticalChanged = true;
-		}
-
+		super.onHeightChanged();
+		this.scrollBarVerticalChanged = true;
 	}
 
 	public int getItemsLeft()

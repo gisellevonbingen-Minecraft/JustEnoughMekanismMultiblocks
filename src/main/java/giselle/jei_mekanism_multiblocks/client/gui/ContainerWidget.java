@@ -1,10 +1,10 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.common.collect.Iterables;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.gui.widget.Widget;
@@ -14,7 +14,9 @@ import net.minecraft.util.text.StringTextComponent;
 public class ContainerWidget extends Widget
 {
 	private final List<Widget> children;
+	private final List<Widget> unmodifiableChildren;
 	private final List<Widget> functionWidgets;
+	private final List<Widget> unmodifiableFunctionWidgets;
 
 	private Widget focused;
 
@@ -23,12 +25,14 @@ public class ContainerWidget extends Widget
 		super(pX, pY, pWidth, pHeight, StringTextComponent.EMPTY);
 
 		this.children = new ArrayList<>();
+		this.unmodifiableChildren = Collections.unmodifiableList(this.children);
 		this.functionWidgets = new ArrayList<>();
+		this.unmodifiableFunctionWidgets = Collections.unmodifiableList(this.functionWidgets);
 	}
 
 	public List<Widget> getChildren()
 	{
-		return Collections.unmodifiableList(this.children);
+		return this.unmodifiableChildren;
 	}
 
 	public <WIDGET extends Widget> WIDGET addChild(WIDGET widget)
@@ -73,7 +77,7 @@ public class ContainerWidget extends Widget
 
 	public List<Widget> getFunctionWidgets()
 	{
-		return Collections.unmodifiableList(this.functionWidgets);
+		return this.unmodifiableFunctionWidgets;
 	}
 
 	public <WIDGET extends Widget> WIDGET addFunctionWidget(WIDGET widget)
@@ -116,9 +120,9 @@ public class ContainerWidget extends Widget
 		new ArrayList<>(this.getFunctionWidgets()).forEach(this::removeFunctionWidget);
 	}
 
-	public Iterable<Widget> getFunctionableWidgets()
+	public List<List<Widget>> getFunctionableWidgets()
 	{
-		return Iterables.concat(this.getChildren(), this.getFunctionWidgets());
+		return Arrays.asList(this.getChildren(), this.getFunctionWidgets());
 	}
 
 	public Widget getFocused()
@@ -134,15 +138,40 @@ public class ContainerWidget extends Widget
 	@Override
 	public void setWidth(int value)
 	{
+		int prev = this.getWidth();
 		super.setWidth(value);
+		int next = this.getWidth();
+
+		if (prev != next)
+		{
+			this.onWidthChanged();
+		}
+
+	}
+
+	protected void onWidthChanged()
+	{
 		this.onSizeChanged();
 	}
 
 	@Override
 	public void setHeight(int value)
 	{
+		int prev = this.getHeight();
 		super.setHeight(value);
+		int next = this.getHeight();
+
+		if (prev != next)
+		{
+			this.onHeightChanged();
+		}
+
+	}
+
+	protected void onHeightChanged()
+	{
 		this.onSizeChanged();
+
 	}
 
 	protected void onSizeChanged()
@@ -177,14 +206,23 @@ public class ContainerWidget extends Widget
 			int childMouseX = (int) this.toChildX(pMouseX);
 			int childMouseY = (int) this.toChildY(pMouseY);
 
-			for (Widget widget : this.getFunctionableWidgets())
+			for (List<Widget> widgets : this.getFunctionableWidgets())
 			{
-				widget.render(pMatrixStack, childMouseX, childMouseY, pPartialTicks);
+				for (Widget widget : widgets)
+				{
+					this.onRenderWidget(widgets, widget, pMatrixStack, childMouseX, childMouseY, pPartialTicks);
+				}
+
 			}
 
 			pMatrixStack.popPose();
 		}
 
+	}
+
+	protected void onRenderWidget(List<Widget> widgets, Widget widget, MatrixStack pMatrixStack, int childMouseX, int childMouseY, float pPartialTicks)
+	{
+		widget.render(pMatrixStack, childMouseX, childMouseY, pPartialTicks);
 	}
 
 	@Override
@@ -201,12 +239,16 @@ public class ContainerWidget extends Widget
 			double childMouseX = this.toChildX(pMouseX);
 			double childMouseY = this.toChildY(pMouseY);
 
-			for (Widget widget : this.getFunctionableWidgets())
+			for (List<Widget> widgets : this.getFunctionableWidgets())
 			{
-				if (widget.mouseClicked(childMouseX, childMouseY, pButton))
+				for (Widget widget : widgets)
 				{
-					this.focused = widget;
-					return true;
+					if (widget.mouseClicked(childMouseX, childMouseY, pButton))
+					{
+						this.focused = widget;
+						return true;
+					}
+
 				}
 
 			}
@@ -224,11 +266,15 @@ public class ContainerWidget extends Widget
 			double childMouseX = this.toChildX(pMouseX);
 			double childMouseY = this.toChildY(pMouseY);
 
-			for (Widget widget : this.getFunctionableWidgets())
+			for (List<Widget> widgets : this.getFunctionableWidgets())
 			{
-				if (widget.mouseReleased(childMouseX, childMouseY, pButton))
+				for (Widget widget : widgets)
 				{
-					return true;
+					if (widget.mouseReleased(childMouseX, childMouseY, pButton))
+					{
+						return true;
+					}
+
 				}
 
 			}
@@ -261,11 +307,15 @@ public class ContainerWidget extends Widget
 			double childMouseX = this.toChildX(pMouseX);
 			double childMouseY = this.toChildY(pMouseY);
 
-			for (Widget widget : this.getFunctionableWidgets())
+			for (List<Widget> widgets : this.getFunctionableWidgets())
 			{
-				if (widget.mouseScrolled(childMouseX, childMouseY, pDelta))
+				for (Widget widget : widgets)
 				{
-					return true;
+					if (widget.mouseScrolled(childMouseX, childMouseY, pDelta))
+					{
+						return true;
+					}
+
 				}
 
 			}
@@ -285,9 +335,13 @@ public class ContainerWidget extends Widget
 		int childMouseX = (int) this.toChildX(pMouseX);
 		int childMouseY = (int) this.toChildY(pMouseY);
 
-		for (Widget widget : this.getFunctionableWidgets())
+		for (List<Widget> widgets : this.getFunctionableWidgets())
 		{
-			widget.renderToolTip(pMatrixStack, childMouseX, childMouseY);
+			for (Widget widget : widgets)
+			{
+				widget.renderToolTip(pMatrixStack, childMouseX, childMouseY);
+			}
+
 		}
 
 		pMatrixStack.popPose();

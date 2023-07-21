@@ -59,8 +59,6 @@ public class CostWidget extends Widget
 		ItemRenderer itemRenderer = minecraft.getItemRenderer();
 		FontRenderer font = minecraft.font;
 
-		GuiHelper.fillRectagleBlack(pMatrixStack, this.x, this.y + this.height, this.width, 1);
-
 		int itemX = this.x + 0;
 		int itemY = this.y + 2;
 		ItemStack itemStack = this.getItemStack();

@@ -5,11 +5,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import giselle.jei_mekanism_multiblocks.client.gui.ListWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
 
-public class CostList extends ListWidget
+public class CostList extends ListLineWidget
 {
 	public CostList(int pX, int pY, int pWidth, int pHeight, int itemHeight)
 	{
