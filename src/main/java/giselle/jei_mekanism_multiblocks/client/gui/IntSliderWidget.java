@@ -65,10 +65,15 @@ public class IntSliderWidget extends SliderWidget
 	public void setIntValue(int value)
 	{
 		value = MathHelper.clamp(value, this.getMinValue(), this.getMaxValue());
+		double doubleValue = MathHelper.inverseLerp(value, this.getMinValue(), this.getMaxValue());
 
 		if (this.getIntValue() != value)
 		{
-			this.setValue(MathHelper.inverseLerp(value, this.getMinValue(), this.getMaxValue()));
+			this.setValue(doubleValue);
+		}
+		else
+		{
+			this.setValueInternal(doubleValue);
 		}
 
 	}

@@ -20,7 +20,7 @@ public class ListLineWidget extends ListWidget
 	{
 		super.onRenderWidget(widgets, widget, pMatrixStack, childMouseX, childMouseY, pPartialTicks);
 
-		if (widgets == this.getChildren())
+		if (widgets == this.getChildren() && widget.visible)
 		{
 			GuiHelper.fillRectagleBlack(pMatrixStack, 0, widget.y + widget.getHeight(), this.getWidth(), 1);
 		}

@@ -7,6 +7,9 @@ import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
+import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
+import mekanism.common.config.MekanismConfig;
 import mekanism.common.registries.MekanismBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
@@ -57,10 +60,10 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true, this::onUseStructuralGlassChanged));
+			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true, this::onUseStructuralGlassChanged));
 
-			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.valves", 0, 0, 0, this::onValvesChanged));
-			this.updateValveSliderLimit();
+			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 0, 0, this::onValvesChanged));
+			this.updateSlidersLimit();
 			this.valvesWidget.getSlider().setIntValue(2);
 		}
 
@@ -69,10 +72,10 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		{
 			super.onDimensionChanged();
 
-			this.updateValveSliderLimit();
+			this.updateSlidersLimit();
 		}
 
-		private void updateValveSliderLimit()
+		private void updateSlidersLimit()
 		{
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
 			int valves = valvesSlider.getIntValue();
@@ -82,6 +85,12 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 
 		protected void onValvesChanged(int valves)
 		{
+			this.onSliderChanged();
+		}
+
+		protected void onSliderChanged()
+		{
+			this.updateSlidersLimit();
 			this.markNeedUpdateCost();
 		}
 
@@ -115,6 +124,18 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 			consumer.accept(new ItemStack(MekanismBlocks.DYNAMIC_TANK, tanks));
 			consumer.accept(new ItemStack(MekanismBlocks.DYNAMIC_VALVE, valves));
 			consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS, structuralGlasses));
+		}
+
+		@Override
+		protected void collectResult(Consumer<Widget> consumer)
+		{
+			super.collectResult(consumer);
+
+			int volume = this.getDimensionVolume();
+			long fluidCapacity = volume * MekanismConfig.general.dynamicTankFluidPerTank.get();
+			long chemicalCapacity = volume * MekanismConfig.general.dynamicTankChemicalPerTank.get();
+			consumer.accept(new ResultWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.result.fluid_tank"), VolumeTextHelper.formatMilliBuckets(fluidCapacity)));
+			consumer.accept(new ResultWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.result.chemical_tank"), VolumeTextHelper.formatMilliBuckets(chemicalCapacity)));
 		}
 
 		public int getValveCount()

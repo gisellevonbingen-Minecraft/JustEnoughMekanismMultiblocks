@@ -62,8 +62,8 @@ public class SliderWidget extends Widget
 		GuiHelper.blitButton(pMatrixStack, this.x, this.y, this.width, this.height, false, false);
 
 		this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
-		int j = getFGColor();
-		drawCenteredString(pMatrixStack, minecraft.font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
+		int j = this.getFGColor();
+		GuiHelper.drawTextScaledShadow(pMatrixStack, this.getMessage(), this.x + 2, this.y + 1, this.width - 4, j, TextAlignment.CENTER);
 	}
 
 	@Override
@@ -153,6 +153,11 @@ public class SliderWidget extends Widget
 	public double getValue()
 	{
 		return this.value;
+	}
+
+	protected void setValueInternal(double value)
+	{
+		this.value = MathHelper.clamp(value, 0.0D, 1.0D);
 	}
 
 	public void setValue(double value)
