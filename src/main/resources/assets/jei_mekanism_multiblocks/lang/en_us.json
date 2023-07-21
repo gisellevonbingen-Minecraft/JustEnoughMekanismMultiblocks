@@ -2,6 +2,7 @@
 	"text.jei_mekanism_multiblocks.recipe_category.title": "Building - [%s]",
 	"text.jei_mekanism_multiblocks.multiblock.dynamic_tank": "Dynamic Tank",
 	"text.jei_mekanism_multiblocks.multiblock.thermal_evaporation_plant": "Thermal Evaporation Plant",
+	"text.jei_mekanism_multiblocks.multiblock.fission_reactor": "Fission Reactor",
 	"text.jei_mekanism_multiblocks.click.normal": "Click: %s",
 	"text.jei_mekanism_multiblocks.click.shift": "Shift+Click: %s",
 	"text.jei_mekanism_multiblocks.specs": "Specs",
@@ -13,10 +14,14 @@
 	"text.jei_mekanism_multiblocks.specs.dimensions.length": "Length: %s",
 	"text.jei_mekanism_multiblocks.specs.dimensions.height": "Height: %s",
 	"text.jei_mekanism_multiblocks.specs.valves": "Valves: %s",
+	"text.jei_mekanism_multiblocks.specs.ports": "Ports: %s",
+	"text.jei_mekanism_multiblocks.specs.logic_adapters": "Logic Adapters: %s",
 	"text.jei_mekanism_multiblocks.specs.use_things": "Use '%s'",
 	"text.jei_mekanism_multiblocks.result.input_tank": "Input Tank",
 	"text.jei_mekanism_multiblocks.result.output_tank": "Output Tank",
 	"text.jei_mekanism_multiblocks.result.fluid_tank": "Fluid Tank",
 	"text.jei_mekanism_multiblocks.result.chemical_tank": "Chemical Tank",
 	"text.jei_mekanism_multiblocks.result.processing_speed": "Processing Speed",
+	"text.jei_mekanism_multiblocks.result.maximum_burn_rate": "Max Burn Rate",
+	"text.jei_mekanism_multiblocks.result.stable_temp_with": "Stable Temp with '%s'"
 }
