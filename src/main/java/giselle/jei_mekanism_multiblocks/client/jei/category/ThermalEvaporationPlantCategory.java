@@ -70,6 +70,14 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 		}
 
 		@Override
+		public int getSideBlocks()
+		{
+			// 1 Controller
+			// 4 Empty top inner
+			return super.getSideBlocks() - 5;
+		}
+
+		@Override
 		protected void collectOtherConfigs(Consumer<Widget> consumer)
 		{
 			super.collectOtherConfigs(consumer);
@@ -87,7 +95,7 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 
 			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 0, 0, this::onValvesChanged));
 			this.updateValveSliderLimit();
-			this.valvesWidget.getSlider().setIntValue(2);
+			this.setValveCount(2);
 		}
 
 		@Override
@@ -96,14 +104,6 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 			super.onDimensionChanged();
 
 			this.updateValveSliderLimit();
-		}
-
-		@Override
-		public int getSideBlocks()
-		{
-			// 1 Controller
-			// 4 Empty top inner
-			return super.getSideBlocks() - 5;
 		}
 
 		private void updateValveSliderLimit()

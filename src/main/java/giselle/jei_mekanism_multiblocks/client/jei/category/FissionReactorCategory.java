@@ -81,9 +81,9 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			consumer.accept(this.useReactorGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.REACTOR_GLASS.getItemStack().getHoverName()), true, this::onUseReactorGlassChanged));
 			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 0, 0, this::onPortsChanged));
 			consumer.accept(this.logicAdaptersWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.logic_adapters", 0, 0, 0, this::onLogicAdaptersChanged));
-			this.updatePortsLimit();
-			this.portsWidget.getSlider().setIntValue(4);
-			this.logicAdaptersWidget.getSlider().setIntValue(0);
+			this.updatePortsSliderLimit();
+			this.setPortCount(4);
+			this.setLogicAdapterCount(0);
 		}
 
 		@Override
@@ -91,20 +91,20 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		{
 			super.onDimensionChanged();
 
-			this.updatePortsLimit();
+			this.updatePortsSliderLimit();
 		}
 
-		private void updatePortsLimit()
+		private void updatePortsSliderLimit()
 		{
 			IntSliderWidget portsSlider = this.portsWidget.getSlider();
 			int valves = portsSlider.getIntValue();
 			portsSlider.setMaxValue(this.getSideBlocks());
 			portsSlider.setIntValue(valves);
 
-			this.updateLogicAdaptersLimit();
+			this.updateLogicAdaptersSliderLimit();
 		}
 
-		private void updateLogicAdaptersLimit()
+		private void updateLogicAdaptersSliderLimit()
 		{
 			IntSliderWidget adaptersSlider = this.logicAdaptersWidget.getSlider();
 			int adapters = adaptersSlider.getIntValue();
@@ -114,17 +114,12 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 		protected void onPortsChanged(int ports)
 		{
-			this.onSliderChanged();
+			this.updateLogicAdaptersSliderLimit();
+			this.markNeedUpdateCost();
 		}
 
 		protected void onLogicAdaptersChanged(int logicAdapters)
 		{
-			this.onSliderChanged();
-		}
-
-		protected void onSliderChanged()
-		{
-			this.updatePortsLimit();
 			this.markNeedUpdateCost();
 		}
 
@@ -268,7 +263,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 		private double getHeatCapacity()
 		{
-			return MekanismGeneratorsConfig.generators.fissionCasingHeatCapacity.get() * (this.getDimensionCornerBlocks() + this.getDimensionSideBlocks());
+			return MekanismGeneratorsConfig.generators.fissionCasingHeatCapacity.get() * this.getDimensionCasingBlocks();
 		}
 
 		private double getCoolingStableTemp(double coolantConductivity)

@@ -235,6 +235,11 @@ public abstract class MultiblockWidget extends ContainerWidget
 		return (innerDimension.getX() * innerDimension.getZ() * 2) + (innerDimension.getX() * innerDimension.getY() * 2) + (innerDimension.getZ() * innerDimension.getY() * 2);
 	}
 
+	public int getDimensionCasingBlocks()
+	{
+		return this.getDimensionCornerBlocks() + this.getDimensionSideBlocks();
+	}
+
 	public int getCornerBlocks()
 	{
 		return this.getDimensionCornerBlocks();
