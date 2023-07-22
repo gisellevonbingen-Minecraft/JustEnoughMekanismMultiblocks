@@ -7,8 +7,8 @@ import java.util.List;
 
 import giselle.jei_mekanism_multiblocks.client.jei.category.DynamicTankCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.FissionReactorCategory;
-import giselle.jei_mekanism_multiblocks.client.jei.category.ThermoelectricBoilerCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.ThermalEvaporationPlantCategory;
+import giselle.jei_mekanism_multiblocks.client.jei.category.ThermoelectricBoilerCategory;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.helpers.IGuiHelper;

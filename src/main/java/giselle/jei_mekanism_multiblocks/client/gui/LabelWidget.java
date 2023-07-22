@@ -79,5 +79,5 @@ public class LabelWidget extends Widget
 	{
 		this.tooltips = tooltips;
 	}
-	
+
 }

@@ -61,7 +61,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 		private CheckBoxWidget useStructuralGlassCheckBox;
 		private IntSliderWithButtons valvesWidget;
 		private IntSliderWithButtons steamHeightWidget;
-		private IntSliderWithButtons heatingHeightWidget;
+		private IntSliderWithButtons heatingElementsWidget;
 
 		@Override
 		protected void collectOtherConfigs(Consumer<Widget> consumer)
@@ -72,7 +72,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 0, 0, this::onValvesChanged));
 			consumer.accept(this.steamHeightWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.steam_height", 0, 1, 0, this::onSteamHeightChanged));
-			consumer.accept(this.heatingHeightWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.heating_height", 0, 1, 0, this::onHeatingHeightChanged));
+			consumer.accept(this.heatingElementsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.heating_elements", 0, 1, 0, this::onHeatingElementsChanged));
 			this.updateSlidersLimit();
 			this.setValveCount(2);
 		}
@@ -85,20 +85,19 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			this.updateSlidersLimit();
 
 			IntSliderWidget steamHeightSlider = this.steamHeightWidget.getSlider();
-			IntSliderWidget heatingHeightSlider = this.heatingHeightWidget.getSlider();
+			IntSliderWidget heatingElementsSlider = this.heatingElementsWidget.getSlider();
 			double maxBoil = 0.0D;
 			int preferredSteamHeight = 0;
-			int preferredHeatingHeight = 0;
+			int preferredHeatingElementCount = heatingElementsSlider.getMinValue();
 
-			long millis = System.currentTimeMillis();
+//			long nano = System.nanoTime();
 
 			for (int steamHeight = steamHeightSlider.getMinValue(); steamHeight <= steamHeightSlider.getMaxValue(); steamHeight++)
 			{
-				for (int heatingHeight = heatingHeightSlider.getMinValue(); heatingHeight <= heatingHeightSlider.getMaxValue(); heatingHeight++)
+				for (int heatingElementCount = preferredHeatingElementCount; heatingElementCount <= heatingElementsSlider.getMaxValue(); heatingElementCount++)
 				{
-					int superHeatingElements = this.getSuperHeatingElements(heatingHeight);
 					int steamVolume = this.getSteamVolume(steamHeight);
-					int waterVolume = this.getWaterVolume(steamHeight, heatingHeight);
+					int waterVolume = this.getWaterVolume(steamHeight, heatingElementCount);
 
 					MaxBoilSimulation simulation = new MaxBoilSimulation();
 					simulation.heatCapacity = this.getHeatCapacity();
@@ -106,16 +105,16 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 					simulation.heatedCoolantTank = this.getHeatedCoolantTank(waterVolume);
 					simulation.waterTank = this.getWaterTank(waterVolume);
 					simulation.cooledCoolantTank = this.getCooledCoolantTank(steamVolume);
-					simulation.heatingCapacity = this.getHeatingCapacity(superHeatingElements);
+					simulation.heatingCapacity = this.getHeatingCapacity(heatingElementCount);
 					simulation.simulate();
 
 					if (simulation.maxBoil > maxBoil)
 					{
 						maxBoil = simulation.maxBoil;
 						preferredSteamHeight = steamHeight;
-						preferredHeatingHeight = heatingHeight;
+						preferredHeatingElementCount = heatingElementCount;
 					}
-					else if (simulation.needMoreSuperHeatingElemetns == false)
+					else if (!simulation.needMoreSuperHeatingElemetns)
 					{
 						break;
 					}
@@ -124,12 +123,12 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 			}
 
-			System.out.println("Simulation for " + (System.currentTimeMillis() - millis) + "ms");
+//			System.out.println("Simulation for " + (System.nanoTime() - nano) / 1000_000D + "ms");
 
 			if (preferredSteamHeight > 0)
 			{
 				this.setSteamHeight(preferredSteamHeight);
-				this.SetHeatingHeight(preferredHeatingHeight);
+				this.SetHeatingElementCount(preferredHeatingElementCount);
 			}
 
 		}
@@ -162,13 +161,14 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 		private void updateHeatingHeightSliderLimit()
 		{
-			IntSliderWidget heatingHeightSlider = this.heatingHeightWidget.getSlider();
-			int heatingHeight = heatingHeightSlider.getIntValue();
-			heatingHeightSlider.setMaxValue(this.getInnerAdjustableHeight() - this.getSteamHeight() + 2);
-			heatingHeightSlider.setIntValue(heatingHeight);
+			Vector3i inner = this.getDimensionInner();
+			IntSliderWidget heatingElementsSlider = this.heatingElementsWidget.getSlider();
+			int heatingElements = heatingElementsSlider.getIntValue();
+			heatingElementsSlider.setMaxValue((this.getInnerAdjustableHeight() - this.getSteamHeight() + 2) * (inner.getX() * inner.getZ()));
+			heatingElementsSlider.setIntValue(heatingElements);
 		}
 
-		protected void onHeatingHeightChanged(int height)
+		protected void onHeatingElementsChanged(int elements)
 		{
 			this.markNeedUpdateCost();
 		}
@@ -204,8 +204,8 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			consumer.accept(new ItemStack(MekanismBlocks.BOILER_VALVE, valves));
 			consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS, structuralGlasses));
 
-			consumer.accept(new ItemStack(MekanismBlocks.PRESSURE_DISPERSER, this.getPressureDispensers()));
-			consumer.accept(new ItemStack(MekanismBlocks.SUPERHEATING_ELEMENT, this.getSuperHeatingElements()));
+			consumer.accept(new ItemStack(MekanismBlocks.PRESSURE_DISPERSER, this.getPressureDispenserCount()));
+			consumer.accept(new ItemStack(MekanismBlocks.SUPERHEATING_ELEMENT, this.getHeatingElementCount()));
 		}
 
 		@Override
@@ -214,10 +214,9 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			super.collectResult(consumer);
 
 			int steamHeight = this.getSteamHeight();
-			int heatingHeight = this.getHeatingHeight();
-			int superHeatingElements = this.getSuperHeatingElements(heatingHeight);
+			int heatingElementCount = this.getHeatingElementCount();
 			int steamVolume = this.getSteamVolume(steamHeight);
-			int waterVolume = this.getWaterVolume(steamHeight, heatingHeight);
+			int waterVolume = this.getWaterVolume(steamHeight, heatingElementCount);
 
 			long steamTank = this.getSteamTank(steamVolume);
 			long heatedCoolantTank = this.getHeatedCoolantTank(waterVolume);
@@ -230,16 +229,15 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			simulation.heatedCoolantTank = heatedCoolantTank;
 			simulation.waterTank = waterTank;
 			simulation.cooledCoolantTank = cooledCoolantTank;
-			simulation.heatingCapacity = this.getHeatingCapacity(superHeatingElements);
+			simulation.heatingCapacity = this.getHeatingCapacity(heatingElementCount);
 			simulation.simulate();
 
 			double temp = simulation.heat / simulation.heatCapacity;
 			long maxBoil = simulation.maxBoil;
 
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.temp"), MekanismUtils.getTemperatureDisplay(temp, TemperatureUnit.KELVIN, false)));
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_boil_rate"), VolumeTextHelper.format(maxBoil, VolumeUnit.MILLI, "B/t")));
-		
-			
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.temp"), MekanismUtils.getTemperatureDisplay(temp, TemperatureUnit.KELVIN, false)));
+
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMilliBuckets(waterTank)));
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMilliBuckets(steamTank)));
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.heated_coolant_tank"), VolumeTextHelper.formatMilliBuckets(heatedCoolantTank)));
@@ -320,9 +318,9 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 		}
 
-		private double getHeatingCapacity(int superHeatingElements)
+		private double getHeatingCapacity(int superHeatingElementCount)
 		{
-			return MekanismConfig.general.superheatingHeatTransfer.get() * superHeatingElements;
+			return MekanismConfig.general.superheatingHeatTransfer.get() * superHeatingElementCount;
 		}
 
 		private double getHeatCapacity()
@@ -330,13 +328,13 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			return BoilerMultiblockData.CASING_HEAT_CAPACITY * this.getDimensionCasingBlocks();
 		}
 
-		private int getWaterVolume(int steamHeight, int heatingHeight)
+		private int getWaterVolume(int steamHeight, int heatingElenmentCount)
 		{
 			Vector3i outer = this.getDimension();
 			int outerSquare = outer.getX() * outer.getZ();
 			Vector3i inner = this.getDimensionInner();
 			int innerSquare = inner.getX() * inner.getZ();
-			return (outerSquare * inner.getY()) - (this.getSteamVolume(steamHeight) - outerSquare + innerSquare) - (this.getSuperHeatingElements(heatingHeight) - innerSquare);
+			return (outerSquare * inner.getY()) - (this.getSteamVolume(steamHeight) - outerSquare + innerSquare) - (heatingElenmentCount - innerSquare);
 		}
 
 		private int getSteamVolume(int steamHeight)
@@ -365,21 +363,10 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			return waterVolume * 256_000L;
 		}
 
-		private int getPressureDispensers()
+		private int getPressureDispenserCount()
 		{
 			Vector3i inner = this.getDimensionInner();
 			return inner.getX() * inner.getZ();
-		}
-
-		private int getSuperHeatingElements()
-		{
-			return this.getSuperHeatingElements(this.getHeatingHeight());
-		}
-
-		private int getSuperHeatingElements(int heatingHeight)
-		{
-			Vector3i inner = this.getDimensionInner();
-			return inner.getX() * inner.getZ() * heatingHeight;
 		}
 
 		private int getInnerAdjustableHeight()
@@ -417,14 +404,14 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			this.steamHeightWidget.getSlider().setIntValue(height);
 		}
 
-		public int getHeatingHeight()
+		public int getHeatingElementCount()
 		{
-			return this.heatingHeightWidget.getSlider().getIntValue();
+			return this.heatingElementsWidget.getSlider().getIntValue();
 		}
 
-		public void SetHeatingHeight(int height)
+		public void SetHeatingElementCount(int heatingElementCount)
 		{
-			this.heatingHeightWidget.getSlider().setIntValue(height);
+			this.heatingElementsWidget.getSlider().setIntValue(heatingElementCount);
 		}
 
 		@Override
