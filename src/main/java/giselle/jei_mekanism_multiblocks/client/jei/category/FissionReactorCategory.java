@@ -183,18 +183,25 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 		private ResultWidget createStableTempWidget(ITextComponent with, double temp)
 		{
-			ResultWidget widget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.stable_temp_with", with), MekanismUtils.getTemperatureDisplay(temp, TemperatureUnit.KELVIN, false));
+			ResultWidget widget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.temp_with", with), MekanismUtils.getTemperatureDisplay(temp, TemperatureUnit.KELVIN, false));
+			boolean warning = false;
 
 			if (Double.isInfinite(temp))
 			{
+				warning = true;
 				widget.getValueLabel().setFGColor(0xFF0000);
 			}
 			else if (temp >= FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE)
 			{
+				warning = true;
 				double ratio = MathHelper.inverseLerp(temp, FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE, FissionReactorMultiblockData.MAX_DAMAGE_TEMPERATURE);
 				int g = (int) MathHelper.clampedLerp(255, 0, ratio);
 				widget.getValueLabel().setFGColor(0xFF0000 + g * 256);
-				widget.getValueLabel().setTooltips(new ITextComponent[]{new TranslationTextComponent("text.jei_mekanism_multiblocks.result.reactor_will_damage")});
+			}
+
+			if (warning)
+			{
+				widget.getValueLabel().setTooltips(new ITextComponent[]{new TranslationTextComponent("text.jei_mekanism_multiblocks.toolip.warning"), new TranslationTextComponent("text.jei_mekanism_multiblocks.result.reactor_will_damage")});
 			}
 
 			return widget;
