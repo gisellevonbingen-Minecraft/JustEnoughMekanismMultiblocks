@@ -139,19 +139,19 @@ public abstract class MultiblockWidget extends ContainerWidget
 		return this.costsList.getCosts();
 	}
 
-	private void updateCosts()
+	public void updateCosts()
 	{
 		List<ItemStack> costs = new ArrayList<>();
 		this.collectCost(costs::add);
 		this.costsList.updateCosts(costs);
 	}
 
-	protected void collectCost(Consumer<ItemStack> consumer)
+	public void collectCost(Consumer<ItemStack> consumer)
 	{
 
 	}
 
-	private void updateResults()
+	public void updateResults()
 	{
 		List<Widget> costs = new ArrayList<>();
 		this.collectResult(costs::add);
@@ -160,7 +160,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		costs.forEach(this.resultsList::addChild);
 	}
 
-	protected void collectResult(Consumer<Widget> consumer)
+	public void collectResult(Consumer<Widget> consumer)
 	{
 
 	}
@@ -201,7 +201,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		return this.costsList.getIngredientUnderMouse(this.toChildX(pMouseX), this.toChildY(pMouseY));
 	}
 
-	protected void markNeedUpdateCost()
+	public void markNeedUpdateCost()
 	{
 		this.needNotifyStateChange = true;
 	}

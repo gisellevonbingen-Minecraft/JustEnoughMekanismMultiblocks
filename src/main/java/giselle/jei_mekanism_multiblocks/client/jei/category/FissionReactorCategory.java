@@ -94,7 +94,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			this.updatePortsSliderLimit();
 		}
 
-		private void updatePortsSliderLimit()
+		public void updatePortsSliderLimit()
 		{
 			IntSliderWidget portsSlider = this.portsWidget.getSlider();
 			int valves = portsSlider.getIntValue();
@@ -104,7 +104,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			this.updateLogicAdaptersSliderLimit();
 		}
 
-		private void updateLogicAdaptersSliderLimit()
+		public void updateLogicAdaptersSliderLimit()
 		{
 			IntSliderWidget adaptersSlider = this.logicAdaptersWidget.getSlider();
 			int adapters = adaptersSlider.getIntValue();
@@ -129,7 +129,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		}
 
 		@Override
-		protected void collectCost(Consumer<ItemStack> consumer)
+		public void collectCost(Consumer<ItemStack> consumer)
 		{
 			super.collectCost(consumer);
 
@@ -162,7 +162,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		}
 
 		@Override
-		protected void collectResult(Consumer<Widget> consumer)
+		public void collectResult(Consumer<Widget> consumer)
 		{
 			super.collectResult(consumer);
 
@@ -248,32 +248,32 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 		}
 
-		private long getCoolantCapacity()
+		public long getCoolantCapacity()
 		{
 			return this.getDimensionVolume() * 100_000L;
 		}
 
-		private long getHeatedCoolantCapacity()
+		public long getHeatedCoolantCapacity()
 		{
 			return this.getDimensionVolume() * 1_000_000L;
 		}
 
-		private long getMaxBurnRate()
+		public long getMaxBurnRate()
 		{
 			return this.getFissionFuelAssemblyCount() * MekanismGeneratorsConfig.generators.burnPerAssembly.get();
 		}
 
-		private long getFuelCapacity()
+		public long getFuelCapacity()
 		{
 			return this.getFissionFuelAssemblyCount() * 8_000L;
 		}
 
-		private double getHeatCapacity()
+		public double getHeatCapacity()
 		{
 			return MekanismGeneratorsConfig.generators.fissionCasingHeatCapacity.get() * this.getDimensionCasingBlocks();
 		}
 
-		private double getCoolingStableTemp(double coolantConductivity)
+		public double getCoolingStableTemp(double coolantConductivity)
 		{
 			long coolantCapacity = this.getCoolantCapacity();
 			long toBurn = this.getMaxBurnRate();

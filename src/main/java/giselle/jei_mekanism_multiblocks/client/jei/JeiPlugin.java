@@ -7,6 +7,7 @@ import java.util.List;
 
 import giselle.jei_mekanism_multiblocks.client.jei.category.DynamicTankCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.FissionReactorCategory;
+import giselle.jei_mekanism_multiblocks.client.jei.category.IndustrialTurbineCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.ThermalEvaporationPlantCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.ThermoelectricBoilerCategory;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
@@ -55,6 +56,7 @@ public class JeiPlugin implements IModPlugin
 		if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
 		{
 			this.categories.add(new FissionReactorCategory(guiHelper));
+			this.categories.add(new IndustrialTurbineCategory(guiHelper));
 		}
 
 		for (MultiblockCategory<?> category : this.getCategories())

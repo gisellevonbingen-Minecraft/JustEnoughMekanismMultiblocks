@@ -75,7 +75,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 			this.updateValvesSliderLimit();
 		}
 
-		private void updateValvesSliderLimit()
+		public void updateValvesSliderLimit()
 		{
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
 			int valves = valvesSlider.getIntValue();
@@ -94,7 +94,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		}
 
 		@Override
-		protected void collectCost(Consumer<ItemStack> consumer)
+		public void collectCost(Consumer<ItemStack> consumer)
 		{
 			super.collectCost(consumer);
 
@@ -121,7 +121,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		}
 
 		@Override
-		protected void collectResult(Consumer<Widget> consumer)
+		public void collectResult(Consumer<Widget> consumer)
 		{
 			super.collectResult(consumer);
 

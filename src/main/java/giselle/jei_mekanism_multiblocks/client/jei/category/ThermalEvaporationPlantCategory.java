@@ -106,7 +106,7 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 			this.updateValveSliderLimit();
 		}
 
-		private void updateValveSliderLimit()
+		public void updateValveSliderLimit()
 		{
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
 			int valves = valvesSlider.getIntValue();
@@ -130,7 +130,7 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 		}
 
 		@Override
-		protected void collectCost(Consumer<ItemStack> consumer)
+		public void collectCost(Consumer<ItemStack> consumer)
 		{
 			super.collectCost(consumer);
 
@@ -186,7 +186,7 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 		}
 
 		@Override
-		protected void collectResult(Consumer<Widget> consumer)
+		public void collectResult(Consumer<Widget> consumer)
 		{
 			super.collectResult(consumer);
 
