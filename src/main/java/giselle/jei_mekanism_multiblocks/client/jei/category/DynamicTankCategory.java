@@ -47,8 +47,8 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 
 	public static class DynamicTankWidget extends MultiblockWidget
 	{
-		private CheckBoxWidget useStructuralGlassCheckBox;
-		private IntSliderWithButtons valvesWidget;
+		protected CheckBoxWidget useStructuralGlassCheckBox;
+		protected IntSliderWithButtons valvesWidget;
 
 		public DynamicTankWidget()
 		{

@@ -33,7 +33,7 @@ public class SliderWidget extends Widget
 	public SliderWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, double pValue, DoubleConsumer setter)
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
-		this.value = pValue;
+		this.value = MathHelper.clamp(pValue, 0.0D, 1.0D);
 		this.horizontal = true;
 		this.setter = setter;
 	}

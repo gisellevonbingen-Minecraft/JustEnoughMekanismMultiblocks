@@ -64,9 +64,9 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 	public static class FissionReactorCategoryWidget extends MultiblockWidget
 	{
-		private CheckBoxWidget useReactorGlassCheckBox;
-		private IntSliderWithButtons portsWidget;
-		private IntSliderWithButtons logicAdaptersWidget;
+		protected CheckBoxWidget useReactorGlassCheckBox;
+		protected IntSliderWithButtons portsWidget;
+		protected IntSliderWithButtons logicAdaptersWidget;
 
 		public FissionReactorCategoryWidget()
 		{

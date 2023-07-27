@@ -59,10 +59,10 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 	public static class ThermalBoilerWidget extends MultiblockWidget
 	{
-		private CheckBoxWidget useStructuralGlassCheckBox;
-		private IntSliderWithButtons valvesWidget;
-		private IntSliderWithButtons steamHeightWidget;
-		private IntSliderWithButtons heatingElementsWidget;
+		protected CheckBoxWidget useStructuralGlassCheckBox;
+		protected IntSliderWithButtons valvesWidget;
+		protected IntSliderWithButtons steamHeightWidget;
+		protected IntSliderWithButtons heatingElementsWidget;
 
 		@Override
 		protected void collectOtherConfigs(Consumer<Widget> consumer)
@@ -145,7 +145,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 			IntSliderWidget steamHeightSlider = this.steamHeightWidget.getSlider();
 			int steamHeight = steamHeightSlider.getIntValue();
-			steamHeightSlider.setMaxValue(this.getInnerAdjustableHeight() + 1);
+			steamHeightSlider.setMaxValue(this.getInnerAdjustableHeight() + steamHeightSlider.getMinValue());
 			steamHeightSlider.setIntValue(steamHeight);
 
 			this.updateHeatingHeightSliderLimit();

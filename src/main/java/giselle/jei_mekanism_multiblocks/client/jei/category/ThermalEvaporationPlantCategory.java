@@ -60,9 +60,9 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 
 	public static class ThermalEvaporationPlantWidget extends MultiblockWidget
 	{
-		private CheckBoxWidget useStructuralGlassCheckBox;
-		private CheckBoxWidget useAdvancedSolarGeneratorCheckBox;
-		private IntSliderWithButtons valvesWidget;
+		protected CheckBoxWidget useStructuralGlassCheckBox;
+		protected CheckBoxWidget useAdvancedSolarGeneratorCheckBox;
+		protected IntSliderWithButtons valvesWidget;
 
 		public ThermalEvaporationPlantWidget()
 		{
