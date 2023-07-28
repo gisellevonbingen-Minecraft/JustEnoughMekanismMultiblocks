@@ -189,6 +189,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			int corners = this.getCornerBlocks();
 			int sides = this.getSideBlocks();
 			int valves = this.getValveCount();
+			sides -= valves;
 
 			int casing = 0;
 			int structuralGlasses = 0;
@@ -196,11 +197,11 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			if (this.isUseStruturalGlass())
 			{
 				casing = corners;
-				structuralGlasses = sides - valves;
+				structuralGlasses = sides;
 			}
 			else
 			{
-				casing = corners + sides - valves;
+				casing = corners + sides;
 			}
 
 			consumer.accept(new ItemStack(MekanismBlocks.BOILER_CASING, casing));

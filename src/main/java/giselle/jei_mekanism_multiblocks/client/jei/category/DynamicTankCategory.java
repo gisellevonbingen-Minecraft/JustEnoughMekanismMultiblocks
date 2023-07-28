@@ -101,6 +101,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 			int corners = this.getCornerBlocks();
 			int sides = this.getSideBlocks();
 			int valves = this.getValveCount();
+			sides -= valves;
 
 			int tanks = 0;
 			int structuralGlasses = 0;
@@ -108,11 +109,11 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 			if (this.isUseStruturalGlass())
 			{
 				tanks = corners;
-				structuralGlasses = sides - valves;
+				structuralGlasses = sides;
 			}
 			else
 			{
-				tanks = corners + sides - valves;
+				tanks = corners + sides;
 			}
 
 			consumer.accept(new ItemStack(MekanismBlocks.DYNAMIC_TANK, tanks));

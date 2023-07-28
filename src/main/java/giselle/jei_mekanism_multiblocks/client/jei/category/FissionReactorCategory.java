@@ -136,8 +136,9 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			int corners = this.getCornerBlocks();
 			int sides = this.getSideBlocks();
 			int ports = this.getPortCount();
+			sides -= ports;
 			int logicAdapter = this.getLogicAdapterCount();
-			int options = ports + logicAdapter;
+			sides -= logicAdapter;
 
 			int blocks = 0;
 			int reactorGlasses = 0;
@@ -145,11 +146,11 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			if (this.isUseReactorGlass())
 			{
 				blocks = corners;
-				reactorGlasses = sides - options;
+				reactorGlasses = sides;
 			}
 			else
 			{
-				blocks = corners + sides - options;
+				blocks = corners + sides;
 				reactorGlasses = 0;
 			}
 
