@@ -8,8 +8,8 @@ import net.minecraft.util.text.ITextComponent;
 public class IntSliderWidget extends SliderWidget
 {
 	private final IntConsumer setter;
-	private int minValue;
-	private int maxValue;
+	private int intMinValue;
+	private int intMaxValue;
 
 	public IntSliderWidget(int x, int y, int width, int height, ITextComponent pMessage, int value, int min, int max)
 	{
@@ -19,18 +19,18 @@ public class IntSliderWidget extends SliderWidget
 	public IntSliderWidget(int x, int y, int width, int height, ITextComponent pMessage, int value, int min, int max, IntConsumer setter)
 	{
 		super(x, y, width, height, pMessage, MathHelper.inverseLerp(value, min, max));
-		this.minValue = min;
-		this.maxValue = max;
+		this.intMinValue = min;
+		this.intMaxValue = max;
 		this.setter = setter;
 	}
 
 	@Override
 	protected double applyValueFromMouse(double pValue)
 	{
-		int min = this.getMinValue();
-		int max = this.getMaxValue();
-		int intValue = (int) Math.round(MathHelper.clampedLerp(min, max, pValue));
-		return MathHelper.inverseLerp(intValue, min, max);
+		int intMin = this.getIntMinValue();
+		int intMax = this.getIntMaxValue();
+		int intValue = (int) Math.round(MathHelper.clampedLerp(intMin, intMax, pValue));
+		return MathHelper.inverseLerp(intValue, intMin, intMax);
 	}
 
 	@Override
@@ -48,8 +48,8 @@ public class IntSliderWidget extends SliderWidget
 
 	public int getIntValue()
 	{
-		int min = this.getMinValue();
-		int max = this.getMaxValue();
+		int min = this.getIntMinValue();
+		int max = this.getIntMaxValue();
 
 		if (min == max)
 		{
@@ -64,8 +64,8 @@ public class IntSliderWidget extends SliderWidget
 
 	public void setIntValue(int value)
 	{
-		value = MathHelper.clamp(value, this.getMinValue(), this.getMaxValue());
-		double doubleValue = MathHelper.inverseLerp(value, this.getMinValue(), this.getMaxValue());
+		value = MathHelper.clamp(value, this.getIntMinValue(), this.getIntMaxValue());
+		double doubleValue = MathHelper.inverseLerp(value, this.getIntMinValue(), this.getIntMaxValue());
 
 		if (this.getIntValue() != value)
 		{
@@ -78,31 +78,31 @@ public class IntSliderWidget extends SliderWidget
 
 	}
 
-	public int getMinValue()
+	public int getIntMinValue()
 	{
-		return this.minValue;
+		return this.intMinValue;
 	}
 
-	public void setMinValue(int minValue)
+	public void setIntMinValue(int intMax)
 	{
-		if (this.getMinValue() != minValue)
+		if (this.getIntMinValue() != intMax)
 		{
-			this.minValue = minValue;
+			this.intMinValue = intMax;
 			this.onIntValueChanged();
 		}
 
 	}
 
-	public int getMaxValue()
+	public int getIntMaxValue()
 	{
-		return this.maxValue;
+		return this.intMaxValue;
 	}
 
-	public void setMaxValue(int maxValue)
+	public void setIntMaxValue(int intMax)
 	{
-		if (this.getMaxValue() != maxValue)
+		if (this.getIntMaxValue() != intMax)
 		{
-			this.maxValue = maxValue;
+			this.intMaxValue = intMax;
 			this.onIntValueChanged();
 		}
 

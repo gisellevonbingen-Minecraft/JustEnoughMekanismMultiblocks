@@ -110,7 +110,7 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 		{
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
 			int valves = valvesSlider.getIntValue();
-			valvesSlider.setMaxValue(this.getSideBlocks());
+			valvesSlider.setIntMaxValue(this.getSideBlocks());
 			valvesSlider.setIntValue(valves);
 		}
 

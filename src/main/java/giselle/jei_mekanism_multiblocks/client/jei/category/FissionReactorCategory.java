@@ -98,7 +98,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		{
 			IntSliderWidget portsSlider = this.portsWidget.getSlider();
 			int valves = portsSlider.getIntValue();
-			portsSlider.setMaxValue(this.getSideBlocks());
+			portsSlider.setIntMaxValue(this.getSideBlocks());
 			portsSlider.setIntValue(valves);
 
 			this.updateLogicAdaptersSliderLimit();
@@ -108,7 +108,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		{
 			IntSliderWidget adaptersSlider = this.logicAdaptersWidget.getSlider();
 			int adapters = adaptersSlider.getIntValue();
-			adaptersSlider.setMaxValue(this.getSideBlocks() - this.getPortCount());
+			adaptersSlider.setIntMaxValue(this.getSideBlocks() - this.getPortCount());
 			adaptersSlider.setIntValue(adapters);
 		}
 

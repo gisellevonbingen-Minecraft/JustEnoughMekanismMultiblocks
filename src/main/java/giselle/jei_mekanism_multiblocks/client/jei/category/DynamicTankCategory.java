@@ -79,7 +79,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		{
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
 			int valves = valvesSlider.getIntValue();
-			valvesSlider.setMaxValue(this.getSideBlocks());
+			valvesSlider.setIntMaxValue(this.getSideBlocks());
 			valvesSlider.setIntValue(valves);
 		}
 

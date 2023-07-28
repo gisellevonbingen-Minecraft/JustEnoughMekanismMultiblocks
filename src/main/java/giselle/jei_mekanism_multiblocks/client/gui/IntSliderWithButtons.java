@@ -17,7 +17,7 @@ public class IntSliderWithButtons extends ContainerWidget
 {
 	public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("+#;-#");
 
-	private final String translationKey;
+	private String translationKey;
 
 	private final ButtonWidget minusButton;
 	private final ButtonWidget plusButton;
@@ -116,6 +116,17 @@ public class IntSliderWithButtons extends ContainerWidget
 		slider.x = minusButton.x + minusButton.getWidth();
 		slider.y = minusButton.y;
 		slider.setWidth(plusButton.x - slider.x);
+	}
+
+	public void setTranslationKey(String translationKey)
+	{
+		this.translationKey = translationKey;
+		this.updateMessage();
+	}
+
+	public String getTranslationKey()
+	{
+		return this.translationKey;
 	}
 
 	public ButtonWidget getMinusButton()
