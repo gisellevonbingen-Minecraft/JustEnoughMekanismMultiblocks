@@ -1,5 +1,9 @@
 package giselle.jei_mekanism_multiblocks.client.jei;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
@@ -10,6 +14,7 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector4f;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
 public class CostWidget extends Widget
@@ -18,11 +23,14 @@ public class CostWidget extends Widget
 	private final boolean hasCountExpressionComponent;
 	private final StringTextComponent countExpressionComponent;
 	private final StringTextComponent countTotalComponent;
+	private ITextComponent[] headTooltips;
+	private ITextComponent[] tailTooltips;
 
 	public CostWidget(int pX, int pY, int pWidth, int pHeight, ItemStack itemStack)
 	{
 		super(pX, pY, pWidth, pHeight, StringTextComponent.EMPTY);
 		this.itemStack = itemStack;
+		this.packedFGColor = 0x3F3F3F;
 
 		int count = itemStack.getCount();
 		int maxStackSize = itemStack.getMaxStackSize();
@@ -70,15 +78,16 @@ public class CostWidget extends Widget
 		int textY = itemY;
 		int textWidth = this.width - 18;
 		int color = this.getFGColor();
+		boolean shadow = false;
 
 		if (this.hasCountExpressionComponent)
 		{
-			GuiHelper.drawTextScaledShadow(pMatrixStack, this.countExpressionComponent, textX, textY, textWidth, color);
-			GuiHelper.drawTextScaledShadow(pMatrixStack, this.countTotalComponent, textX, textY + font.lineHeight, textWidth, color);
+			GuiHelper.drawScaledText(pMatrixStack, this.countExpressionComponent, textX, textY, textWidth, color, shadow);
+			GuiHelper.drawScaledText(pMatrixStack, this.countTotalComponent, textX, textY + font.lineHeight, textWidth, color, shadow);
 		}
 		else
 		{
-			GuiHelper.drawTextScaledShadow(pMatrixStack, this.countTotalComponent, textX, textY + font.lineHeight / 2, textWidth, color);
+			GuiHelper.drawScaledText(pMatrixStack, this.countTotalComponent, textX, textY + font.lineHeight / 2, textWidth, color, shadow);
 		}
 
 		this.renderToolTip(pMatrixStack, pMouseX, pMouseY);
@@ -95,7 +104,24 @@ public class CostWidget extends Widget
 
 			if (minecraft.screen instanceof ITooltipRenderer)
 			{
-				((ITooltipRenderer) minecraft.screen).jei_mekanism_multiblocks$renderTooltip(pPoseStack, this.getItemStack(), pMouseX, pMouseY);
+				List<ITextComponent> tooltip = new ArrayList<>();
+				ITextComponent[] headTooltips = this.getHeadTooltips();
+
+				if (headTooltips != null)
+				{
+					tooltip.addAll(Arrays.asList(headTooltips));
+				}
+
+				tooltip.addAll(minecraft.screen.getTooltipFromItem(this.getItemStack()));
+
+				ITextComponent[] tailTooltips = this.getTailTooltips();
+
+				if (tailTooltips != null)
+				{
+					tooltip.addAll(Arrays.asList(tailTooltips));
+				}
+
+				minecraft.screen.renderWrappedToolTip(pPoseStack, tooltip, pMouseX, pMouseY, minecraft.font);
 			}
 
 		}
@@ -105,6 +131,26 @@ public class CostWidget extends Widget
 	public ItemStack getItemStack()
 	{
 		return this.itemStack;
+	}
+
+	public ITextComponent[] getHeadTooltips()
+	{
+		return this.headTooltips;
+	}
+
+	public void setHeadTooltips(ITextComponent[] tooltips)
+	{
+		this.headTooltips = tooltips;
+	}
+
+	public ITextComponent[] getTailTooltips()
+	{
+		return this.tailTooltips;
+	}
+
+	public void setTailTooltips(ITextComponent[] tooltips)
+	{
+		this.tailTooltips = tooltips;
 	}
 
 }

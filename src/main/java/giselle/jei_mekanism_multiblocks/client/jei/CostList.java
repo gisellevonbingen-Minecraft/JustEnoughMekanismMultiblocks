@@ -1,7 +1,6 @@
 package giselle.jei_mekanism_multiblocks.client.jei;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,18 +28,18 @@ public class CostList extends ListLineWidget
 		return Optional.empty();
 	}
 
-	public void updateCosts(Collection<ItemStack> costs)
+	public void updateCosts(List<CostWidget> widgets)
 	{
 		this.clearChildren();
 
-		for (ItemStack cost : costs)
+		for (CostWidget widget : widgets)
 		{
-			if (cost.isEmpty())
+			if (widget.getItemStack().isEmpty())
 			{
 				continue;
 			}
 
-			this.addChild(new CostWidget(0, 0, 0, 0, cost));
+			this.addChild(widget);
 		}
 
 	}

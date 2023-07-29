@@ -93,7 +93,7 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 				this.useAdvancedSolarGeneratorCheckBox = new CheckBoxWidget(0, 0, 0, 0, StringTextComponent.EMPTY, false, this::onUseStructuralGlassChanged);
 			}
 
-			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 0, 0, this::onValvesChanged));
+			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 2, 0, this::onValvesChanged));
 			this.updateValveSliderLimit();
 			this.setValveCount(2);
 		}
@@ -130,7 +130,7 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 		}
 
 		@Override
-		public void collectCost(Consumer<ItemStack> consumer)
+		public void collectCost(ICostConsumer consumer)
 		{
 			super.collectCost(consumer);
 

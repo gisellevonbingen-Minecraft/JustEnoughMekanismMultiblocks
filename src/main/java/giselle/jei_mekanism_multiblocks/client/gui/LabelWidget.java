@@ -13,6 +13,7 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 
 public class LabelWidget extends Widget
 {
+	private boolean shadow;
 	private TextAlignment alignment;
 	private ITextComponent[] tooltips;
 
@@ -24,6 +25,7 @@ public class LabelWidget extends Widget
 	public LabelWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, TextAlignment alignment)
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
+		this.shadow = true;
 		this.alignment = alignment;
 	}
 
@@ -32,7 +34,7 @@ public class LabelWidget extends Widget
 	{
 		int color = this.getFGColor() | MathHelper.ceil(this.alpha * 255.0F) << 24;
 		ITextComponent message = this.getMessage();
-		GuiHelper.drawTextScaledShadow(pMatrixStack, message, this.x, this.y, this.width, color, this.alignment);
+		GuiHelper.drawScaledText(pMatrixStack, message, this.x, this.y, this.width, color, this.isShadow(), this.getAlignment());
 
 		if (this.isHovered())
 		{
@@ -53,6 +55,16 @@ public class LabelWidget extends Widget
 
 		}
 
+	}
+
+	public boolean isShadow()
+	{
+		return this.shadow;
+	}
+
+	public void setShadow(boolean shadow)
+	{
+		this.shadow = shadow;
 	}
 
 	public TextAlignment getAlignment()

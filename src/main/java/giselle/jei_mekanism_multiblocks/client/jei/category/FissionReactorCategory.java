@@ -79,7 +79,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			super.collectOtherConfigs(consumer);
 
 			consumer.accept(this.useReactorGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.REACTOR_GLASS.getItemStack().getHoverName()), true, this::onUseReactorGlassChanged));
-			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 0, 0, this::onPortsChanged));
+			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 4, 0, this::onPortsChanged));
 			consumer.accept(this.logicAdaptersWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.logic_adapters", 0, 0, 0, this::onLogicAdaptersChanged));
 			this.updatePortsSliderLimit();
 			this.setPortCount(4);
@@ -129,7 +129,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		}
 
 		@Override
-		public void collectCost(Consumer<ItemStack> consumer)
+		public void collectCost(ICostConsumer consumer)
 		{
 			super.collectCost(consumer);
 

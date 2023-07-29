@@ -94,7 +94,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		}
 
 		@Override
-		public void collectCost(Consumer<ItemStack> consumer)
+		public void collectCost(ICostConsumer consumer)
 		{
 			super.collectCost(consumer);
 

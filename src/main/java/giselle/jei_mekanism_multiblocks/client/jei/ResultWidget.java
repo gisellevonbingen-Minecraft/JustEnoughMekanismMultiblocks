@@ -20,7 +20,11 @@ public class ResultWidget extends ContainerWidget
 		super(pX, pY, pWidth, pHeight);
 
 		this.addChild(this.textLabel = new LabelWidget(0, 0, 0, 0, text, TextAlignment.LEFT));
+		this.textLabel.setFGColor(0x3F3F3F);
+		this.textLabel.setShadow(false);
 		this.addChild(this.valueLabel = new LabelWidget(0, 0, 0, 0, value, TextAlignment.RIGHT));
+		this.valueLabel.setFGColor(0x3F3F3F);
+		this.valueLabel.setShadow(false);
 
 		this.updateChildrenHorizontal();
 		this.updateChildrenVertical();
@@ -60,7 +64,7 @@ public class ResultWidget extends ContainerWidget
 		int height = this.getHeight() / 2;
 
 		LabelWidget textLabel = this.getTextLabel();
-		textLabel.y = 0;
+		textLabel.y = 1;
 		textLabel.setHeight(height);
 
 		LabelWidget valueLabel = this.getValueLabel();

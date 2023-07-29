@@ -72,6 +72,6 @@ public class CheckBoxWidget extends AbstractButton
 		AbstractGui.blit(pMatrixStack, this.x, this.y, checkerLength, checkerLength, 0.0F + (this.isHovered() ? 10.0F : 0.0F), 16.0F + (this.selected ? 10.0F : 0.0F), 10, 10, 256, 256);
 		this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
 
-		GuiHelper.drawTextScaledShadow(pMatrixStack, this.getMessage(), this.x + checkerLength, this.y, this.x + this.width - checkerLength, 14737632 | MathHelper.ceil(this.alpha * 255.0F) << 24);
+		GuiHelper.drawScaledText(pMatrixStack, this.getMessage(), this.x + checkerLength, this.y, this.x + this.width - checkerLength, 14737632 | MathHelper.ceil(this.alpha * 255.0F) << 24, true);
 	}
 }

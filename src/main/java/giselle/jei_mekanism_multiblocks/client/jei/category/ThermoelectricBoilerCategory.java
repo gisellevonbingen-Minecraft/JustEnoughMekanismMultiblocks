@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
+import giselle.jei_mekanism_multiblocks.client.jei.CostWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
@@ -25,6 +26,7 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class ThermoelectricBoilerCategory extends MultiblockCategory<ThermoelectricBoilerCategory.ThermalBoilerWidget>
@@ -64,6 +66,8 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 		protected IntSliderWithButtons steamHeightWidget;
 		protected IntSliderWithButtons heatingElementsWidget;
 
+		private boolean needMoreHeatingElements;
+
 		@Override
 		protected void collectOtherConfigs(Consumer<Widget> consumer)
 		{
@@ -71,7 +75,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true, this::onUseStructuralGlassChanged));
 
-			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 0, 0, this::onValvesChanged));
+			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 2, 0, this::onValvesChanged));
 			consumer.accept(this.steamHeightWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.steam_height", 0, 1, 0, this::onSteamHeightChanged));
 			consumer.accept(this.heatingElementsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.heating_elements", 0, 1, 0, this::onHeatingElementsChanged));
 			this.updateSlidersLimit();
@@ -97,7 +101,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 			while (true)
 			{
-				if (steamHeight > steamHeightSlider.getIntMaxValue() || heatingElementCount > heatingElementsSlider.getIntMaxValue())
+				if (steamHeight > steamHeightSlider.getIntMaxValue() || heatingElementCount > this.getMaxHeatingElements(steamHeight))
 				{
 					break;
 				}
@@ -164,11 +168,16 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 		public void updateHeatingHeightSliderLimit()
 		{
-			Vector3i inner = this.getDimensionInner();
 			IntSliderWidget heatingElementsSlider = this.heatingElementsWidget.getSlider();
 			int heatingElements = heatingElementsSlider.getIntValue();
-			heatingElementsSlider.setIntMaxValue((this.getInnerAdjustableHeight() - this.getSteamHeight() + 2) * (inner.getX() * inner.getZ()));
+			heatingElementsSlider.setIntMaxValue(this.getMaxHeatingElements(this.getSteamHeight()));
 			heatingElementsSlider.setIntValue(heatingElements);
+		}
+
+		public int getMaxHeatingElements(int steamHeight)
+		{
+			Vector3i inner = this.getDimensionInner();
+			return (this.getInnerAdjustableHeight() - steamHeight + 2) * (inner.getX() * inner.getZ());
 		}
 
 		protected void onHeatingElementsChanged(int elements)
@@ -182,7 +191,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 		}
 
 		@Override
-		public void collectCost(Consumer<ItemStack> consumer)
+		public void collectCost(ICostConsumer consumer)
 		{
 			super.collectCost(consumer);
 
@@ -209,7 +218,14 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS, structuralGlasses));
 
 			consumer.accept(new ItemStack(MekanismBlocks.PRESSURE_DISPERSER, this.getPressureDispenserCount()));
-			consumer.accept(new ItemStack(MekanismBlocks.SUPERHEATING_ELEMENT, this.getHeatingElementCount()));
+			CostWidget heatingElements = consumer.accept(new ItemStack(MekanismBlocks.SUPERHEATING_ELEMENT, this.getHeatingElementCount()));
+
+			if (this.needMoreHeatingElements)
+			{
+				heatingElements.setFGColor(0xFF4000);
+				heatingElements.setHeadTooltips(new ITextComponent[]{new TranslationTextComponent("text.jei_mekanism_multiblocks.toolip.need_more_heating_elements").withStyle(TextFormatting.RED)});
+			}
+
 		}
 
 		@Override
@@ -224,6 +240,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			// System.out.println("needMoreSuperHeatingElemetns: " + simulation.needMoreSuperHeatingElemetns);
 
 			ResultWidget boilRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_boil_rate"), VolumeTextHelper.format(simulation.maxBoil, VolumeUnit.MILLI, "B/t"));
+			this.needMoreHeatingElements = false;
 
 			if (simulation.needMoreSuperHeatingElemetns)
 			{
@@ -233,8 +250,9 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 				if (simulation2.maxBoil > simulation.maxBoil)
 				{
-					boilRateWidget.getValueLabel().setFGColor(0xFFFF00);
-					boilRateWidget.getValueLabel().setTooltips(new ITextComponent[]{new TranslationTextComponent("text.jei_mekanism_multiblocks.toolip.limited"), new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_boil_rate.need_more_heating_elements")});
+					this.needMoreHeatingElements = true;
+					boilRateWidget.getValueLabel().setFGColor(0xFF4000);
+					boilRateWidget.getValueLabel().setTooltips(new ITextComponent[]{new TranslationTextComponent("text.jei_mekanism_multiblocks.toolip.limited"), new TranslationTextComponent("text.jei_mekanism_multiblocks.toolip.need_more_heating_elements")});
 				}
 
 			}

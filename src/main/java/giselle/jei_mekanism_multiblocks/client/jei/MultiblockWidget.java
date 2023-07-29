@@ -15,6 +15,7 @@ import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.ListWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.TabButtonWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.TextAlignment;
+import giselle.jei_mekanism_multiblocks.client.jei.category.ICostConsumer;
 import mezz.jei.gui.recipes.IRecipeLogicStateListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
@@ -146,12 +147,16 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	public void updateCosts()
 	{
-		List<ItemStack> costs = new ArrayList<>();
-		this.collectCost(costs::add);
+		List<CostWidget> costs = new ArrayList<>();
+		this.collectCost(w ->
+		{
+			costs.add(w);
+			return w;
+		});
 		this.costsList.updateCosts(costs);
 	}
 
-	public void collectCost(Consumer<ItemStack> consumer)
+	public void collectCost(ICostConsumer output)
 	{
 
 	}
@@ -194,8 +199,8 @@ public abstract class MultiblockWidget extends ContainerWidget
 		if (this.needNotifyStateChange)
 		{
 			this.needNotifyStateChange = false;
-			this.updateCosts();
 			this.updateResults();
+			this.updateCosts();
 			this.notifyStateChange();
 		}
 

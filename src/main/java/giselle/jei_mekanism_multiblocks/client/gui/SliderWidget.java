@@ -63,7 +63,7 @@ public class SliderWidget extends Widget
 
 		this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
 		int j = this.getFGColor();
-		GuiHelper.drawTextScaledShadow(pMatrixStack, this.getMessage(), this.x + 2, this.y + 1, this.width - 4, j, TextAlignment.CENTER);
+		GuiHelper.drawScaledText(pMatrixStack, this.getMessage(), this.x + 2, this.y + 1, this.width - 4, j, true, TextAlignment.CENTER);
 	}
 
 	@Override

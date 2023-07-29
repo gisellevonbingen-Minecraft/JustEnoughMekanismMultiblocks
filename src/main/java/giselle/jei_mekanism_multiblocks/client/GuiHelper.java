@@ -32,12 +32,12 @@ public class GuiHelper
 		AbstractGui.blit(pMatrixStack, x, y, width, height, 0, 0, 16, 16, 256, 256);
 	}
 
-	public static void drawTextScaledShadow(MatrixStack pMatrixStack, ITextComponent text, int x, int y, int width, int color)
+	public static void drawScaledText(MatrixStack pMatrixStack, ITextComponent text, int x, int y, int width, int color, boolean shadow)
 	{
-		drawTextScaledShadow(pMatrixStack, text, x, y, width, color, TextAlignment.LEFT);
+		drawScaledText(pMatrixStack, text, x, y, width, color, shadow, TextAlignment.LEFT);
 	}
 
-	public static void drawTextScaledShadow(MatrixStack pMatrixStack, ITextComponent text, int x, int y, int width, int color, TextAlignment alignment)
+	public static void drawScaledText(MatrixStack pMatrixStack, ITextComponent text, int x, int y, int width, int color, boolean shadow, TextAlignment alignment)
 	{
 		Minecraft minecraft = Minecraft.getInstance();
 		FontRenderer font = minecraft.font;
@@ -46,7 +46,18 @@ public class GuiHelper
 		pMatrixStack.pushPose();
 		pMatrixStack.scale(scale, scale, 1.0F);
 
-		font.drawShadow(pMatrixStack, text, (x + (float) alignment.align(width, textWidth * scale)) / scale, y / scale + (1.0F - scale) * font.lineHeight, color);
+		float scaledX = (x + (float) alignment.align(width, textWidth * scale)) / scale;
+		float scaledY = y / scale + (1.0F - scale) * font.lineHeight;
+
+		if (shadow)
+		{
+			font.drawShadow(pMatrixStack, text, scaledX, scaledY, color);
+		}
+		else
+		{
+			font.draw(pMatrixStack, text, scaledX, scaledY, color);
+		}
+
 		pMatrixStack.popPose();
 	}
 
