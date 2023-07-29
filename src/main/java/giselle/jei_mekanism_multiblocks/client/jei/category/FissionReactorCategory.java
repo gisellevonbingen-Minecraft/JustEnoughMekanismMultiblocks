@@ -11,6 +11,7 @@ import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeUnit;
 import mekanism.api.heat.HeatAPI;
+import mekanism.api.math.MathUtils;
 import mekanism.common.registries.MekanismGases;
 import mekanism.common.registries.MekanismGases.Coolants;
 import mekanism.common.util.HeatUtils;
@@ -171,41 +172,46 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			long heatedCoolantCapacity = this.getHeatedCoolantCapacity();
 			long maxBurnRate = this.getMaxBurnRate();
 			long fuelCapacity = this.getFuelCapacity();
-			double waterCoolingTemp = this.getCoolingStableTemp(0.5D);
-			double sodiumCoolingTemp = this.getCoolingStableTemp(Coolants.SODIUM_COOLANT.getConductivity());
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.maximum_burn_rate"), VolumeTextHelper.format(maxBurnRate, VolumeUnit.MILLI, "B/t")));
-			consumer.accept(this.createStableTempWidget(new FluidStack(Fluids.WATER, 1).getDisplayName(), waterCoolingTemp));
-			consumer.accept(this.createStableTempWidget(MekanismGases.SODIUM.getTextComponent(), sodiumCoolingTemp));
+			this.createStableTempWidget(consumer, new FluidStack(Fluids.WATER, 1).getDisplayName(), 0.5D);
+			this.createStableTempWidget(consumer, MekanismGases.SODIUM.getTextComponent(), Coolants.SODIUM_COOLANT.getConductivity());
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_COOLANT_TANK.translate(), VolumeTextHelper.formatMilliBuckets(coolantCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_FUEL_TANK.translate(), VolumeTextHelper.formatMilliBuckets(fuelCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_HEATED_COOLANT_TANK.translate(), VolumeTextHelper.formatMilliBuckets(heatedCoolantCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_WASTE_TANK.translate(), VolumeTextHelper.formatMilliBuckets(fuelCapacity)));
 		}
 
-		private ResultWidget createStableTempWidget(ITextComponent with, double temp)
+		private void createStableTempWidget(Consumer<Widget> consumer, ITextComponent with, double conductivity)
 		{
-			ResultWidget widget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.temp_with", with), MekanismUtils.getTemperatureDisplay(temp, TemperatureUnit.KELVIN, false));
+			double stableTemp = this.getCoolingStableTemp(conductivity);
+			ResultWidget tempWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.temp_with", with), MekanismUtils.getTemperatureDisplay(stableTemp, TemperatureUnit.KELVIN, false));
+			consumer.accept(tempWidget);
+
 			boolean warning = false;
 
-			if (Double.isInfinite(temp))
+			if (Double.isInfinite(stableTemp))
 			{
 				warning = true;
-				widget.getValueLabel().setFGColor(0xFF0000);
+				tempWidget.getValueLabel().setFGColor(0xFF0000);
 			}
-			else if (temp >= FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE)
+			else if (stableTemp >= FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE)
 			{
 				warning = true;
-				double ratio = MathHelper.inverseLerp(temp, FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE, FissionReactorMultiblockData.MAX_DAMAGE_TEMPERATURE);
+				double ratio = MathHelper.inverseLerp(stableTemp, FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE, FissionReactorMultiblockData.MAX_DAMAGE_TEMPERATURE);
 				int g = (int) MathHelper.clampedLerp(255, 0, ratio);
-				widget.getValueLabel().setFGColor(0xFF0000 + g * 256);
+				tempWidget.getValueLabel().setFGColor(0xFF0000 + g * 256);
 			}
 
 			if (warning)
 			{
-				widget.getValueLabel().setTooltips(new ITextComponent[]{new TranslationTextComponent("text.jei_mekanism_multiblocks.toolip.warning"), new TranslationTextComponent("text.jei_mekanism_multiblocks.result.reactor_will_damage")});
+				tempWidget.getValueLabel().setTooltips(//
+						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.warning"), //
+						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.reactor_will_damage"));
 			}
 
-			return widget;
+			long heatedCoolant = this.getHeatedCoolant(stableTemp, conductivity);
+			ResultWidget heatedCoolantWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.heated_coolant", with), VolumeTextHelper.format(heatedCoolant, VolumeUnit.MILLI, "B/t"));
+			consumer.accept(heatedCoolantWidget);
 		}
 
 		private void simulateTemp(double coolantConductivity)
@@ -247,6 +253,15 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 				prevHeat = heat;
 			}
 
+		}
+
+		public long getHeatedCoolant(double temp, double coolantConductivity)
+		{
+			double boilEfficiency = 1.0D;
+			double boilHeat = boilEfficiency * (temp - HeatUtils.BASE_BOIL_TEMP) * this.getHeatCapacity();
+			double caseCoolantHeat = boilHeat * coolantConductivity;
+			long coolantHeated = MathUtils.clampToLong(HeatUtils.getSteamEnergyEfficiency() / HeatUtils.getWaterThermalEnthalpy() * caseCoolantHeat);
+			return Math.max(0, Math.min(coolantHeated, this.getCoolantCapacity()));
 		}
 
 		public long getCoolantCapacity()

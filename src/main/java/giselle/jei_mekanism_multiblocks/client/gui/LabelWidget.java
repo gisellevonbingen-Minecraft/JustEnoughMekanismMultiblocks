@@ -87,7 +87,7 @@ public class LabelWidget extends Widget
 		return this.tooltips;
 	}
 
-	public void setTooltips(ITextComponent[] tooltips)
+	public void setTooltips(ITextComponent... tooltips)
 	{
 		this.tooltips = tooltips;
 	}

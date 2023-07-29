@@ -7,7 +7,6 @@ import java.util.List;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
-import giselle.jei_mekanism_multiblocks.client.ITooltipRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.Widget;
@@ -101,29 +100,24 @@ public class CostWidget extends Widget
 		if (this.visible && this.isHovered())
 		{
 			Minecraft minecraft = Minecraft.getInstance();
+			List<ITextComponent> tooltip = new ArrayList<>();
+			ITextComponent[] headTooltips = this.getHeadTooltips();
 
-			if (minecraft.screen instanceof ITooltipRenderer)
+			if (headTooltips != null)
 			{
-				List<ITextComponent> tooltip = new ArrayList<>();
-				ITextComponent[] headTooltips = this.getHeadTooltips();
-
-				if (headTooltips != null)
-				{
-					tooltip.addAll(Arrays.asList(headTooltips));
-				}
-
-				tooltip.addAll(minecraft.screen.getTooltipFromItem(this.getItemStack()));
-
-				ITextComponent[] tailTooltips = this.getTailTooltips();
-
-				if (tailTooltips != null)
-				{
-					tooltip.addAll(Arrays.asList(tailTooltips));
-				}
-
-				minecraft.screen.renderWrappedToolTip(pPoseStack, tooltip, pMouseX, pMouseY, minecraft.font);
+				tooltip.addAll(Arrays.asList(headTooltips));
 			}
 
+			tooltip.addAll(minecraft.screen.getTooltipFromItem(this.getItemStack()));
+
+			ITextComponent[] tailTooltips = this.getTailTooltips();
+
+			if (tailTooltips != null)
+			{
+				tooltip.addAll(Arrays.asList(tailTooltips));
+			}
+
+			minecraft.screen.renderWrappedToolTip(pPoseStack, tooltip, pMouseX, pMouseY, minecraft.font);
 		}
 
 	}
@@ -138,7 +132,7 @@ public class CostWidget extends Widget
 		return this.headTooltips;
 	}
 
-	public void setHeadTooltips(ITextComponent[] tooltips)
+	public void setHeadTooltips(ITextComponent... tooltips)
 	{
 		this.headTooltips = tooltips;
 	}
@@ -148,7 +142,7 @@ public class CostWidget extends Widget
 		return this.tailTooltips;
 	}
 
-	public void setTailTooltips(ITextComponent[] tooltips)
+	public void setTailTooltips(ITextComponent... tooltips)
 	{
 		this.tailTooltips = tooltips;
 	}

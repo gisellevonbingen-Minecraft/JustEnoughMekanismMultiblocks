@@ -2,9 +2,7 @@
 	"required": true,
 	"package": "giselle.jei_mekanism_multiblocks.client.mixin",
 	"compatibilityLevel": "JAVA_8",
-	"client": [
-		"minecraft.ScreenMixin"
-	],
+	"client": [],
 	"mixins": [],
 	"injectors": {
 		"defaultRequire": 1

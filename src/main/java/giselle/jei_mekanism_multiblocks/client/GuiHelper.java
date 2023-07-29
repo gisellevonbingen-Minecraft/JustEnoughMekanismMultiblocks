@@ -14,7 +14,7 @@ import net.minecraft.util.text.ITextComponent;
 public class GuiHelper
 {
 	public static final ResourceLocation WIDGETS_LOCATION = JEI_MekanismMultiblocks.rl("textures/gui/widgets.png");
-
+	
 	public static void fillRectagleBlack(MatrixStack pMatrixStack, int x, int y, int width, int height)
 	{
 		fillRectagle(pMatrixStack, x, y, width, height, 0.0F, 0.0F, 0.0F, 1.0F);
