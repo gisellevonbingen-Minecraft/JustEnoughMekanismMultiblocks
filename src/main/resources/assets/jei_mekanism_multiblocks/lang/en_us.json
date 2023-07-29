@@ -36,7 +36,7 @@
 	"text.jei_mekanism_multiblocks.result.processing_speed": "Processing Speed",
 	"text.jei_mekanism_multiblocks.result.maximum_burn_rate": "Max Burn Rate",
 	"text.jei_mekanism_multiblocks.result.temp_with": "Temp with '%s'",
-	"text.jei_mekanism_multiblocks.result.heated_coolant": "Heated '%s'",
+	"text.jei_mekanism_multiblocks.result.heated_coolant": "Output heated '%s'",
 	"text.jei_mekanism_multiblocks.result.temp": "Temp",
 	"text.jei_mekanism_multiblocks.result.max_boil_rate": "Max Boil Rate",
 	"text.jei_mekanism_multiblocks.result.max_flow_rate": "Max Flow Rate",

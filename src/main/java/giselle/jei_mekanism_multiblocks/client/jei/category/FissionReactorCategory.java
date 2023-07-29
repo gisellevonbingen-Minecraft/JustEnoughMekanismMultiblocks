@@ -141,21 +141,21 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			int logicAdapter = this.getLogicAdapterCount();
 			sides -= logicAdapter;
 
-			int blocks = 0;
+			int casings = 0;
 			int reactorGlasses = 0;
 
 			if (this.isUseReactorGlass())
 			{
-				blocks = corners;
+				casings = corners;
 				reactorGlasses = sides;
 			}
 			else
 			{
-				blocks = corners + sides;
+				casings = corners + sides;
 				reactorGlasses = 0;
 			}
 
-			consumer.accept(new ItemStack(GeneratorsBlocks.FISSION_REACTOR_CASING, blocks));
+			consumer.accept(new ItemStack(GeneratorsBlocks.FISSION_REACTOR_CASING, casings));
 			consumer.accept(new ItemStack(GeneratorsBlocks.FISSION_REACTOR_PORT, ports));
 			consumer.accept(new ItemStack(GeneratorsBlocks.FISSION_REACTOR_LOGIC_ADAPTER, logicAdapter));
 			consumer.accept(new ItemStack(GeneratorsBlocks.FISSION_FUEL_ASSEMBLY, this.getFissionFuelAssemblyCount()));
