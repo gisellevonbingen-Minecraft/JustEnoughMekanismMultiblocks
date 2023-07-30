@@ -1,17 +1,11 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.LongConsumer;
+import java.text.DecimalFormat;
 
-import com.ibm.icu.text.DecimalFormat;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.client.gui.GuiUtils;
 
 public class LongSliderWithButtons extends ContainerWidget
 {
@@ -25,25 +19,21 @@ public class LongSliderWithButtons extends ContainerWidget
 
 	public LongSliderWithButtons(int pX, int pY, int pWidth, int pHeight, String translationKey, long value, long min, long max)
 	{
-		this(pX, pY, pWidth, pHeight, translationKey, value, min, max, null);
+		this(pX, pY, pWidth, pHeight, translationKey, new LongSliderWidget(0, 0, 0, 0, StringTextComponent.EMPTY, value, min, max));
 	}
 
-	public LongSliderWithButtons(int pX, int pY, int pWidth, int pHeight, String translationKey, long value, long min, long max, LongConsumer setter)
+	public LongSliderWithButtons(int pX, int pY, int pWidth, int pHeight, String translationKey, LongSliderWidget slider)
 	{
 		super(pX, pY, pWidth, pHeight);
 		this.translationKey = translationKey;
 
 		this.addChild(this.minusButton = this.createAdjustButton(new StringTextComponent("-"), -1));
 		this.addChild(this.plusButton = this.createAdjustButton(new StringTextComponent("+"), +1));
-		this.addChild(this.slider = new LongSliderWidget(0, 0, 0, 0, StringTextComponent.EMPTY, value, min, max, v ->
+		this.addChild(this.slider = slider);
+		this.slider.addLongValueChangeHanlder(v ->
 		{
 			this.updateMessage();
-
-			if (setter != null)
-			{
-				setter.accept(v);
-			}
-		}));
+		});
 		this.updateMessage();
 		this.onHeightChanged();
 	}
@@ -58,19 +48,17 @@ public class LongSliderWithButtons extends ContainerWidget
 		int shiftDelta = 5;
 		int normalDelta = 1;
 
-		return new ButtonWidget(0, 0, 0, 0, component, b ->
+		ButtonWidget button = new ButtonWidget(0, 0, 0, 0, component);
+		button.setTooltip(//
+				new TranslationTextComponent("text.jei_mekanism_multiblocks.click.normal", DECIMAL_FORMAT.format(direction * normalDelta)), //
+				new TranslationTextComponent("text.jei_mekanism_multiblocks.click.shift", DECIMAL_FORMAT.format(direction * shiftDelta)));
+		button.addPressHandler(b ->
 		{
-			long longValue = this.slider.getLongValue();
+			long intValue = this.slider.getLongValue();
 			long delta = Screen.hasShiftDown() ? shiftDelta : normalDelta;
-			this.slider.setLongValue(longValue + delta * direction);
-		}, (b, pMatrixStack, pMouseX, pMouseY) ->
-		{
-			Minecraft minecraft = Minecraft.getInstance();
-			List<ITextComponent> tooltips = new ArrayList<>();
-			tooltips.add(new TranslationTextComponent("text.jei_mekanism_multiblocks.click.normal", DECIMAL_FORMAT.format(direction * normalDelta)));
-			tooltips.add(new TranslationTextComponent("text.jei_mekanism_multiblocks.click.shift", DECIMAL_FORMAT.format(direction * shiftDelta)));
-			GuiUtils.drawHoveringText(pMatrixStack, tooltips, pMouseX, pMouseY, minecraft.screen.width, minecraft.screen.height, -1, minecraft.font);
+			this.slider.setLongValue(intValue + delta * direction);
 		});
+		return button;
 	}
 
 	@Override

@@ -83,10 +83,15 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useReactorGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.REACTOR_GLASS.getItemStack().getHoverName()), true, this::onUseReactorGlassChanged));
-			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 4, 0, this::onPortsChanged));
-			consumer.accept(this.logicAdaptersWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.logic_adapters", 0, 0, 0, this::onLogicAdaptersChanged));
-			consumer.accept(this.burnRateWidget = new LongSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.burn_rate", 0, 0, 0, this::onBurnRateChanged));
+			consumer.accept(this.useReactorGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.REACTOR_GLASS.getItemStack().getHoverName()), true));
+			this.useReactorGlassCheckBox.addSelectedChangedHandler(this::onUseReactorGlassChanged);
+			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 4, 0));
+			this.portsWidget.getSlider().addIntValueChangeHanlder(this::onPortsChanged);
+			consumer.accept(this.logicAdaptersWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.logic_adapters", 0, 0, 0));
+			this.logicAdaptersWidget.getSlider().addIntValueChangeHanlder(this::onLogicAdaptersChanged);
+			consumer.accept(this.burnRateWidget = new LongSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.burn_rate", 0, 0, 0));
+			this.burnRateWidget.getSlider().addLongValueChangeHanlder(this::onBurnRateChanged);
+
 			this.updatePortsSliderLimit();
 			this.setPortCount(4);
 			this.setLogicAdapterCount(0);

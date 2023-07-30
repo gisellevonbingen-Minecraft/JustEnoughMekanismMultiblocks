@@ -57,6 +57,8 @@ public class CostWidget extends Widget
 		this.hasCountExpressionComponent = stacks > 0;
 		this.countExpressionComponent = new StringTextComponent(builder.toString());
 		this.countTotalComponent = new StringTextComponent("=" + count);
+		this.headTooltips = new ITextComponent[0];
+		this.tailTooltips = new ITextComponent[0];
 	}
 
 	@Override
@@ -97,9 +99,10 @@ public class CostWidget extends Widget
 	{
 		super.renderToolTip(pPoseStack, pMouseX, pMouseY);
 
-		if (this.visible && this.isHovered())
+		Minecraft minecraft = Minecraft.getInstance();
+
+		if (minecraft != null && this.visible && this.isHovered())
 		{
-			Minecraft minecraft = Minecraft.getInstance();
 			List<ITextComponent> tooltip = new ArrayList<>();
 			ITextComponent[] headTooltips = this.getHeadTooltips();
 
@@ -129,22 +132,22 @@ public class CostWidget extends Widget
 
 	public ITextComponent[] getHeadTooltips()
 	{
-		return this.headTooltips;
+		return this.headTooltips.clone();
 	}
 
 	public void setHeadTooltips(ITextComponent... tooltips)
 	{
-		this.headTooltips = tooltips;
+		this.headTooltips = tooltips.clone();
 	}
 
 	public ITextComponent[] getTailTooltips()
 	{
-		return this.tailTooltips;
+		return this.tailTooltips.clone();
 	}
 
 	public void setTailTooltips(ITextComponent... tooltips)
 	{
-		this.tailTooltips = tooltips;
+		this.tailTooltips = tooltips.clone();
 	}
 
 }

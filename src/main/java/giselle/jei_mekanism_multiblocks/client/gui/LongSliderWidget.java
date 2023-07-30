@@ -1,5 +1,7 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.LongConsumer;
 
 import net.minecraft.util.math.MathHelper;
@@ -7,30 +9,42 @@ import net.minecraft.util.text.ITextComponent;
 
 public class LongSliderWidget extends SliderWidget
 {
-	private final LongConsumer setter;
+	private final List<LongConsumer> longValueChangeHandlers;
 	private long longMinValue;
 	private long longMaxValue;
 
 	public LongSliderWidget(int x, int y, int width, int height, ITextComponent pMessage, long value, long min, long max)
 	{
-		this(x, y, width, height, pMessage, value, min, max, null);
-	}
-
-	public LongSliderWidget(int x, int y, int width, int height, ITextComponent pMessage, long value, long min, long max, LongConsumer setter)
-	{
 		super(x, y, width, height, pMessage, MathHelper.inverseLerp(value, min, max));
+		this.longValueChangeHandlers = new ArrayList<>();
 		this.longMinValue = min;
 		this.longMaxValue = max;
-		this.setter = setter;
+	}
+
+	public void addLongValueChangeHanlder(LongConsumer handler)
+	{
+		this.longValueChangeHandlers.add(handler);
+	}
+
+	protected long toLongValue(double pValue)
+	{
+		long longMin = this.getLongMinValue();
+		long longMax = this.getLongMaxValue();
+		return Math.round(MathHelper.clampedLerp(longMin, longMax, pValue));
+	}
+
+	protected double fromLongValue(long longValue)
+	{
+		long longMin = this.getLongMinValue();
+		long longMax = this.getLongMaxValue();
+		return MathHelper.inverseLerp(longValue, longMin, longMax);
 	}
 
 	@Override
 	protected double applyValueFromMouse(double pValue)
 	{
-		long longMin = this.getLongMinValue();
-		long longMax = this.getLongMaxValue();
-		long longValue = (long) Math.round(MathHelper.clampedLerp(longMin, longMax, pValue));
-		return MathHelper.inverseLerp(longValue, longMin, longMax);
+		long longValue = this.toLongValue(pValue);
+		return this.fromLongValue(longValue);
 	}
 
 	@Override
@@ -43,29 +57,24 @@ public class LongSliderWidget extends SliderWidget
 
 	private void onLongValueChanged()
 	{
-		this.setter.accept(this.getLongValue());
+		long longValue = this.getLongValue();
+
+		for (LongConsumer handler : this.longValueChangeHandlers)
+		{
+			handler.accept(longValue);
+		}
+
 	}
 
 	public long getLongValue()
 	{
-		long longMin = this.getLongMinValue();
-		long longMax = this.getLongMaxValue();
-
-		if (longMin == longMax)
-		{
-			return longMin;
-		}
-		else
-		{
-			return (long) Math.round(MathHelper.clampedLerp(longMin, longMax, this.getValue()));
-		}
-
+		return this.toLongValue(this.getValue());
 	}
 
 	public void setLongValue(long longValue)
 	{
 		longValue = MathHelper.clamp(longValue, this.getLongMinValue(), this.getLongMaxValue());
-		double doubleValue = MathHelper.inverseLerp(longValue, this.getLongMinValue(), this.getLongMaxValue());
+		double doubleValue = this.fromLongValue(longValue);
 
 		if (this.getLongValue() != longValue)
 		{

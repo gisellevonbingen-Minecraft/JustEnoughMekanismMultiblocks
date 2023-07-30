@@ -99,11 +99,16 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true, this::onUseStructuralGlassChanged));
-			consumer.accept(this.rotorsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.rotors", 0, 1, 0, this::onRotorsChanged));
-			consumer.accept(this.ventsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.vents", 0, 1, 0, this::onVentsChanged));
-			consumer.accept(this.condensersWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.condensers", 0, 0, 0, this::onCondensersChanged));
-			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 2, 0, this::onValvesChanged));
+			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
+			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
+			consumer.accept(this.rotorsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.rotors", 0, 1, 0));
+			this.rotorsWidget.getSlider().addIntValueChangeHanlder(this::onRotorsChanged);
+			consumer.accept(this.ventsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.vents", 0, 1, 0));
+			this.ventsWidget.getSlider().addIntValueChangeHanlder(this::onVentsChanged);
+			consumer.accept(this.condensersWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.condensers", 0, 0, 0));
+			this.condensersWidget.getSlider().addIntValueChangeHanlder(this::onCondensersChanged);
+			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 2, 0));
+			this.valvesWidget.getSlider().addIntValueChangeHanlder(this::onValvesChanged);
 
 			this.updateRotorsSliderLimit();
 		}

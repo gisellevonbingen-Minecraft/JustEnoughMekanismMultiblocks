@@ -10,6 +10,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import giselle.jei_mekanism_multiblocks.client.gui.ContainerWidget;
+import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.ListWidget;
@@ -22,6 +23,7 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public abstract class MultiblockWidget extends ContainerWidget
@@ -47,8 +49,10 @@ public abstract class MultiblockWidget extends ContainerWidget
 		this.configsList.setItemsPadding(2);
 		this.configsList.setItemOffset(2);
 
-		this.addChild(this.costsButton = new TabButtonWidget(99, 0, 41, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.costs"), this::onCostsButtonClick));
-		this.addChild(this.resultsButton = new TabButtonWidget(139, 0, 41, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.results"), this::onResultsButtonClick));
+		this.addChild(this.costsButton = new TabButtonWidget(99, 0, 41, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.costs")));
+		this.costsButton.addPressHandler(this::onCostsButtonClick);
+		this.addChild(this.resultsButton = new TabButtonWidget(139, 0, 41, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.results")));
+		this.resultsButton.addPressHandler(this::onResultsButtonClick);
 		this.addChild(this.costsList = new CostList(100, 10, 80, 110, 20));
 		this.costsList.setItemsTop(2);
 		this.costsList.setItemOffset(1);
@@ -101,9 +105,12 @@ public abstract class MultiblockWidget extends ContainerWidget
 		LabelWidget dimensionLabel = new LabelWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.dimensions"), TextAlignment.LEFT);
 
 		List<IntSliderWithButtons> widgets = new ArrayList<>();
-		widgets.add(this.widthWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.dimensions.width", this.getDimensionWidthMin(), this.getDimensionWidthMin(), this.getDimensionWidthMax(), this::onDimensionWidthChanged));
-		widgets.add(this.lengthWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.dimensions.length", this.getDimensionLengthMin(), this.getDimensionLengthMin(), this.getDimensionLengthMax(), this::onDimensionLengthChanged));
-		widgets.add(this.heightWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.dimensions.height", this.getDimensionHeightMin(), this.getDimensionHeightMin(), this.getDimensionHeightMax(), this::onDimensionHeightChanged));
+		widgets.add(this.widthWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.dimensions.width", this.createDimensionSlider(0, this.getDimensionWidthMin(), this.getDimensionWidthMax())));
+		this.widthWidget.getSlider().addIntValueChangeHanlder(this::onDimensionWidthChanged);
+		widgets.add(this.lengthWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.dimensions.length", this.createDimensionSlider(1, this.getDimensionLengthMin(), this.getDimensionLengthMax())));
+		this.lengthWidget.getSlider().addIntValueChangeHanlder(this::onDimensionLengthChanged);
+		widgets.add(this.heightWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.dimensions.height", this.createDimensionSlider(2, this.getDimensionHeightMin(), this.getDimensionHeightMax())));
+		this.heightWidget.getSlider().addIntValueChangeHanlder(this::onDimensionHeightChanged);
 
 		List<IntSliderWithButtons> list = widgets.stream().filter(w -> this.isUseDimensionWIidget(w) && w.getSlider().getIntMinValue() < w.getSlider().getIntMaxValue()).collect(Collectors.toList());
 
@@ -113,6 +120,11 @@ public abstract class MultiblockWidget extends ContainerWidget
 			list.forEach(this.configsList::addChild);
 		}
 
+	}
+
+	protected IntSliderWidget createDimensionSlider(int index, int min, int max)
+	{
+		return new IntSliderWidget(0, 0, 0, 0, StringTextComponent.EMPTY, min, min, max);
 	}
 
 	protected boolean isUseDimensionWIidget(IntSliderWithButtons widget)

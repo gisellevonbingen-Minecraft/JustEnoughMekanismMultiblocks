@@ -38,9 +38,14 @@ public class ListWidget extends ContainerWidget
 		this.itemOffset = 0;
 		this.scrollBarWidth = 12;
 
-		this.addFunctionWidget(this.upButton = new ButtonWidget(0, 0, 0, 0, new StringTextComponent("▲"), this::onScrollButtonClick));
-		this.addFunctionWidget(this.downButton = new ButtonWidget(0, 0, 0, 0, new StringTextComponent("▼"), this::onScrollButtonClick));
-		this.addFunctionWidget(this.scrollBar = new IntSliderWidget(0, 0, 0, 0, StringTextComponent.EMPTY, 0, 0, 0, this::onScrollChanged));
+		this.addFunctionWidget(this.upButton = new ButtonWidget(0, 0, 0, 0, new StringTextComponent("▲")));
+		this.upButton.addPressHandler(this::onScrollButtonClick);
+
+		this.addFunctionWidget(this.downButton = new ButtonWidget(0, 0, 0, 0, new StringTextComponent("▼")));
+		this.downButton.addPressHandler(this::onScrollButtonClick);
+
+		this.addFunctionWidget(this.scrollBar = new IntSliderWidget(0, 0, 0, 0, StringTextComponent.EMPTY, 0, 0, 0));
+		this.scrollBar.addIntValueChangeHanlder(this::onScrollChanged);
 
 		this.scrollBar.setVertical();
 		this.itemsChanged = true;

@@ -12,14 +12,9 @@ public class TabButtonWidget extends ButtonWidget
 {
 	private boolean selected;
 
-	public TabButtonWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, IPressable pOnPress)
+	public TabButtonWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage)
 	{
-		this(pX, pY, pWidth, pHeight, pMessage, pOnPress, NO_TOOLTIP);
-	}
-
-	public TabButtonWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, IPressable pOnPress, ITooltip pOnTooltip)
-	{
-		super(pX, pY, pWidth, pHeight, pMessage, pOnPress, pOnTooltip);
+		super(pX, pY, pWidth, pHeight, pMessage);
 		this.selected = false;
 	}
 

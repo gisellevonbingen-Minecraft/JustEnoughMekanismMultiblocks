@@ -1,5 +1,8 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -13,30 +16,29 @@ import net.minecraft.util.text.ITextComponent;
 
 public class ButtonWidget extends AbstractButton
 {
-	public static final ITooltip NO_TOOLTIP = (pButton, pMatrixStack, pMouseX, pMouseY) ->
-	{
+	private final List<IPressHandler> pressHandlers;
+	private ITextComponent[] tooltip;
 
-	};
-
-	private final IPressable onPress;
-	private final ITooltip onTooltip;
-
-	public ButtonWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, IPressable pOnPress)
-	{
-		this(pX, pY, pWidth, pHeight, pMessage, pOnPress, NO_TOOLTIP);
-	}
-
-	public ButtonWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, IPressable pOnPress, ITooltip pOnTooltip)
+	public ButtonWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage)
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
-		this.onPress = pOnPress;
-		this.onTooltip = pOnTooltip != null ? pOnTooltip : null;
+		this.pressHandlers = new ArrayList<>();
+		this.tooltip = new ITextComponent[0];
+	}
+
+	public void addPressHandler(IPressHandler handler)
+	{
+		this.pressHandlers.add(handler);
 	}
 
 	@Override
 	public void onPress()
 	{
-		this.onPress.onPress(this);
+		for (IPressHandler handler : this.pressHandlers)
+		{
+			handler.onPress(this);
+		}
+
 	}
 
 	@Override
@@ -65,17 +67,22 @@ public class ButtonWidget extends AbstractButton
 	@Override
 	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
 	{
-		this.onTooltip.onTooltip(this, pMatrixStack, pMouseX, pMouseY);
+		GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
 	}
 
-	public interface IPressable
+	public void setTooltip(ITextComponent... tooltip)
+	{
+		this.tooltip = tooltip.clone();
+	}
+
+	public ITextComponent[] getTooltip()
+	{
+		return this.tooltip.clone();
+	}
+
+	public interface IPressHandler
 	{
 		void onPress(AbstractButton pButton);
-	}
-
-	public interface ITooltip
-	{
-		void onTooltip(AbstractButton pButton, MatrixStack pMatrixStack, int pMouseX, int pMouseY);
 	}
 
 }

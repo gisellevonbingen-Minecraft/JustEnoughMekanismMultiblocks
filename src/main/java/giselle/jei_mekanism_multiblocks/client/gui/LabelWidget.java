@@ -1,15 +1,11 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
-import java.util.Arrays;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.client.gui.GuiUtils;
 
 public class LabelWidget extends Widget
 {
@@ -27,6 +23,7 @@ public class LabelWidget extends Widget
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.shadow = true;
 		this.alignment = alignment;
+		this.tooltips = new ITextComponent[0];
 	}
 
 	@Override
@@ -46,15 +43,7 @@ public class LabelWidget extends Widget
 	@Override
 	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
 	{
-		ITextComponent[] tooltips = this.getTooltips();
-
-		if (tooltips != null && tooltips.length > 0)
-		{
-			Minecraft minecraft = Minecraft.getInstance();
-			GuiUtils.drawHoveringText(pMatrixStack, Arrays.asList(tooltips), pMouseX, pMouseY, minecraft.screen.width, minecraft.screen.height, -1, minecraft.font);
-
-		}
-
+		GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltips());
 	}
 
 	public boolean isShadow()
@@ -84,12 +73,12 @@ public class LabelWidget extends Widget
 
 	public ITextComponent[] getTooltips()
 	{
-		return this.tooltips;
+		return this.tooltips.clone();
 	}
 
 	public void setTooltips(ITextComponent... tooltips)
 	{
-		this.tooltips = tooltips;
+		this.tooltips = tooltips.clone();
 	}
 
 }

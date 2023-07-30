@@ -1,5 +1,7 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -15,19 +17,19 @@ import net.minecraft.util.text.ITextComponent;
 
 public class CheckBoxWidget extends AbstractButton
 {
+	private final List<Consumer<Boolean>> selectedChangedHandlers;
 	private boolean selected;
-	private Consumer<Boolean> setter;
 
 	public CheckBoxWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, boolean pSelected)
 	{
-		this(pX, pY, pWidth, pHeight, pMessage, pSelected, null);
+		super(pX, pY, pWidth, pHeight, pMessage);
+		this.selectedChangedHandlers = new ArrayList<>();
+		this.selected = pSelected;
 	}
 
-	public CheckBoxWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, boolean pSelected, Consumer<Boolean> setter)
+	public void addSelectedChangedHandler(Consumer<Boolean> handler)
 	{
-		super(pX, pY, pWidth, pHeight, pMessage);
-		this.selected = pSelected;
-		this.setter = setter;
+		this.selectedChangedHandlers.add(handler);
 	}
 
 	@Override
@@ -47,9 +49,9 @@ public class CheckBoxWidget extends AbstractButton
 		{
 			this.selected = selected;
 
-			if (this.setter != null)
+			for (Consumer<Boolean> handler : this.selectedChangedHandlers)
 			{
-				this.setter.accept(selected);
+				handler.accept(selected);
 			}
 
 		}
@@ -74,4 +76,5 @@ public class CheckBoxWidget extends AbstractButton
 
 		GuiHelper.drawScaledText(pMatrixStack, this.getMessage(), this.x + checkerLength, this.y, this.x + this.width - checkerLength, 14737632 | MathHelper.ceil(this.alpha * 255.0F) << 24, true);
 	}
+
 }

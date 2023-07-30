@@ -1,5 +1,8 @@
 package giselle.jei_mekanism_multiblocks.client;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -14,6 +17,28 @@ import net.minecraft.util.text.ITextComponent;
 public class GuiHelper
 {
 	public static final ResourceLocation WIDGETS_LOCATION = JEI_MekanismMultiblocks.rl("textures/gui/widgets.png");
+
+	public static void renderComponentTooltip(MatrixStack pMatrixStack, int pMouseX, int pMouseY, ITextComponent... tooltip)
+	{
+		Minecraft minecraft = Minecraft.getInstance();
+
+		if (minecraft.screen != null && tooltip.length > 0)
+		{
+			minecraft.screen.renderComponentTooltip(pMatrixStack, Arrays.asList(tooltip), pMouseX, pMouseY);
+		}
+
+	}
+
+	public static void renderComponentTooltip(MatrixStack pMatrixStack, int pMouseX, int pMouseY, List<ITextComponent> tooltip)
+	{
+		Minecraft minecraft = Minecraft.getInstance();
+
+		if (minecraft.screen != null && tooltip.size() > 0)
+		{
+			minecraft.screen.renderComponentTooltip(pMatrixStack, tooltip, pMouseX, pMouseY);
+		}
+
+	}
 
 	public static void fillRectagleBlack(MatrixStack pMatrixStack, int x, int y, int width, int height)
 	{
