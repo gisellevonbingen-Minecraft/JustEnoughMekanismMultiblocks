@@ -48,26 +48,26 @@ public class IntSliderWidget extends SliderWidget
 
 	public int getIntValue()
 	{
-		int min = this.getIntMinValue();
-		int max = this.getIntMaxValue();
+		int intMin = this.getIntMinValue();
+		int intMax = this.getIntMaxValue();
 
-		if (min == max)
+		if (intMin == intMax)
 		{
-			return min;
+			return intMin;
 		}
 		else
 		{
-			return (int) Math.round(MathHelper.clampedLerp(min, max, this.getValue()));
+			return (int) Math.round(MathHelper.clampedLerp(intMin, intMax, this.getValue()));
 		}
 
 	}
 
-	public void setIntValue(int value)
+	public void setIntValue(int intValue)
 	{
-		value = MathHelper.clamp(value, this.getIntMinValue(), this.getIntMaxValue());
-		double doubleValue = MathHelper.inverseLerp(value, this.getIntMinValue(), this.getIntMaxValue());
+		intValue = MathHelper.clamp(intValue, this.getIntMinValue(), this.getIntMaxValue());
+		double doubleValue = MathHelper.inverseLerp(intValue, this.getIntMinValue(), this.getIntMaxValue());
 
-		if (this.getIntValue() != value)
+		if (this.getIntValue() != intValue)
 		{
 			this.setValue(doubleValue);
 		}
