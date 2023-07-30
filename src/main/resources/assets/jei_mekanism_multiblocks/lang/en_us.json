@@ -23,6 +23,7 @@
 	"text.jei_mekanism_multiblocks.specs.logic_adapters": "Logic Adapters: %s",
 	"text.jei_mekanism_multiblocks.specs.heating_elements": "Heating Elements: %s",
 	"text.jei_mekanism_multiblocks.specs.condensers": "Condensers: %s",
+	"text.jei_mekanism_multiblocks.specs.burn_rate": "Burn Rate: %s",
 	"text.jei_mekanism_multiblocks.specs.use_things": "Use '%s'",
 	"text.jei_mekanism_multiblocks.specs.steam_height": "Steam Height: %s",
 	"text.jei_mekanism_multiblocks.result.input_tank": "Input Tank",
@@ -46,6 +47,7 @@
 	"text.jei_mekanism_multiblocks.tooltip.warning": "※ Warning",
 	"text.jei_mekanism_multiblocks.tooltip.limited": "※ Limited",
 	"text.jei_mekanism_multiblocks.tooltip.value_limited": "※ '%s' is limited.",
+	"text.jei_mekanism_multiblocks.tooltip.when_burn_rate": "When 'Burn Rate' is %s.",
 	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "Reactor will be damaged.",
 	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "Water will be losing.",
 	"text.jei_mekanism_multiblocks.tooltip.need_more": "Need more '%s'."
