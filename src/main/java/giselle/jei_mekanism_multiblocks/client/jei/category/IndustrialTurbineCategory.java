@@ -6,6 +6,7 @@ import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
+import giselle.jei_mekanism_multiblocks.client.gui.Mod2IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.CostWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
@@ -28,6 +29,7 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -74,13 +76,22 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 		protected IntSliderWithButtons condensersWidget;
 		protected IntSliderWithButtons valvesWidget;
 
-		private int prevWidth;
 		private boolean needMoreVents;
 
 		public IndustrialTurbineWidget()
 		{
 			this.widthWidget.setTranslationKey("text.jei_mekanism_multiblocks.specs.dimensions.width_length");
-			this.prevWidth = this.widthWidget.getSlider().getIntValue();
+		}
+
+		@Override
+		protected IntSliderWidget createDimensionSlider(int index, int min, int max)
+		{
+			if (index == 0)
+			{
+				return new Mod2IntSliderWidget(0, 0, 0, 0, StringTextComponent.EMPTY, min, min, max, 0);
+			}
+
+			return super.createDimensionSlider(index, min, max);
 		}
 
 		@Override
@@ -116,21 +127,9 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 		@Override
 		protected void onDimensionWidthChanged(int width)
 		{
-			if (this.prevWidth != width && width % 2 == 0)
-			{
-				if (this.prevWidth == 0 || this.prevWidth >= width)
-				{
-					width--;
-				}
-				else if (this.prevWidth <= width)
-				{
-					width++;
-				}
-
-				IntSliderWidget widthSlider = this.widthWidget.getSlider();
-				widthSlider.setIntValue(width);
-			}
-			this.prevWidth = width;
+			width += width % 2 - 1;
+			IntSliderWidget widthSlider = this.widthWidget.getSlider();
+			widthSlider.setIntValue(width);
 
 			super.onDimensionWidthChanged(width);
 

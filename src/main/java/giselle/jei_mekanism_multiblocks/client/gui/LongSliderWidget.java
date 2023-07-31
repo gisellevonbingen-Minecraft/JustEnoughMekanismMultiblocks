@@ -30,14 +30,32 @@ public class LongSliderWidget extends SliderWidget
 	{
 		long longMin = this.getLongMinValue();
 		long longMax = this.getLongMaxValue();
-		return Math.round(MathHelper.clampedLerp(longMin, longMax, pValue));
+
+		if (longMin == longMax)
+		{
+			return longMin;
+		}
+		else
+		{
+			return Math.round(MathHelper.clampedLerp(longMin, longMax, pValue));
+		}
+
 	}
 
 	protected double fromLongValue(long longValue)
 	{
 		long longMin = this.getLongMinValue();
 		long longMax = this.getLongMaxValue();
-		return MathHelper.inverseLerp(longValue, longMin, longMax);
+
+		if (longMin == longMax)
+		{
+			return 0.0D;
+		}
+		else
+		{
+			return MathHelper.inverseLerp(longValue, longMin, longMax);
+		}
+
 	}
 
 	@Override

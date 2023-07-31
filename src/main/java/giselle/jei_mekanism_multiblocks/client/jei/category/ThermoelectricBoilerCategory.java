@@ -475,7 +475,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 		public void tick()
 		{
-			double temp = this.heat / heatCapacity;
+			double temp = this.heat / this.heatCapacity;
 
 			long toCool = Math.round(this.heatedCoolantTank * this.coolantCoolingEfficiency);
 			toCool = MathUtils.clampToLong(toCool * (1.0D - (temp / HeatUtils.HEATED_COOLANT_TEMP)));
@@ -497,7 +497,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 				this.heat += this.thermalHeat;
 			}
 
-			this.heatOnTemp = (temp - HeatUtils.BASE_BOIL_TEMP) * (heatCapacity * MekanismConfig.general.boilerWaterConductivity.get());
+			this.heatOnTemp = (temp - HeatUtils.BASE_BOIL_TEMP) * (this.heatCapacity * MekanismConfig.general.boilerWaterConductivity.get());
 			double boilingHeat = this.heatOnTemp;
 
 			if (this.heatOnTemp > this.heatingCapacity)
