@@ -13,9 +13,9 @@ public class IntSliderWithButtons extends ContainerWidget
 
 	private String translationKey;
 
+	private final IntSliderWidget slider;
 	private final ButtonWidget minusButton;
 	private final ButtonWidget plusButton;
-	private final IntSliderWidget slider;
 
 	public IntSliderWithButtons(int pX, int pY, int pWidth, int pHeight, String translationKey, int value, int min, int max)
 	{
@@ -27,13 +27,14 @@ public class IntSliderWithButtons extends ContainerWidget
 		super(pX, pY, pWidth, pHeight);
 		this.translationKey = translationKey;
 
-		this.addChild(this.minusButton = this.createAdjustButton(new StringTextComponent("-"), -1));
-		this.addChild(this.plusButton = this.createAdjustButton(new StringTextComponent("+"), +1));
 		this.addChild(this.slider = slider);
 		this.slider.addIntValueChangeHanlder(v ->
 		{
 			this.updateMessage();
 		});
+		this.addChild(this.minusButton = this.createAdjustButton(new StringTextComponent("-"), -1));
+		this.addChild(this.plusButton = this.createAdjustButton(new StringTextComponent("+"), +1));
+
 		this.updateMessage();
 		this.onHeightChanged();
 	}
@@ -76,6 +77,9 @@ public class IntSliderWithButtons extends ContainerWidget
 
 		int height = this.getHeight();
 
+		IntSliderWidget slider = this.getSlider();
+		slider.setHeight(height);
+
 		ButtonWidget minusButton = this.getMinusButton();
 		minusButton.setWidth(height);
 		minusButton.setHeight(height);
@@ -84,26 +88,23 @@ public class IntSliderWithButtons extends ContainerWidget
 		plusButton.setWidth(height);
 		plusButton.setHeight(height);
 
-		IntSliderWidget slider = this.getSlider();
-		slider.setHeight(height);
-
 		this.updateChildrenBounds();
 	}
 
 	protected void updateChildrenBounds()
 	{
-		ButtonWidget minusButton = this.getMinusButton();
-		minusButton.x = 0;
-		minusButton.y = 0;
-
 		ButtonWidget plusButton = this.getPlusButton();
 		plusButton.x = this.getWidth() - plusButton.getWidth();
-		plusButton.y = minusButton.y;
+		plusButton.y = 0;
+
+		ButtonWidget minusButton = this.getMinusButton();
+		minusButton.x = plusButton.x - minusButton.getWidth();
+		minusButton.y = plusButton.y;
 
 		IntSliderWidget slider = this.getSlider();
-		slider.x = minusButton.x + minusButton.getWidth();
+		slider.x = 0;
 		slider.y = minusButton.y;
-		slider.setWidth(plusButton.x - slider.x);
+		slider.setWidth(minusButton.x - slider.x);
 	}
 
 	public void setTranslationKey(String translationKey)
