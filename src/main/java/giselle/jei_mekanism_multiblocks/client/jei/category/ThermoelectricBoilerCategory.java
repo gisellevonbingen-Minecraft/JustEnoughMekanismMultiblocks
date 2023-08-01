@@ -194,7 +194,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 		}
 
 		@Override
-		public void collectCost(ICostConsumer consumer)
+		protected void collectCost(ICostConsumer consumer)
 		{
 			super.collectCost(consumer);
 
@@ -233,7 +233,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 		}
 
 		@Override
-		public void collectResult(Consumer<Widget> consumer)
+		protected void collectResult(Consumer<Widget> consumer)
 		{
 			super.collectResult(consumer);
 

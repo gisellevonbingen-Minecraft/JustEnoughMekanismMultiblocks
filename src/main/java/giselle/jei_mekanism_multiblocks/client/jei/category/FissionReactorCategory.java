@@ -158,7 +158,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		}
 
 		@Override
-		public void collectCost(ICostConsumer consumer)
+		protected void collectCost(ICostConsumer consumer)
 		{
 			super.collectCost(consumer);
 
@@ -192,7 +192,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		}
 
 		@Override
-		public void collectResult(Consumer<Widget> consumer)
+		protected void collectResult(Consumer<Widget> consumer)
 		{
 			super.collectResult(consumer);
 

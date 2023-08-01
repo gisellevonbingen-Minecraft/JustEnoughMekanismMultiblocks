@@ -157,7 +157,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		return this.costsList.getCosts();
 	}
 
-	public void updateCosts()
+	private void updateCosts()
 	{
 		List<CostWidget> costs = new ArrayList<>();
 		this.collectCost(w ->
@@ -168,12 +168,12 @@ public abstract class MultiblockWidget extends ContainerWidget
 		this.costsList.updateCosts(costs);
 	}
 
-	public void collectCost(ICostConsumer output)
+	protected void collectCost(ICostConsumer output)
 	{
 
 	}
 
-	public void updateResults()
+	private void updateResults()
 	{
 		List<Widget> costs = new ArrayList<>();
 		this.collectResult(costs::add);
@@ -182,7 +182,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		costs.forEach(this.resultsList::addChild);
 	}
 
-	public void collectResult(Consumer<Widget> consumer)
+	protected void collectResult(Consumer<Widget> consumer)
 	{
 
 	}
