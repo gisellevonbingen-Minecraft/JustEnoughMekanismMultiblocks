@@ -160,13 +160,13 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 		protected void onValvesChanged(int valves)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		protected void onSteamHeightChanged(int height)
 		{
 			this.updateHeatingHeightSliderLimit();
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		public void updateHeatingHeightSliderLimit()
@@ -185,12 +185,12 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 		protected void onHeatingElementsChanged(int elements)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		protected void onUseStructuralGlassChanged(boolean useStructuralGlass)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		@Override

@@ -135,27 +135,27 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		protected void onPortsChanged(int ports)
 		{
 			this.updateLogicAdaptersSliderLimit();
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		protected void onLogicAdaptersChanged(int logicAdapters)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		protected void onUseReactorGlassChanged(boolean useReactorGlass)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		protected void onInjectionRateChanged(int injectionRate)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		protected void onWaterCooledChanged(boolean waterCooled)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		@Override

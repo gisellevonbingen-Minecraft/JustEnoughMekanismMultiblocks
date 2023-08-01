@@ -121,17 +121,17 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 
 		protected void onValvesChanged(int valves)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		protected void onUseStructuralGlassChanged(boolean useStructuralGlass)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		protected void onUseAdvancedSolarGeneratorChanged(boolean useAdvancedSolarGenerator)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		@Override

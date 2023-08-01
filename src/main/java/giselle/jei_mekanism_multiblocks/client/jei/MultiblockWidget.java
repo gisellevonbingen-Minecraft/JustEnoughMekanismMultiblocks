@@ -149,7 +149,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	protected void onDimensionChanged()
 	{
-		this.markNeedUpdateCost();
+		this.markNeedUpdate();
 	}
 
 	public List<ItemStack> getCosts()
@@ -223,7 +223,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		return this.costsList.getIngredientUnderMouse(this.toChildX(pMouseX), this.toChildY(pMouseY));
 	}
 
-	public void markNeedUpdateCost()
+	public void markNeedUpdate()
 	{
 		this.needNotifyStateChange = true;
 	}

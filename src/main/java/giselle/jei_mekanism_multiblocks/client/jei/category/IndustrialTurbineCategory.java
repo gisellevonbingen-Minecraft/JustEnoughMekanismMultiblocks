@@ -168,7 +168,7 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 			this.updateVentsSliderLimit();
 			this.setVentCount(this.getClampedMaxVentCount(rotors));
 			this.setCondenserCount(this.getClampedMaxCondenserCount(rotors, this.getVentCount()));
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		public void updateVentsSliderLimit()
@@ -187,7 +187,7 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 			this.needMoreVents = vents < this.getClampedMaxVentCount(this.getRotorCount());
 			this.updateCondensersSliderLimit();
 			this.updateValvesSliderLimit();
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		public void updateCondensersSliderLimit()
@@ -200,7 +200,7 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 
 		protected void onCondensersChanged(int condensers)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		public void updateValvesSliderLimit()
@@ -213,12 +213,12 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 
 		protected void onValvesChanged(int valves)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		protected void onUseStructuralGlassChanged(boolean useStructuralGlass)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		@Override

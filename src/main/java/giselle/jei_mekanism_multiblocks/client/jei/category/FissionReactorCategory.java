@@ -131,17 +131,17 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		protected void onPortsChanged(int ports)
 		{
 			this.updateLogicAdaptersSliderLimit();
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		protected void onLogicAdaptersChanged(int logicAdapters)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		protected void onUseReactorGlassChanged(boolean useReactorGlass)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		public void updateBurnRateSliderLimit()
@@ -154,7 +154,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 		protected void onBurnRateChanged(long burnRate)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		@Override

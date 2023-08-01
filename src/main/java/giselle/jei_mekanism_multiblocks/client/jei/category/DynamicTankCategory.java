@@ -87,12 +87,12 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 
 		protected void onValvesChanged(int valves)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		protected void onUseStructuralGlassChanged(boolean useStructuralGlass)
 		{
-			this.markNeedUpdateCost();
+			this.markNeedUpdate();
 		}
 
 		@Override
