@@ -251,8 +251,6 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 				structuralGlasses = 0;
 			}
 
-			int maxFlow = MathUtils.clampToInt(this.getMaxFlowRateClamped(lowerVolume, vents));
-
 			consumer.accept(new ItemStack(GeneratorsBlocks.TURBINE_CASING, casing));
 			consumer.accept(new ItemStack(GeneratorsBlocks.TURBINE_VALVE, valves));
 			CostWidget vent = consumer.accept(new ItemStack(GeneratorsBlocks.TURBINE_VENT, vents));
@@ -271,6 +269,8 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 			consumer.accept(new ItemStack(MekanismBlocks.PRESSURE_DISPERSER, this.getDisperserCount()));
 			consumer.accept(new ItemStack(GeneratorsBlocks.ELECTROMAGNETIC_COIL, this.getNeededCoilCount(blades)));
 			CostWidget maxWaterOutputWidget = consumer.accept(new ItemStack(GeneratorsBlocks.SATURATING_CONDENSER, this.getCondenserCount()));
+
+			int maxFlow = MathUtils.clampToInt(this.getMaxFlowRateClamped(lowerVolume, vents));
 
 			if (maxFlow > this.getMaxWaterOutput())
 			{

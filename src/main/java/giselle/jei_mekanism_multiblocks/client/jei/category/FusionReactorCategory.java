@@ -309,7 +309,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			return this.useReactorGlassCheckBox.isSelected();
 		}
 
-		public void setUseStructuralGlass(boolean useReactorGlass)
+		public void setUseReactorGlass(boolean useReactorGlass)
 		{
 			this.useReactorGlassCheckBox.setSelected(useReactorGlass);
 		}

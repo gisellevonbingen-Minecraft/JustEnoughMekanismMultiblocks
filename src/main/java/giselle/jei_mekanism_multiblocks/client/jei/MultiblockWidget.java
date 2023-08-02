@@ -168,7 +168,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		this.costsList.updateCosts(costs);
 	}
 
-	protected void collectCost(ICostConsumer output)
+	protected void collectCost(ICostConsumer consumer)
 	{
 
 	}
