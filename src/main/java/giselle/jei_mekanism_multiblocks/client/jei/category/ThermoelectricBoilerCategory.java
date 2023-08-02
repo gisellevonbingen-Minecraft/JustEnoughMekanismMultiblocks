@@ -256,7 +256,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 				{
 					this.needMoreHeatingElements = true;
 					boilRateWidget.getValueLabel().setFGColor(0xFF8000);
-					boilRateWidget.getValueLabel().setTooltip(//
+					boilRateWidget.setTooltip(//
 							new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.limited").withStyle(TextFormatting.RED), //
 							new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_more", MekanismBlocks.SUPERHEATING_ELEMENT.getTextComponent()).withStyle(TextFormatting.RED));
 				}

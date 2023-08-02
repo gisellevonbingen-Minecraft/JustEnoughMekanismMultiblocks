@@ -235,13 +235,13 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 			if (warning)
 			{
-				tempWidget.getValueLabel().setTooltip(burnRateTooltip, //
+				tempWidget.setTooltip(burnRateTooltip, //
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.warning").withStyle(TextFormatting.RED), //
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.reactor_will_damage").withStyle(TextFormatting.RED));
 			}
 			else
 			{
-				tempWidget.getValueLabel().setTooltip(burnRateTooltip);
+				tempWidget.setTooltip(burnRateTooltip);
 			}
 
 			long heatedCoolant = this.getHeatedCoolant(stableTemp, conductivity);

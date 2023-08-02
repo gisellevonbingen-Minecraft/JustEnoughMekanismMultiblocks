@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
-import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.Mod2IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
@@ -83,7 +82,6 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		protected IntSliderWithButtons logicAdaptersWidget;
 		protected IntSliderWithButtons injectionRateWidget;
 		protected CheckBoxWidget waterCooledCheckBox;
-		protected LabelWidget injectionRateInfoWidget;
 
 		public FusionReactorCategoryWidget()
 		{
@@ -105,11 +103,11 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			this.injectionRateWidget.getSlider().addValueChangeHanlder(this::onInjectionRateChanged);
 			consumer.accept(this.waterCooledCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.water_cooled"), false));
 			this.waterCooledCheckBox.addSelectedChangedHandler(this::onWaterCooledChanged);
-			consumer.accept(this.injectionRateInfoWidget = new LabelWidget(0, 0, 0, 0, StringTextComponent.EMPTY));
 
 			this.updatePortsSliderLimit();
 			this.setPortCount(4);
 			this.setLogicAdapterCount(0);
+			this.updateInjectionRateInfoMessage();
 		}
 
 		@Override
@@ -173,11 +171,30 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		protected void onInjectionRateChanged(int injectionRate)
 		{
 			this.markNeedUpdate();
+			this.updateInjectionRateInfoMessage();
 		}
 
 		protected void onWaterCooledChanged(boolean waterCooled)
 		{
 			this.markNeedUpdate();
+			this.updateInjectionRateInfoMessage();
+		}
+
+		public void updateInjectionRateInfoMessage()
+		{
+			if (this.isWaterCooled())
+			{
+				int limitedInjectionRate = Math.min(this.getInjectionRate(), FusionReactorMultiblockData.MAX_INJECTION);
+				TranslationTextComponent tooltip = new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate);
+				this.waterCooledCheckBox.setTooltip(tooltip);
+				this.injectionRateWidget.setTooltip(tooltip);
+			}
+			else
+			{
+				this.waterCooledCheckBox.setTooltip();
+				this.injectionRateWidget.setTooltip();
+			}
+
 		}
 
 		@Override
@@ -220,13 +237,10 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			super.collectResult(consumer);
 
 			int injectionRate = this.getInjectionRate();
-			long waterTank = 1_000L * FluidAttributes.BUCKET_VOLUME * Math.min(injectionRate, FusionReactorMultiblockData.MAX_INJECTION);
+			int limitedInjectionRate = Math.min(injectionRate, FusionReactorMultiblockData.MAX_INJECTION);
+			long waterTank = 1_000L * FluidAttributes.BUCKET_VOLUME * limitedInjectionRate;
 			long steamTank = waterTank * 100L;
 			long fuelTank = FluidAttributes.BUCKET_VOLUME;
-
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMilliBuckets(waterTank)));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMilliBuckets(steamTank)));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.fuel_tank"), VolumeTextHelper.formatMilliBuckets(fuelTank)));
 
 			FloatingLong energyFusionFuel = MekanismGeneratorsConfig.generators.energyPerFusionFuel.get();
 			double casingThermalConductivity = MekanismGeneratorsConfig.generators.fusionCasingThermalConductivity.get();
@@ -253,6 +267,19 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			if (steamProduction > 0L)
 			{
 				consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_production"), VolumeTextHelper.format(steamProduction, VolumeUnit.MILLI, "B/t")));
+			}
+
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.fuel_tank"), VolumeTextHelper.formatMilliBuckets(fuelTank)));
+
+			if (this.isWaterCooled())
+			{
+				TranslationTextComponent injectionRateTooltip = new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate);
+				ResultWidget watTankWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMilliBuckets(waterTank));
+				watTankWidget.setTooltip(injectionRateTooltip);
+				consumer.accept(watTankWidget);
+				ResultWidget steamTankWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMilliBuckets(steamTank));
+				steamTankWidget.setTooltip(injectionRateTooltip);
+				consumer.accept(steamTankWidget);
 			}
 
 		}

@@ -1,5 +1,12 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import com.ibm.icu.text.DecimalFormat;
 
 import net.minecraft.client.gui.screen.Screen;
@@ -10,10 +17,13 @@ import net.minecraft.util.text.TranslationTextComponent;
 public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends ContainerWidget
 {
 	public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("+#;-#");
+	public static int SHIFT_DELTA = 5;
+	public static int NORMAL_DELTA = 1;
 
 	private String translationKey;
 
 	private final SLIDER slider;
+	private final Map<ButtonWidget, Integer> button2DirectionMap;
 	private final ButtonWidget minusButton;
 	private final ButtonWidget plusButton;
 
@@ -27,11 +37,23 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 		{
 			this.updateMessage();
 		});
-		this.addChild(this.minusButton = this.createAdjustButton(new StringTextComponent("-"), -1));
-		this.addChild(this.plusButton = this.createAdjustButton(new StringTextComponent("+"), +1));
+		this.button2DirectionMap = new HashMap<>();
+		this.minusButton = this.createAdjustButton(new StringTextComponent("-"), -1);
+		this.plusButton = this.createAdjustButton(new StringTextComponent("+"), +1);
 
 		this.updateMessage();
 		this.onHeightChanged();
+	}
+
+	public void setTooltip(ITextComponent... tooltip)
+	{
+		this.getSlider().setTooltip(tooltip);
+
+		for (Entry<ButtonWidget, Integer> entry : this.button2DirectionMap.entrySet())
+		{
+			this.updateAdjustButtonTooltip(entry.getKey(), entry.getValue());
+		}
+
 	}
 
 	protected abstract String getDisplayValue();
@@ -41,21 +63,27 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 		this.getSlider().setMessage(new TranslationTextComponent(this.translationKey, this.getDisplayValue()));
 	}
 
-	private ButtonWidget createAdjustButton(ITextComponent component, int direction)
+	private ButtonWidget createAdjustButton(ITextComponent message, int direction)
 	{
-		int shiftDelta = 5;
-		int normalDelta = 1;
-
-		ButtonWidget button = new ButtonWidget(0, 0, 0, 0, component);
-		button.setTooltip(//
-				new TranslationTextComponent("text.jei_mekanism_multiblocks.click.normal", DECIMAL_FORMAT.format(direction * normalDelta)), //
-				new TranslationTextComponent("text.jei_mekanism_multiblocks.click.shift", DECIMAL_FORMAT.format(direction * shiftDelta)));
+		ButtonWidget button = new ButtonWidget(0, 0, 0, 0, message);
+		this.updateAdjustButtonTooltip(button, direction);
 		button.addPressHandler(b ->
 		{
-			int delta = Screen.hasShiftDown() ? shiftDelta : normalDelta;
+			int delta = Screen.hasShiftDown() ? SHIFT_DELTA : NORMAL_DELTA;
 			this.onAdjustButtonPress(delta * direction);
 		});
+		this.button2DirectionMap.put(button, direction);
+		this.addChild(button);
 		return button;
+	}
+
+	private void updateAdjustButtonTooltip(ButtonWidget button, int direction)
+	{
+		List<ITextComponent> tooltip = new ArrayList<>();
+		Collections.addAll(tooltip, this.getSlider().getTooltip());
+		tooltip.add(new TranslationTextComponent("text.jei_mekanism_multiblocks.click.normal", DECIMAL_FORMAT.format(direction * NORMAL_DELTA)));
+		tooltip.add(new TranslationTextComponent("text.jei_mekanism_multiblocks.click.shift", DECIMAL_FORMAT.format(direction * SHIFT_DELTA)));
+		button.setTooltip(tooltip.stream().toArray(ITextComponent[]::new));
 	}
 
 	protected void onAdjustButtonPress(int delta)

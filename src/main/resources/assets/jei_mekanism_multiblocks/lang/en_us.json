@@ -57,5 +57,6 @@
 	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "Reactor will be damaged.",
 	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "Water will be losing.",
 	"text.jei_mekanism_multiblocks.tooltip.need_more": "Need more '%s'.",
-	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "Production per flow: %s"
+	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "Production per flow: %s.",
+	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "Need set reactor's 'Injection Rate' to %s."
 }

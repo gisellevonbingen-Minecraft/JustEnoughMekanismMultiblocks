@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
-import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.Mod2IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.CostWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
@@ -307,7 +306,7 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 			TranslationTextComponent productionPerFlowTooltip = new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.production_per_flow", new TranslationTextComponent("%1$s/%2$s", EnergyDisplay.of(productionPerFlow).getTextComponent(), "mB"));
 
 			ResultWidget maxProductionWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_production"), EnergyDisplay.of(maxProduction).getTextComponent());
-			maxProductionWidget.getValueLabel().setTooltip(productionPerFlowTooltip);
+			maxProductionWidget.setTooltip(productionPerFlowTooltip);
 
 			consumer.accept(maxProductionWidget);
 			ResultWidget maxFlowRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_flow_rate"), VolumeTextHelper.format(maxFlow, VolumeUnit.MILLI, "B/t"));
@@ -315,16 +314,14 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 
 			if (this.needMoreVents)
 			{
-				LabelWidget valueLabel = maxFlowRateWidget.getValueLabel();
-				valueLabel.setFGColor(0xFF8000);
-				valueLabel.setTooltip(//
+				maxFlowRateWidget.getValueLabel().setFGColor(0xFF8000);
+				maxFlowRateWidget.setTooltip(//
 						productionPerFlowTooltip, new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.limited").withStyle(TextFormatting.RED), //
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_more", GeneratorsBlocks.TURBINE_VENT.getTextComponent()).withStyle(TextFormatting.RED));
 			}
 			else
 			{
-				LabelWidget valueLabel = maxFlowRateWidget.getValueLabel();
-				valueLabel.setTooltip(productionPerFlowTooltip);
+				maxFlowRateWidget.setTooltip(productionPerFlowTooltip);
 			}
 
 			ResultWidget maxWaterOutputWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_water_output"), VolumeTextHelper.format(maxWaterOutput, VolumeUnit.MILLI, "B/t"));
@@ -332,9 +329,8 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 
 			if (maxFlow > maxWaterOutput)
 			{
-				LabelWidget valueLabel = maxWaterOutputWidget.getValueLabel();
-				valueLabel.setFGColor(0xFF8000);
-				valueLabel.setTooltip(//
+				maxWaterOutputWidget.getValueLabel().setFGColor(0xFF8000);
+				maxWaterOutputWidget.setTooltip(//
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.warning").withStyle(TextFormatting.RED), //
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.water_will_losing").withStyle(TextFormatting.RED), //
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_more", GeneratorsBlocks.SATURATING_CONDENSER.getTextComponent()).withStyle(TextFormatting.RED));

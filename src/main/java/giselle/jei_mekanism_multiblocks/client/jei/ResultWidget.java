@@ -82,4 +82,10 @@ public class ResultWidget extends ContainerWidget
 		return this.valueLabel;
 	}
 
+	public void setTooltip(ITextComponent... tooltip)
+	{
+		this.getTextLabel().setTooltip(tooltip);
+		this.getValueLabel().setTooltip(tooltip);
+	}
+
 }
