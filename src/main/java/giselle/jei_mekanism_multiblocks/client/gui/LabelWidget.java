@@ -11,7 +11,7 @@ public class LabelWidget extends Widget
 {
 	private boolean shadow;
 	private TextAlignment alignment;
-	private ITextComponent[] tooltips;
+	private ITextComponent[] tooltip;
 
 	public LabelWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage)
 	{
@@ -23,7 +23,7 @@ public class LabelWidget extends Widget
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.shadow = true;
 		this.alignment = alignment;
-		this.tooltips = new ITextComponent[0];
+		this.tooltip = new ITextComponent[0];
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class LabelWidget extends Widget
 	@Override
 	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
 	{
-		GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltips());
+		GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
 	}
 
 	public boolean isShadow()
@@ -71,14 +71,14 @@ public class LabelWidget extends Widget
 		this.alignment = alignment;
 	}
 
-	public ITextComponent[] getTooltips()
+	public ITextComponent[] getTooltip()
 	{
-		return this.tooltips.clone();
+		return this.tooltip.clone();
 	}
 
-	public void setTooltips(ITextComponent... tooltips)
+	public void setTooltip(ITextComponent... tooltip)
 	{
-		this.tooltips = tooltips.clone();
+		this.tooltip = tooltip.clone();
 	}
 
 }

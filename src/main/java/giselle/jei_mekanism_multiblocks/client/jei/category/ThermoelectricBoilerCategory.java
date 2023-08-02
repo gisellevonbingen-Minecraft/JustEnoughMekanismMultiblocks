@@ -226,7 +226,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			if (this.needMoreHeatingElements)
 			{
 				heatingElements.setFGColor(0xFF8000);
-				heatingElements.setHeadTooltips(//
+				heatingElements.setHeadTooltip(//
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.value_limited", new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_boil_rate")).withStyle(TextFormatting.RED), new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_more", MekanismBlocks.SUPERHEATING_ELEMENT.getTextComponent()).withStyle(TextFormatting.RED));
 			}
 
@@ -256,7 +256,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 				{
 					this.needMoreHeatingElements = true;
 					boilRateWidget.getValueLabel().setFGColor(0xFF8000);
-					boilRateWidget.getValueLabel().setTooltips(//
+					boilRateWidget.getValueLabel().setTooltip(//
 							new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.limited").withStyle(TextFormatting.RED), //
 							new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_more", MekanismBlocks.SUPERHEATING_ELEMENT.getTextComponent()).withStyle(TextFormatting.RED));
 				}
