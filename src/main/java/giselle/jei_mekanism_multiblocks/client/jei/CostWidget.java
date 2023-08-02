@@ -77,7 +77,7 @@ public class CostWidget extends Widget
 
 		int textX = itemX + 18;
 		int textY = itemY;
-		int textWidth = this.width - 18;
+		int textWidth = this.width - textX;
 		int color = this.getFGColor();
 		boolean shadow = false;
 
