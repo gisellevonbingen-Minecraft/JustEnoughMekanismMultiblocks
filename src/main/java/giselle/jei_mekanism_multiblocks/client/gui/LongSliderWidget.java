@@ -9,128 +9,127 @@ import net.minecraft.util.text.ITextComponent;
 
 public class LongSliderWidget extends SliderWidget
 {
-	private final List<LongConsumer> longValueChangeHandlers;
-	private long longMinValue;
-	private long longMaxValue;
+	private final List<LongConsumer> valueChangeHandlers;
+	private long minValue;
+	private long maxValue;
+	private long prev;
 
 	public LongSliderWidget(int x, int y, int width, int height, ITextComponent pMessage, long value, long min, long max)
 	{
 		super(x, y, width, height, pMessage, MathHelper.inverseLerp(value, min, max));
-		this.longValueChangeHandlers = new ArrayList<>();
-		this.longMinValue = min;
-		this.longMaxValue = max;
+		this.valueChangeHandlers = new ArrayList<>();
+		this.minValue = min;
+		this.maxValue = max;
+		this.prev = this.getValue();
 	}
 
-	public void addLongValueChangeHanlder(LongConsumer handler)
+	public void addValueChangeHanlder(LongConsumer handler)
 	{
-		this.longValueChangeHandlers.add(handler);
+		this.valueChangeHandlers.add(handler);
 	}
 
-	protected long toLongValue(double pValue)
+	protected long toValue(double pRatio)
 	{
-		long longMin = this.getLongMinValue();
-		long longMax = this.getLongMaxValue();
+		long minValue = this.getMinValue();
+		long maxValue = this.getMaxValue();
 
-		if (longMin == longMax)
+		if (minValue == maxValue)
 		{
-			return longMin;
+			return maxValue;
 		}
 		else
 		{
-			return Math.round(MathHelper.clampedLerp(longMin, longMax, pValue));
+			return Math.round(MathHelper.clampedLerp(minValue, maxValue, pRatio));
 		}
 
 	}
 
-	protected double fromLongValue(long longValue)
+	protected double toRatio(long value)
 	{
-		long longMin = this.getLongMinValue();
-		long longMax = this.getLongMaxValue();
+		long minValue = this.getMinValue();
+		long maxValue = this.getMaxValue();
 
-		if (longMin == longMax)
+		if (minValue == maxValue)
 		{
 			return 0.0D;
 		}
 		else
 		{
-			return MathHelper.inverseLerp(longValue, longMin, longMax);
+			value = MathHelper.clamp(value, minValue, maxValue);
+			return MathHelper.inverseLerp(value, minValue, maxValue);
 		}
 
 	}
 
 	@Override
-	protected double applyValueFromMouse(double pValue)
+	protected double applyRatioFromMouse(double pRatio)
 	{
-		long longValue = this.toLongValue(pValue);
-		return this.fromLongValue(longValue);
+		long value = this.toValue(pRatio);
+		return this.toRatio(value);
 	}
 
 	@Override
+	protected void onRatioChanged()
+	{
+		long next = this.getValue();
+
+		if (this.prev != next)
+		{
+			this.prev = next;
+			this.onValueChanged();
+		}
+
+		super.onRatioChanged();
+	}
+
 	protected void onValueChanged()
 	{
-		super.onValueChanged();
+		long value = this.getValue();
 
-		this.onLongValueChanged();
-	}
-
-	private void onLongValueChanged()
-	{
-		long longValue = this.getLongValue();
-
-		for (LongConsumer handler : this.longValueChangeHandlers)
+		for (LongConsumer handler : this.valueChangeHandlers)
 		{
-			handler.accept(longValue);
+			handler.accept(value);
 		}
 
 	}
 
-	public long getLongValue()
+	public long getValue()
 	{
-		return this.toLongValue(this.getValue());
+		return this.toValue(this.getRatio());
 	}
 
-	public void setLongValue(long longValue)
+	public void setValue(long value)
 	{
-		longValue = MathHelper.clamp(longValue, this.getLongMinValue(), this.getLongMaxValue());
-		double doubleValue = this.fromLongValue(longValue);
-
-		if (this.getLongValue() != longValue)
-		{
-			this.setValue(doubleValue);
-		}
-		else
-		{
-			this.setValueInternal(doubleValue);
-		}
-
+		double ratio = this.toRatio(value);
+		this.setRatio(ratio);
 	}
 
-	public long getLongMinValue()
+	public long getMinValue()
 	{
-		return this.longMinValue;
+		return this.minValue;
 	}
 
-	public void setLongMinValue(long longMax)
+	public void setMinValue(long minValue)
 	{
-		if (this.getLongMinValue() != longMax)
+		if (this.getMinValue() != minValue)
 		{
-			this.longMinValue = longMax;
-			this.onLongValueChanged();
+			this.minValue = minValue;
+			this.onValueChanged();
 		}
 
 	}
 
-	public long getLongMaxValue()
+	public long getMaxValue()
 	{
-		return this.longMaxValue;
+		return this.maxValue;
 	}
 
-	public void setLongMaxValue(long longMax)
+	public void setMaxValue(long maxValue)
 	{
-		if (this.getLongMaxValue() != longMax)
+		if (this.getMaxValue() != maxValue)
 		{
-			this.longMaxValue = longMax;
-			this.onLongValueChanged();
+			this.maxValue = maxValue;
+			this.onValueChanged();
 		}
 
 	}

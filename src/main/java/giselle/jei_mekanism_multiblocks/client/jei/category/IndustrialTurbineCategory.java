@@ -113,13 +113,13 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
 			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 			consumer.accept(this.rotorsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.rotors", 0, 1, 0));
-			this.rotorsWidget.getSlider().addIntValueChangeHanlder(this::onRotorsChanged);
+			this.rotorsWidget.getSlider().addValueChangeHanlder(this::onRotorsChanged);
 			consumer.accept(this.ventsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.vents", 0, 1, 0));
-			this.ventsWidget.getSlider().addIntValueChangeHanlder(this::onVentsChanged);
+			this.ventsWidget.getSlider().addValueChangeHanlder(this::onVentsChanged);
 			consumer.accept(this.condensersWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.condensers", 0, 0, 0));
-			this.condensersWidget.getSlider().addIntValueChangeHanlder(this::onCondensersChanged);
+			this.condensersWidget.getSlider().addValueChangeHanlder(this::onCondensersChanged);
 			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 2, 0));
-			this.valvesWidget.getSlider().addIntValueChangeHanlder(this::onValvesChanged);
+			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 
 			this.updateRotorsSliderLimit();
 		}
@@ -129,14 +129,14 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 		{
 			width += width % 2 - 1;
 			IntSliderWidget widthSlider = this.widthWidget.getSlider();
-			widthSlider.setIntValue(width);
+			widthSlider.setValue(width);
 
 			super.onDimensionWidthChanged(width);
 
 			IntSliderWidget lengthSlider = this.lengthWidget.getSlider();
-			lengthSlider.setIntMinValue(width);
-			lengthSlider.setIntMaxValue(width);
-			lengthSlider.setIntValue(width);
+			lengthSlider.setMinValue(width);
+			lengthSlider.setMaxValue(width);
+			lengthSlider.setValue(width);
 		}
 
 		@Override
@@ -145,7 +145,7 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 			super.onDimensionChanged();
 
 			this.updateRotorsSliderLimit();
-			this.setRotorCount(this.rotorsWidget.getSlider().getIntMaxValue());
+			this.setRotorCount(this.rotorsWidget.getSlider().getMaxValue());
 			this.setVentCount(this.getClampedMaxVentCount(this.getRotorCount()));
 			this.setCondenserCount(this.getClampedMaxCondenserCount(this.getRotorCount(), this.getVentCount()));
 		}
@@ -156,9 +156,9 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 			int innerRadius = (inner.getX() - 1) / 2;
 
 			IntSliderWidget rotorsSlider = this.rotorsWidget.getSlider();
-			int rotors = rotorsSlider.getIntValue();
-			rotorsSlider.setIntMaxValue(Math.min((innerRadius + 1) * 4 - 3, inner.getY() - 2));
-			rotorsSlider.setIntValue(rotors);
+			int rotors = rotorsSlider.getValue();
+			rotorsSlider.setMaxValue(Math.min((innerRadius + 1) * 4 - 3, inner.getY() - 2));
+			rotorsSlider.setValue(rotors);
 
 			this.updateVentsSliderLimit();
 		}
@@ -174,9 +174,9 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 		public void updateVentsSliderLimit()
 		{
 			IntSliderWidget ventsSlider = this.ventsWidget.getSlider();
-			int vents = ventsSlider.getIntValue();
-			ventsSlider.setIntMaxValue(this.getClampedMaxVentCount(this.getRotorCount()));
-			ventsSlider.setIntValue(vents);
+			int vents = ventsSlider.getValue();
+			ventsSlider.setMaxValue(this.getClampedMaxVentCount(this.getRotorCount()));
+			ventsSlider.setValue(vents);
 
 			this.updateCondensersSliderLimit();
 			this.updateValvesSliderLimit();
@@ -193,9 +193,9 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 		public void updateCondensersSliderLimit()
 		{
 			IntSliderWidget condensersSlider = this.condensersWidget.getSlider();
-			int condensers = condensersSlider.getIntValue();
-			condensersSlider.setIntMaxValue(this.getClampedMaxCondenserCount(this.getRotorCount(), this.getVentCount()));
-			condensersSlider.setIntValue(condensers);
+			int condensers = condensersSlider.getValue();
+			condensersSlider.setMaxValue(this.getClampedMaxCondenserCount(this.getRotorCount(), this.getVentCount()));
+			condensersSlider.setValue(condensers);
 		}
 
 		protected void onCondensersChanged(int condensers)
@@ -206,9 +206,9 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 		public void updateValvesSliderLimit()
 		{
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
-			int valves = valvesSlider.getIntValue();
-			valvesSlider.setIntMaxValue(this.getSideBlocks() - this.getVentCount());
-			valvesSlider.setIntValue(valves);
+			int valves = valvesSlider.getValue();
+			valvesSlider.setMaxValue(this.getSideBlocks() - this.getVentCount());
+			valvesSlider.setValue(valves);
 		}
 
 		protected void onValvesChanged(int valves)
@@ -456,17 +456,17 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 
 		public int getValveCount()
 		{
-			return this.valvesWidget.getSlider().getIntValue();
+			return this.valvesWidget.getSlider().getValue();
 		}
 
 		public void setValveCount(int valveCount)
 		{
-			this.valvesWidget.getSlider().setIntValue(valveCount);
+			this.valvesWidget.getSlider().setValue(valveCount);
 		}
 
 		public int getRotorCount()
 		{
-			return this.rotorsWidget.getSlider().getIntValue();
+			return this.rotorsWidget.getSlider().getValue();
 		}
 
 		public int getBladeCount(int rotorCount)
@@ -476,27 +476,27 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 
 		public void setRotorCount(int rotorCount)
 		{
-			this.rotorsWidget.getSlider().setIntValue(rotorCount);
+			this.rotorsWidget.getSlider().setValue(rotorCount);
 		}
 
 		public int getCondenserCount()
 		{
-			return this.condensersWidget.getSlider().getIntValue();
+			return this.condensersWidget.getSlider().getValue();
 		}
 
 		public void setCondenserCount(int condenserCount)
 		{
-			this.condensersWidget.getSlider().setIntValue(condenserCount);
+			this.condensersWidget.getSlider().setValue(condenserCount);
 		}
 
 		public int getVentCount()
 		{
-			return this.ventsWidget.getSlider().getIntValue();
+			return this.ventsWidget.getSlider().getValue();
 		}
 
 		public void setVentCount(int ventCount)
 		{
-			this.ventsWidget.getSlider().setIntValue(ventCount);
+			this.ventsWidget.getSlider().setValue(ventCount);
 		}
 
 		public boolean isUseStruturalGlass()

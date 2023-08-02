@@ -97,7 +97,7 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 			}
 
 			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 2, 0));
-			this.valvesWidget.getSlider().addIntValueChangeHanlder(this::onValvesChanged);
+			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 
 			this.updateValveSliderLimit();
 			this.setValveCount(2);
@@ -114,9 +114,9 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 		public void updateValveSliderLimit()
 		{
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
-			int valves = valvesSlider.getIntValue();
-			valvesSlider.setIntMaxValue(this.getSideBlocks());
-			valvesSlider.setIntValue(valves);
+			int valves = valvesSlider.getValue();
+			valvesSlider.setMaxValue(this.getSideBlocks());
+			valvesSlider.setValue(valves);
 		}
 
 		protected void onValvesChanged(int valves)
@@ -207,12 +207,12 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 
 		public int getValveCount()
 		{
-			return this.valvesWidget.getSlider().getIntValue();
+			return this.valvesWidget.getSlider().getValue();
 		}
 
 		public void setValveCount(int valveCount)
 		{
-			this.valvesWidget.getSlider().setIntValue(valveCount);
+			this.valvesWidget.getSlider().setValue(valveCount);
 		}
 
 		public boolean isUseStruturalGlass()

@@ -14,37 +14,37 @@ public class Mod2IntSliderWidget extends IntSliderWidget
 	}
 
 	@Override
-	public int getIntValue()
+	protected int toValue(double pRatio)
 	{
-		int intValue = super.getIntValue();
+		int value = super.toValue(pRatio);
 
-		if (intValue % 2 == this.getRemainder())
+		if (value % 2 == this.getRemainder())
 		{
-			intValue++;
+			value++;
 		}
 
-		return intValue;
+		return value;
 	}
 
 	@Override
-	public void setIntValue(int intValue)
+	public void setValue(int value)
 	{
-		if (intValue % 2 == this.getRemainder())
+		if (value % 2 == this.getRemainder())
 		{
-			int prev = this.getIntValue();
+			int prev = this.getValue();
 
-			if (intValue > prev)
+			if (value > prev)
 			{
-				intValue++;
+				value++;
 			}
 			else
 			{
-				intValue--;
+				value--;
 			}
 
 		}
 
-		super.setIntValue(intValue);
+		super.setValue(value);
 	}
 
 	public int getRemainder()

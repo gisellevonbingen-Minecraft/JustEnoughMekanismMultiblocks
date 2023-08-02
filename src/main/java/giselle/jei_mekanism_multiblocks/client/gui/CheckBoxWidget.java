@@ -18,12 +18,14 @@ import net.minecraft.util.text.ITextComponent;
 public class CheckBoxWidget extends AbstractButton
 {
 	private final List<Consumer<Boolean>> selectedChangedHandlers;
+	private ITextComponent[] tooltip;
 	private boolean selected;
 
 	public CheckBoxWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, boolean pSelected)
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.selectedChangedHandlers = new ArrayList<>();
+		this.tooltip = new ITextComponent[0];
 		this.selected = pSelected;
 	}
 
@@ -75,6 +77,28 @@ public class CheckBoxWidget extends AbstractButton
 		this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
 
 		GuiHelper.drawScaledText(pMatrixStack, this.getMessage(), this.x + checkerLength, this.y, this.x + this.width - checkerLength, 14737632 | MathHelper.ceil(this.alpha * 255.0F) << 24, true);
+
+		if (this.isHovered())
+		{
+			this.renderToolTip(pMatrixStack, pMouseX, pMouseY);
+		}
+
+	}
+
+	@Override
+	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
+	{
+		GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
+	}
+
+	public void setTooltip(ITextComponent... tooltip)
+	{
+		this.tooltip = tooltip.clone();
+	}
+
+	public ITextComponent[] getTooltip()
+	{
+		return this.tooltip.clone();
 	}
 
 }

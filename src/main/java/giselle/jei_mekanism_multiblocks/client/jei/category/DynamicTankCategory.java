@@ -63,7 +63,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
 			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 0, 0));
-			this.valvesWidget.getSlider().addIntValueChangeHanlder(this::onValvesChanged);
+			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 
 			this.updateValvesSliderLimit();
 			this.setValveCount(2);
@@ -80,9 +80,9 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		public void updateValvesSliderLimit()
 		{
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
-			int valves = valvesSlider.getIntValue();
-			valvesSlider.setIntMaxValue(this.getSideBlocks());
-			valvesSlider.setIntValue(valves);
+			int valves = valvesSlider.getValue();
+			valvesSlider.setMaxValue(this.getSideBlocks());
+			valvesSlider.setValue(valves);
 		}
 
 		protected void onValvesChanged(int valves)
@@ -137,12 +137,12 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 
 		public int getValveCount()
 		{
-			return this.valvesWidget.getSlider().getIntValue();
+			return this.valvesWidget.getSlider().getValue();
 		}
 
 		public void setValveCount(int valveCount)
 		{
-			this.valvesWidget.getSlider().setIntValue(valveCount);
+			this.valvesWidget.getSlider().setValue(valveCount);
 		}
 
 		public boolean isUseStruturalGlass()

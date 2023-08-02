@@ -86,11 +86,11 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			consumer.accept(this.useReactorGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.REACTOR_GLASS.getItemStack().getHoverName()), true));
 			this.useReactorGlassCheckBox.addSelectedChangedHandler(this::onUseReactorGlassChanged);
 			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 4, 0));
-			this.portsWidget.getSlider().addIntValueChangeHanlder(this::onPortsChanged);
+			this.portsWidget.getSlider().addValueChangeHanlder(this::onPortsChanged);
 			consumer.accept(this.logicAdaptersWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.logic_adapters", 0, 0, 0));
-			this.logicAdaptersWidget.getSlider().addIntValueChangeHanlder(this::onLogicAdaptersChanged);
+			this.logicAdaptersWidget.getSlider().addValueChangeHanlder(this::onLogicAdaptersChanged);
 			consumer.accept(this.burnRateWidget = new LongSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.burn_rate", 0, 0, 0));
-			this.burnRateWidget.getSlider().addLongValueChangeHanlder(this::onBurnRateChanged);
+			this.burnRateWidget.getSlider().addValueChangeHanlder(this::onBurnRateChanged);
 
 			this.updatePortsSliderLimit();
 			this.setPortCount(4);
@@ -113,9 +113,9 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		public void updatePortsSliderLimit()
 		{
 			IntSliderWidget portsSlider = this.portsWidget.getSlider();
-			int valves = portsSlider.getIntValue();
-			portsSlider.setIntMaxValue(this.getSideBlocks());
-			portsSlider.setIntValue(valves);
+			int valves = portsSlider.getValue();
+			portsSlider.setMaxValue(this.getSideBlocks());
+			portsSlider.setValue(valves);
 
 			this.updateLogicAdaptersSliderLimit();
 		}
@@ -123,9 +123,9 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		public void updateLogicAdaptersSliderLimit()
 		{
 			IntSliderWidget adaptersSlider = this.logicAdaptersWidget.getSlider();
-			int adapters = adaptersSlider.getIntValue();
-			adaptersSlider.setIntMaxValue(this.getSideBlocks() - this.getPortCount());
-			adaptersSlider.setIntValue(adapters);
+			int adapters = adaptersSlider.getValue();
+			adaptersSlider.setMaxValue(this.getSideBlocks() - this.getPortCount());
+			adaptersSlider.setValue(adapters);
 		}
 
 		protected void onPortsChanged(int ports)
@@ -147,9 +147,9 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		public void updateBurnRateSliderLimit()
 		{
 			LongSliderWidget burnRateSlider = this.burnRateWidget.getSlider();
-			long burnRate = burnRateSlider.getLongValue();
-			burnRateSlider.setLongMaxValue(this.getMaxBurnRate());
-			burnRateSlider.setLongValue(burnRate);
+			long burnRate = burnRateSlider.getValue();
+			burnRateSlider.setMaxValue(this.getMaxBurnRate());
+			burnRateSlider.setValue(burnRate);
 		}
 
 		protected void onBurnRateChanged(long burnRate)
@@ -359,22 +359,22 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 		public int getPortCount()
 		{
-			return this.portsWidget.getSlider().getIntValue();
+			return this.portsWidget.getSlider().getValue();
 		}
 
 		public void setPortCount(int portCount)
 		{
-			this.portsWidget.getSlider().setIntValue(portCount);
+			this.portsWidget.getSlider().setValue(portCount);
 		}
 
 		public int getLogicAdapterCount()
 		{
-			return this.logicAdaptersWidget.getSlider().getIntValue();
+			return this.logicAdaptersWidget.getSlider().getValue();
 		}
 
 		public void setLogicAdapterCount(int logicAdapterCount)
 		{
-			this.logicAdaptersWidget.getSlider().setIntValue(logicAdapterCount);
+			this.logicAdaptersWidget.getSlider().setValue(logicAdapterCount);
 		}
 
 		public boolean isUseReactorGlass()
@@ -389,12 +389,12 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 		public long getBurnRate()
 		{
-			return this.burnRateWidget.getSlider().getLongValue();
+			return this.burnRateWidget.getSlider().getValue();
 		}
 
 		public void setBurnRate(long burnRate)
 		{
-			this.burnRateWidget.getSlider().setLongValue(burnRate);
+			this.burnRateWidget.getSlider().setValue(burnRate);
 		}
 
 		@Override

@@ -1,24 +1,28 @@
 package giselle.jei_mekanism_multiblocks.client.jei.category;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
+import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.Mod2IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeUnit;
+import mekanism.api.chemical.gas.Gas;
 import mekanism.api.math.FloatingLong;
+import mekanism.common.util.ChemicalUtil;
 import mekanism.common.util.HeatUtils;
-import mekanism.common.util.MekanismUtils;
-import mekanism.common.util.UnitDisplayUtils.TemperatureUnit;
 import mekanism.common.util.text.EnergyDisplay;
+import mekanism.generators.common.GeneratorTags;
 import mekanism.generators.common.config.MekanismGeneratorsConfig;
 import mekanism.generators.common.content.fusion.FusionReactorMultiblockData;
 import mekanism.generators.common.registries.GeneratorsBlocks;
+import mekanism.generators.common.registries.GeneratorsItems;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.gui.widget.Widget;
@@ -44,6 +48,20 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		consumer.accept(GeneratorsBlocks.FUSION_REACTOR_LOGIC_ADAPTER.getItemStack());
 		consumer.accept(GeneratorsBlocks.LASER_FOCUS_MATRIX.getItemStack());
 		consumer.accept(GeneratorsBlocks.REACTOR_GLASS.getItemStack());
+
+		List<Gas> fusionFuelGases = GeneratorTags.Gases.FUSION_FUEL.getValues();
+
+		if (fusionFuelGases.size() > 0)
+		{
+			Gas fusionFuelGas = fusionFuelGases.get(0);
+			long capacity = MekanismGeneratorsConfig.generators.hohlraumMaxGas.get();
+			consumer.accept(ChemicalUtil.getFilledVariant(GeneratorsItems.HOHLRAUM.getItemStack(), capacity, fusionFuelGas));
+		}
+		else
+		{
+			consumer.accept(GeneratorsItems.HOHLRAUM.getItemStack());
+		}
+
 	}
 
 	@Override
@@ -65,6 +83,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		protected IntSliderWithButtons logicAdaptersWidget;
 		protected IntSliderWithButtons injectionRateWidget;
 		protected CheckBoxWidget waterCooledCheckBox;
+		protected LabelWidget injectionRateInfoWidget;
 
 		public FusionReactorCategoryWidget()
 		{
@@ -79,13 +98,14 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			consumer.accept(this.useReactorGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.REACTOR_GLASS.getItemStack().getHoverName()), true));
 			this.useReactorGlassCheckBox.addSelectedChangedHandler(this::onUseReactorGlassChanged);
 			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 1, 0));
-			this.portsWidget.getSlider().addIntValueChangeHanlder(this::onPortsChanged);
+			this.portsWidget.getSlider().addValueChangeHanlder(this::onPortsChanged);
 			consumer.accept(this.logicAdaptersWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.logic_adapters", 0, 0, 0));
-			this.logicAdaptersWidget.getSlider().addIntValueChangeHanlder(this::onLogicAdaptersChanged);
+			this.logicAdaptersWidget.getSlider().addValueChangeHanlder(this::onLogicAdaptersChanged);
 			consumer.accept(this.injectionRateWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.injection_rate", new Mod2IntSliderWidget(0, 0, 0, 0, StringTextComponent.EMPTY, 2, 2, FluidAttributes.BUCKET_VOLUME, 1)));
-			this.injectionRateWidget.getSlider().addIntValueChangeHanlder(this::onInjectionRateChanged);
+			this.injectionRateWidget.getSlider().addValueChangeHanlder(this::onInjectionRateChanged);
 			consumer.accept(this.waterCooledCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.water_cooled"), false));
 			this.waterCooledCheckBox.addSelectedChangedHandler(this::onWaterCooledChanged);
+			consumer.accept(this.injectionRateInfoWidget = new LabelWidget(0, 0, 0, 0, StringTextComponent.EMPTY));
 
 			this.updatePortsSliderLimit();
 			this.setPortCount(4);
@@ -119,9 +139,9 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		public void updatePortsSliderLimit()
 		{
 			IntSliderWidget portsSlider = this.portsWidget.getSlider();
-			int valves = portsSlider.getIntValue();
-			portsSlider.setIntMaxValue(this.getSideBlocks());
-			portsSlider.setIntValue(valves);
+			int valves = portsSlider.getValue();
+			portsSlider.setMaxValue(this.getSideBlocks());
+			portsSlider.setValue(valves);
 
 			this.updateLogicAdaptersSliderLimit();
 		}
@@ -129,9 +149,9 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		public void updateLogicAdaptersSliderLimit()
 		{
 			IntSliderWidget adaptersSlider = this.logicAdaptersWidget.getSlider();
-			int adapters = adaptersSlider.getIntValue();
-			adaptersSlider.setIntMaxValue(this.getSideBlocks() - this.getPortCount());
-			adaptersSlider.setIntValue(adapters);
+			int adapters = adaptersSlider.getValue();
+			adaptersSlider.setMaxValue(this.getSideBlocks() - this.getPortCount());
+			adaptersSlider.setValue(adapters);
 		}
 
 		protected void onPortsChanged(int ports)
@@ -239,22 +259,22 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 		public int getPortCount()
 		{
-			return this.portsWidget.getSlider().getIntValue();
+			return this.portsWidget.getSlider().getValue();
 		}
 
 		public void setPortCount(int portCount)
 		{
-			this.portsWidget.getSlider().setIntValue(portCount);
+			this.portsWidget.getSlider().setValue(portCount);
 		}
 
 		public int getLogicAdapterCount()
 		{
-			return this.logicAdaptersWidget.getSlider().getIntValue();
+			return this.logicAdaptersWidget.getSlider().getValue();
 		}
 
 		public void setLogicAdapterCount(int logicAdapterCount)
 		{
-			this.logicAdaptersWidget.getSlider().setIntValue(logicAdapterCount);
+			this.logicAdaptersWidget.getSlider().setValue(logicAdapterCount);
 		}
 
 		public boolean isUseReactorGlass()
@@ -269,12 +289,12 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 		public int getInjectionRate()
 		{
-			return this.injectionRateWidget.getSlider().getIntValue();
+			return this.injectionRateWidget.getSlider().getValue();
 		}
 
 		public void setInjectionRate(int injectionRate)
 		{
-			this.injectionRateWidget.getSlider().setIntValue(injectionRate);
+			this.injectionRateWidget.getSlider().setValue(injectionRate);
 		}
 
 		public boolean isWaterCooled()

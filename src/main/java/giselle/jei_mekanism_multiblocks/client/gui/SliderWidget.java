@@ -1,5 +1,8 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -16,26 +19,28 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class SliderWidget extends Widget
 {
-	private double value;
+	private final List<DoubleConsumer> ratioChangeHandlers;
+	private double ratio;
 	private boolean horizontal;
-	private DoubleConsumer setter;
+	private ITextComponent[] tooltip;
 
 	public SliderWidget()
 	{
 		this(0, 0, 0, 0, StringTextComponent.EMPTY, 0);
 	}
 
-	public SliderWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, double pValue)
-	{
-		this(pX, pY, pWidth, pHeight, pMessage, pValue, null);
-	}
-
-	public SliderWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, double pValue, DoubleConsumer setter)
+	public SliderWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, double pRatio)
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
-		this.value = MathHelper.clamp(pValue, 0.0D, 1.0D);
+		this.ratioChangeHandlers = new ArrayList<>();
+		this.ratio = MathHelper.clamp(pRatio, 0.0D, 1.0D);
 		this.horizontal = true;
-		this.setter = setter;
+		this.tooltip = new ITextComponent[0];
+	}
+
+	public void addRatioChangeHanlder(DoubleConsumer handler)
+	{
+		this.ratioChangeHandlers.add(handler);
 	}
 
 	@Override
@@ -64,6 +69,18 @@ public class SliderWidget extends Widget
 		this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
 		int j = this.getFGColor();
 		GuiHelper.drawScaledText(pMatrixStack, this.getMessage(), this.x + 2, this.y + 1, this.width - 4, j, true, TextAlignment.CENTER);
+
+		if (this.isHovered())
+		{
+			this.renderToolTip(pMatrixStack, pMouseX, pMouseY);
+		}
+
+	}
+
+	@Override
+	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
+	{
+		GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
 	}
 
 	@Override
@@ -82,7 +99,7 @@ public class SliderWidget extends Widget
 
 		if (this.isHorizontal())
 		{
-			cursorX = this.x + (int) (this.value * (this.width - 8));
+			cursorX = this.x + (int) (this.ratio * (this.width - 8));
 			cursorY = this.y;
 			cursorWidth = 8;
 			cursorHeight = this.height;
@@ -90,7 +107,7 @@ public class SliderWidget extends Widget
 		else
 		{
 			cursorX = this.x;
-			cursorY = this.y + (int) (this.value * (this.height - 8));
+			cursorY = this.y + (int) (this.ratio * (this.height - 8));
 			cursorWidth = this.width;
 			cursorHeight = 8;
 		}
@@ -102,7 +119,7 @@ public class SliderWidget extends Widget
 		GuiHelper.blitButton(pMatrixStack, cursorX, cursorY, cursorWidth, cursorHeight, true, this.isHovered());
 	}
 
-	protected void setValueFromMouse(double pMouseX, double pMouseY)
+	protected void setRatioFromMouse(double pMouseX, double pMouseY)
 	{
 		double ratio = 0.0D;
 
@@ -115,25 +132,25 @@ public class SliderWidget extends Widget
 			ratio = (pMouseY - (this.y + 4)) / (this.height - 8);
 		}
 
-		double value = this.applyValueFromMouse(ratio);
-		this.setValue(value);
+		double appliedRatio = this.applyRatioFromMouse(ratio);
+		this.setRatio(appliedRatio);
 	}
 
-	protected double applyValueFromMouse(double pValue)
+	protected double applyRatioFromMouse(double pRatio)
 	{
-		return pValue;
+		return pRatio;
 	}
 
 	@Override
 	public void onClick(double pMouseX, double pMouseY)
 	{
-		this.setValueFromMouse(pMouseX, pMouseY);
+		this.setRatioFromMouse(pMouseX, pMouseY);
 	}
 
 	@Override
 	protected void onDrag(double pMouseX, double pMouseY, double pDragX, double pDragY)
 	{
-		this.setValueFromMouse(pMouseX, pMouseY);
+		this.setRatioFromMouse(pMouseX, pMouseY);
 		super.onDrag(pMouseX, pMouseY, pDragX, pDragY);
 	}
 
@@ -141,42 +158,40 @@ public class SliderWidget extends Widget
 	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers)
 	{
 		boolean flag = pKeyCode == 263;
+
 		if (flag || pKeyCode == 262)
 		{
 			float f = flag ? -1.0F : 1.0F;
-			this.setValue(this.value + f / (this.width - 8));
+			this.setRatio(this.ratio + f / (this.width - 8));
 		}
 
 		return false;
 	}
 
-	public double getValue()
+	public double getRatio()
 	{
-		return this.value;
+		return this.ratio;
 	}
 
-	protected void setValueInternal(double value)
+	public void setRatio(double pRatio)
 	{
-		this.value = MathHelper.clamp(value, 0.0D, 1.0D);
-	}
+		pRatio = MathHelper.clamp(pRatio, 0.0D, 1.0D);
 
-	public void setValue(double value)
-	{
-		value = MathHelper.clamp(value, 0.0D, 1.0D);
-
-		if (this.getValue() != value)
+		if (this.getRatio() != pRatio)
 		{
-			this.value = value;
-			this.onValueChanged();
+			this.ratio = pRatio;
+			this.onRatioChanged();
 		}
 
 	}
 
-	protected void onValueChanged()
+	protected void onRatioChanged()
 	{
-		if (this.setter != null)
+		double ratio = this.getRatio();
+
+		for (DoubleConsumer handler : this.ratioChangeHandlers)
 		{
-			this.setter.accept(this.getValue());
+			handler.accept(ratio);
 		}
 
 	}
@@ -216,6 +231,16 @@ public class SliderWidget extends Widget
 	public void onRelease(double pMouseX, double pMouseY)
 	{
 		super.playDownSound(Minecraft.getInstance().getSoundManager());
+	}
+
+	public void setTooltip(ITextComponent... tooltip)
+	{
+		this.tooltip = tooltip.clone();
+	}
+
+	public ITextComponent[] getTooltip()
+	{
+		return tooltip.clone();
 	}
 
 }

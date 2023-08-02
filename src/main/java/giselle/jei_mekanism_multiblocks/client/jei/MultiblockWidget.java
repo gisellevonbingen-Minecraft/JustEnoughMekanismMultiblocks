@@ -106,13 +106,13 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 		List<IntSliderWithButtons> widgets = new ArrayList<>();
 		widgets.add(this.widthWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.dimensions.width", this.createDimensionSlider(0, this.getDimensionWidthMin(), this.getDimensionWidthMax())));
-		this.widthWidget.getSlider().addIntValueChangeHanlder(this::onDimensionWidthChanged);
+		this.widthWidget.getSlider().addValueChangeHanlder(this::onDimensionWidthChanged);
 		widgets.add(this.lengthWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.dimensions.length", this.createDimensionSlider(1, this.getDimensionLengthMin(), this.getDimensionLengthMax())));
-		this.lengthWidget.getSlider().addIntValueChangeHanlder(this::onDimensionLengthChanged);
+		this.lengthWidget.getSlider().addValueChangeHanlder(this::onDimensionLengthChanged);
 		widgets.add(this.heightWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.dimensions.height", this.createDimensionSlider(2, this.getDimensionHeightMin(), this.getDimensionHeightMax())));
-		this.heightWidget.getSlider().addIntValueChangeHanlder(this::onDimensionHeightChanged);
+		this.heightWidget.getSlider().addValueChangeHanlder(this::onDimensionHeightChanged);
 
-		List<IntSliderWithButtons> list = widgets.stream().filter(w -> this.isUseDimensionWIidget(w) && w.getSlider().getIntMinValue() < w.getSlider().getIntMaxValue()).collect(Collectors.toList());
+		List<IntSliderWithButtons> list = widgets.stream().filter(w -> this.isUseDimensionWIidget(w) && w.getSlider().getMinValue() < w.getSlider().getMaxValue()).collect(Collectors.toList());
 
 		if (list.size() > 0)
 		{
@@ -290,12 +290,12 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	public int getDimensionWidth()
 	{
-		return this.widthWidget.getSlider().getIntValue();
+		return this.widthWidget.getSlider().getValue();
 	}
 
 	public void setDimensionWidth(int width)
 	{
-		this.widthWidget.getSlider().setIntValue(width);
+		this.widthWidget.getSlider().setValue(width);
 	}
 
 	public abstract int getDimensionWidthMin();
@@ -304,12 +304,12 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	public int getDimensionLength()
 	{
-		return this.lengthWidget.getSlider().getIntValue();
+		return this.lengthWidget.getSlider().getValue();
 	}
 
 	public void setDimensionLength(int length)
 	{
-		this.lengthWidget.getSlider().setIntValue(length);
+		this.lengthWidget.getSlider().setValue(length);
 	}
 
 	public abstract int getDimensionLengthMin();
@@ -318,12 +318,12 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	public int getDimensionHeight()
 	{
-		return this.heightWidget.getSlider().getIntValue();
+		return this.heightWidget.getSlider().getValue();
 	}
 
 	public void seDimensionHeight(int height)
 	{
-		this.heightWidget.getSlider().setIntValue(height);
+		this.heightWidget.getSlider().setValue(height);
 	}
 
 	public abstract int getDimensionHeightMin();

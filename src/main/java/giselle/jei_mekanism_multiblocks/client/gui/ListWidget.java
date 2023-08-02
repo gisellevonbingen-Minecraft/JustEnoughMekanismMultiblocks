@@ -45,7 +45,7 @@ public class ListWidget extends ContainerWidget
 		this.downButton.addPressHandler(this::onScrollButtonClick);
 
 		this.addFunctionWidget(this.scrollBar = new IntSliderWidget(0, 0, 0, 0, StringTextComponent.EMPTY, 0, 0, 0));
-		this.scrollBar.addIntValueChangeHanlder(this::onScrollChanged);
+		this.scrollBar.addValueChangeHanlder(this::onScrollChanged);
 
 		this.scrollBar.setVertical();
 		this.itemsChanged = true;
@@ -114,11 +114,11 @@ public class ListWidget extends ContainerWidget
 		{
 			this.itemsChanged = false;
 
-			int scroll = this.scrollBar.getIntValue();
+			int scroll = this.scrollBar.getValue();
 			int childCount = this.getChildren().size();
-			this.scrollBar.setIntMaxValue(Math.max(childCount - this.getItemCountInHeight(), 0));
-			this.scrollBar.setIntValue(scroll);
-			this.scrollBar.active = this.scrollBar.getIntMaxValue() > 0;
+			this.scrollBar.setMaxValue(Math.max(childCount - this.getItemCountInHeight(), 0));
+			this.scrollBar.setValue(scroll);
+			this.scrollBar.active = this.scrollBar.getMaxValue() > 0;
 			this.upButton.active = this.scrollBar.active;
 			this.downButton.active = this.scrollBar.active;
 		}
@@ -364,12 +364,12 @@ public class ListWidget extends ContainerWidget
 
 	public int getScrollAmount()
 	{
-		return this.scrollBar.getIntValue();
+		return this.scrollBar.getValue();
 	}
 
 	public void setScrollAmount(int scrollAmount)
 	{
-		this.scrollBar.setIntValue(scrollAmount);
+		this.scrollBar.setValue(scrollAmount);
 	}
 
 }

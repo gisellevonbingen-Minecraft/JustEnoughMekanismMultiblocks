@@ -9,128 +9,127 @@ import net.minecraft.util.text.ITextComponent;
 
 public class IntSliderWidget extends SliderWidget
 {
-	private final List<IntConsumer> intValueChangeHandlers;
-	private int intMinValue;
-	private int intMaxValue;
+	private final List<IntConsumer> valueChangeHandlers;
+	private int minValue;
+	private int maxValue;
+	private int prev;
 
 	public IntSliderWidget(int x, int y, int width, int height, ITextComponent pMessage, int value, int min, int max)
 	{
 		super(x, y, width, height, pMessage, MathHelper.inverseLerp(value, min, max));
-		this.intValueChangeHandlers = new ArrayList<>();
-		this.intMinValue = min;
-		this.intMaxValue = max;
+		this.valueChangeHandlers = new ArrayList<>();
+		this.minValue = min;
+		this.maxValue = max;
+		this.prev = this.getValue();
 	}
 
-	public void addIntValueChangeHanlder(IntConsumer handler)
+	public void addValueChangeHanlder(IntConsumer handler)
 	{
-		this.intValueChangeHandlers.add(handler);
+		this.valueChangeHandlers.add(handler);
 	}
 
-	protected int toIntValue(double pValue)
+	protected int toValue(double pRatio)
 	{
-		int intMin = this.getIntMinValue();
-		int intMax = this.getIntMaxValue();
+		int minValue = this.getMinValue();
+		int maxValue = this.getMaxValue();
 
-		if (intMin == intMax)
+		if (minValue == maxValue)
 		{
-			return intMax;
+			return maxValue;
 		}
 		else
 		{
-			return (int) Math.round(MathHelper.clampedLerp(intMin, intMax, pValue));
+			return (int) Math.round(MathHelper.clampedLerp(minValue, maxValue, pRatio));
 		}
 
 	}
 
-	protected double fromIntValue(int intValue)
+	protected double toRatio(int value)
 	{
-		int intMin = this.getIntMinValue();
-		int intMax = this.getIntMaxValue();
+		int minValue = this.getMinValue();
+		int maxValue = this.getMaxValue();
 
-		if (intMin == intMax)
+		if (minValue == maxValue)
 		{
 			return 0.0D;
 		}
 		else
 		{
-			return MathHelper.inverseLerp(intValue, intMin, intMax);
+			value = MathHelper.clamp(value, minValue, maxValue);
+			return MathHelper.inverseLerp(value, minValue, maxValue);
 		}
 
 	}
 
 	@Override
-	protected double applyValueFromMouse(double pValue)
+	protected double applyRatioFromMouse(double pRatio)
 	{
-		int intValue = this.toIntValue(pValue);
-		return this.fromIntValue(intValue);
+		int value = this.toValue(pRatio);
+		return this.toRatio(value);
 	}
 
 	@Override
+	protected void onRatioChanged()
+	{
+		int next = this.getValue();
+
+		if (this.prev != next)
+		{
+			this.prev = next;
+			this.onValueChanged();
+		}
+
+		super.onRatioChanged();
+	}
+
 	protected void onValueChanged()
 	{
-		super.onValueChanged();
+		int value = this.getValue();
 
-		this.onIntValueChanged();
-	}
-
-	private void onIntValueChanged()
-	{
-		int intValue = this.getIntValue();
-
-		for (IntConsumer handler : this.intValueChangeHandlers)
+		for (IntConsumer handler : this.valueChangeHandlers)
 		{
-			handler.accept(intValue);
+			handler.accept(value);
 		}
 
 	}
 
-	public int getIntValue()
+	public int getValue()
 	{
-		return this.toIntValue(this.getValue());
+		return this.toValue(this.getRatio());
 	}
 
-	public void setIntValue(int intValue)
+	public void setValue(int value)
 	{
-		intValue = MathHelper.clamp(intValue, this.getIntMinValue(), this.getIntMaxValue());
-		double doubleValue = this.fromIntValue(intValue);
-
-		if (this.getIntValue() != intValue)
-		{
-			this.setValue(doubleValue);
-		}
-		else
-		{
-			this.setValueInternal(doubleValue);
-		}
-
+		double ratio = this.toRatio(value);
+		this.setRatio(ratio);
 	}
 
-	public int getIntMinValue()
+	public int getMinValue()
 	{
-		return this.intMinValue;
+		return this.minValue;
 	}
 
-	public void setIntMinValue(int intMax)
+	public void setMinValue(int minValue)
 	{
-		if (this.getIntMinValue() != intMax)
+		if (this.getMinValue() != minValue)
 		{
-			this.intMinValue = intMax;
-			this.onIntValueChanged();
+			this.minValue = minValue;
+			this.onValueChanged();
 		}
 
 	}
 
-	public int getIntMaxValue()
+	public int getMaxValue()
 	{
-		return this.intMaxValue;
+		return this.maxValue;
 	}
 
-	public void setIntMaxValue(int intMax)
+	public void setMaxValue(int maxValue)
 	{
-		if (this.getIntMaxValue() != intMax)
+		if (this.getMaxValue() != maxValue)
 		{
-			this.intMaxValue = intMax;
-			this.onIntValueChanged();
+			this.maxValue = maxValue;
+			this.onValueChanged();
 		}
 
 	}
