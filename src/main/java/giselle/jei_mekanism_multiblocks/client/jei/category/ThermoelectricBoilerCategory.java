@@ -80,6 +80,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 			consumer.accept(this.steamHeightWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.steam_height", 0, 1, 0));
 			this.steamHeightWidget.getSlider().addValueChangeHanlder(this::onSteamHeightChanged);
+			this.steamHeightWidget.setTooltip(new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.steam_height", MekanismBlocks.PRESSURE_DISPERSER.getTextComponent()));
 			consumer.accept(this.heatingElementsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.heating_elements", 0, 1, 0));
 			this.heatingElementsWidget.getSlider().addValueChangeHanlder(this::onHeatingElementsChanged);
 
