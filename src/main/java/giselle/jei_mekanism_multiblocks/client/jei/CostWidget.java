@@ -7,6 +7,7 @@ import java.util.List;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
+import mekanism.common.util.text.TextUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.Widget;
@@ -20,8 +21,8 @@ public class CostWidget extends Widget
 {
 	private final ItemStack itemStack;
 	private final boolean hasCountExpressionComponent;
-	private final StringTextComponent countExpressionComponent;
-	private final StringTextComponent countTotalComponent;
+	private final ITextComponent countExpressionComponent;
+	private final ITextComponent countTotalComponent;
 	private ITextComponent[] headTooltip;
 	private ITextComponent[] tailTooltip;
 
@@ -44,7 +45,7 @@ public class CostWidget extends Widget
 
 			if (remains > 0)
 			{
-				builder.append(" + ");
+				builder.append("+");
 			}
 
 		}
@@ -56,7 +57,7 @@ public class CostWidget extends Widget
 
 		this.hasCountExpressionComponent = stacks > 0;
 		this.countExpressionComponent = new StringTextComponent(builder.toString());
-		this.countTotalComponent = new StringTextComponent("=" + count);
+		this.countTotalComponent = new StringTextComponent("=").append(TextUtils.format(count));
 		this.headTooltip = new ITextComponent[0];
 		this.tailTooltip = new ITextComponent[0];
 	}
@@ -73,7 +74,7 @@ public class CostWidget extends Widget
 		ItemStack itemStack = this.getItemStack();
 		Vector4f vector4f = new Vector4f(0.0F, 0.0F, 0.0F, 1.0F);
 		vector4f.transform(pMatrixStack.last().pose());
-		itemRenderer.renderGuiItem(itemStack, (int) vector4f.x() + itemX, (int) vector4f.y() + itemY);
+		itemRenderer.renderAndDecorateItem(null, itemStack, (int) vector4f.x() + itemX, (int) vector4f.y() + itemY);
 
 		int textX = itemX + 18;
 		int textY = itemY;

@@ -1,5 +1,6 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
+import mekanism.common.util.text.TextUtils;
 import net.minecraft.util.text.StringTextComponent;
 
 public class IntSliderWithButtons extends SliderWithButtons<IntSliderWidget>
@@ -21,7 +22,7 @@ public class IntSliderWithButtons extends SliderWithButtons<IntSliderWidget>
 	@Override
 	protected String getDisplayValue()
 	{
-		return String.valueOf(this.getSlider().getValue());
+		return TextUtils.format(this.getSlider().getValue());
 	}
 
 	@Override
