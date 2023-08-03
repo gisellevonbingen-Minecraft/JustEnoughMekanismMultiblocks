@@ -10,7 +10,6 @@ import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
-import giselle.jei_mekanism_multiblocks.common.util.VolumeUnit;
 import mekanism.api.heat.HeatAPI;
 import mekanism.api.math.MathUtils;
 import mekanism.common.Mekanism;
@@ -246,7 +245,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			// System.out.println("needMoreSteamVolume: " + simulation.needMoreSteamVolume);
 			// System.out.println("needMoreSuperHeatingElemetns: " + simulation.needMoreSuperHeatingElemetns);
 
-			ResultWidget boilRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_boil_rate"), VolumeTextHelper.format(simulation.maxBoil, VolumeUnit.MILLI, "B/t"));
+			ResultWidget boilRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_boil_rate"), VolumeTextHelper.formatMBt(simulation.maxBoil));
 			this.needMoreHeatingElements = false;
 
 			if (simulation.needMoreSuperHeatingElemetns)
@@ -269,10 +268,10 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			consumer.accept(boilRateWidget);
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.temp"), MekanismUtils.getTemperatureDisplay(simulation.heat / simulation.heatCapacity, TemperatureUnit.KELVIN, false)));
 
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMilliBuckets(simulation.waterTank)));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMilliBuckets(simulation.steamTank)));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.heated_coolant_tank"), VolumeTextHelper.formatMilliBuckets(simulation.heatedCoolantTank)));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.cooled_coolant_tank"), VolumeTextHelper.formatMilliBuckets(simulation.cooledCoolantTank)));
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(simulation.waterTank)));
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(simulation.steamTank)));
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.heated_coolant_tank"), VolumeTextHelper.formatMB(simulation.heatedCoolantTank)));
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.cooled_coolant_tank"), VolumeTextHelper.formatMB(simulation.cooledCoolantTank)));
 		}
 
 		public ThermoelectricBoilerSimulation simulateMaxBoil(int steamHeight, int heatingElementCount)

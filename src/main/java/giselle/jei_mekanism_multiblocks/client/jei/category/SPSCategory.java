@@ -107,8 +107,8 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 
 			FloatingLong energyPerAntimatter = MekanismConfig.general.spsEnergyPerInput.get().multiply(MekanismConfig.general.spsInputPerAntimatter.get());
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.energy_per_antimatter"), new TranslationTextComponent("%s/%s", EnergyDisplay.of(energyPerAntimatter).getTextComponent(), "mB")));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMilliBuckets(MekanismConfig.general.spsInputPerAntimatter.get() * 2L)));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMilliBuckets(1_000)));
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(MekanismConfig.general.spsInputPerAntimatter.get() * 2L)));
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(1_000)));
 		}
 
 		protected void onPortsChanged(int ports)

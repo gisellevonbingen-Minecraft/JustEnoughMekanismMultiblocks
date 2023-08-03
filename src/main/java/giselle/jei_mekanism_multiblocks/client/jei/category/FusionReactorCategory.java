@@ -11,7 +11,6 @@ import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
-import giselle.jei_mekanism_multiblocks.common.util.VolumeUnit;
 import mekanism.api.chemical.gas.Gas;
 import mekanism.api.math.FloatingLong;
 import mekanism.common.util.ChemicalUtil;
@@ -268,18 +267,18 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 			if (steamProduction > 0L)
 			{
-				consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_production"), VolumeTextHelper.format(steamProduction, VolumeUnit.MILLI, "B/t")));
+				consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_production"), VolumeTextHelper.formatMBt(steamProduction)));
 			}
 
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.fuel_tank"), VolumeTextHelper.formatMilliBuckets(fuelTank)));
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.fuel_tank"), VolumeTextHelper.formatMB(fuelTank)));
 
 			if (this.isWaterCooled())
 			{
 				TranslationTextComponent injectionRateTooltip = new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate);
-				ResultWidget watTankWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMilliBuckets(waterTank));
+				ResultWidget watTankWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(waterTank));
 				watTankWidget.setTooltip(injectionRateTooltip);
 				consumer.accept(watTankWidget);
-				ResultWidget steamTankWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMilliBuckets(steamTank));
+				ResultWidget steamTankWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(steamTank));
 				steamTankWidget.setTooltip(injectionRateTooltip);
 				consumer.accept(steamTankWidget);
 			}

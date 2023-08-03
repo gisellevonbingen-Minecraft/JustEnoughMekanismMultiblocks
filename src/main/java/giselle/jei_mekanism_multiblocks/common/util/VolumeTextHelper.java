@@ -20,9 +20,14 @@ public class VolumeTextHelper
 
 	}
 
-	public static ITextComponent formatMilliBuckets(double value)
+	public static ITextComponent formatMB(double value)
 	{
 		return format(value, VolumeUnit.MILLI, "B");
+	}
+
+	public static ITextComponent formatMBt(double value)
+	{
+		return format(value, VolumeUnit.MILLI, "B/t");
 	}
 
 	public static ITextComponent format(double value, VolumeUnit from, String unit)

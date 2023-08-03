@@ -133,8 +133,8 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 			int volume = this.getDimensionVolume();
 			long fluidCapacity = volume * MekanismConfig.general.dynamicTankFluidPerTank.get();
 			long chemicalCapacity = volume * MekanismConfig.general.dynamicTankChemicalPerTank.get();
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.fluid_tank"), VolumeTextHelper.formatMilliBuckets(fluidCapacity)));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.chemical_tank"), VolumeTextHelper.formatMilliBuckets(chemicalCapacity)));
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.fluid_tank"), VolumeTextHelper.formatMB(fluidCapacity)));
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.chemical_tank"), VolumeTextHelper.formatMB(chemicalCapacity)));
 		}
 
 		public int getValveCount()

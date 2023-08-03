@@ -11,7 +11,6 @@ import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
-import giselle.jei_mekanism_multiblocks.common.util.VolumeUnit;
 import mekanism.api.math.FloatingLong;
 import mekanism.api.math.MathUtils;
 import mekanism.common.config.MekanismConfig;
@@ -310,7 +309,7 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 			maxProductionWidget.setTooltip(productionPerFlowTooltip);
 
 			consumer.accept(maxProductionWidget);
-			ResultWidget maxFlowRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_flow_rate"), VolumeTextHelper.format(maxFlow, VolumeUnit.MILLI, "B/t"));
+			ResultWidget maxFlowRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_flow_rate"), VolumeTextHelper.formatMBt(maxFlow));
 			consumer.accept(maxFlowRateWidget);
 
 			this.needMoreVents = vents < this.getClampedMaxVentCount(this.getRotorCount());
@@ -327,7 +326,7 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 				maxFlowRateWidget.setTooltip(productionPerFlowTooltip);
 			}
 
-			ResultWidget maxWaterOutputWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_water_output"), VolumeTextHelper.format(maxWaterOutput, VolumeUnit.MILLI, "B/t"));
+			ResultWidget maxWaterOutputWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_water_output"), VolumeTextHelper.formatMBt(maxWaterOutput));
 			consumer.accept(maxWaterOutputWidget);
 
 			if (maxFlow > maxWaterOutput)
@@ -339,7 +338,7 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_more", GeneratorsBlocks.SATURATING_CONDENSER.getTextComponent()).withStyle(TextFormatting.RED));
 			}
 
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMilliBuckets(steamTank)));
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(steamTank)));
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.energy_capacity"), EnergyDisplay.of(FloatingLong.create(energyCapacity)).getTextComponent()));
 		}
 
