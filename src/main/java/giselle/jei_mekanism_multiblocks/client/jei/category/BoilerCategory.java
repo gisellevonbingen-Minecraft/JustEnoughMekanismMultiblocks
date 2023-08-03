@@ -77,7 +77,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			consumer.accept(this.forSodiumCoolingCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.for_sodium_cooling"), false));
 			this.forSodiumCoolingCheckBox.addSelectedChangedHandler(this::onForSodiumCoolingChanged);
 
-			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 2, 0));
+			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 0, 0));
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 			consumer.accept(this.steamHeightWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.steam_height", 0, 1, 0));
 			this.steamHeightWidget.getSlider().addValueChangeHanlder(this::onSteamHeightChanged);
@@ -159,6 +159,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 		{
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
 			int valves = valvesSlider.getValue();
+			valvesSlider.setMinValue(this.isForSodiumCooling() ? 4 : 2);
 			valvesSlider.setMaxValue(this.getSideBlocks());
 			valvesSlider.setValue(valves);
 
@@ -207,6 +208,8 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 
 		protected void onForSodiumCoolingChanged(boolean forSodiumCooling)
 		{
+			this.updateSlidersLimit();
+			
 			if (forSodiumCooling)
 			{
 				this.calculatePreferredSodiumCoolingLayout();

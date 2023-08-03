@@ -21,7 +21,7 @@
 	"text.jei_mekanism_multiblocks.specs.injection_rate": "융합 속도: %s",
 	"text.jei_mekanism_multiblocks.specs.steam_height": "증기 높이: %s",
 	"text.jei_mekanism_multiblocks.specs.water_cooled": "수냉",
-	"text.jei_mekanism_multiblocks.specs.for_sodium_cooling": "소듐 냉각용",
+	"text.jei_mekanism_multiblocks.specs.for_sodium_cooling": "나트륨 냉각용",
 	
 	"text.jei_mekanism_multiblocks.result.input_tank": "입력 탱크",
 	"text.jei_mekanism_multiblocks.result.output_tank": "출력 탱크",
@@ -41,7 +41,7 @@
 	"text.jei_mekanism_multiblocks.result.boil_capacity": "비등 용량",
 	"text.jei_mekanism_multiblocks.result.energy_capacity": "에너지 용량",
 	"text.jei_mekanism_multiblocks.result.temp_with": "'%s' 사용시 온도",
-	"text.jei_mekanism_multiblocks.result.heated_coolant": "가열된 '%s' 출력량",
+	"text.jei_mekanism_multiblocks.result.heating_rate_with": "'%s' 가열 속도",
 	"text.jei_mekanism_multiblocks.result.steam_production": "증기 생산량",
 	"text.jei_mekanism_multiblocks.result.passive_generation": "지속 발전량",
 	"text.jei_mekanism_multiblocks.result.energy_per_antimatter": "반물질당 에너지",

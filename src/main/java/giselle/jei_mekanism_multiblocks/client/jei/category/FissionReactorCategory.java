@@ -245,8 +245,9 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			}
 
 			long heatedCoolant = this.getHeatedCoolant(stableTemp, conductivity);
-			ResultWidget heatedCoolantWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.heated_coolant", with), VolumeTextHelper.formatMBt(heatedCoolant));
-			consumer.accept(heatedCoolantWidget);
+			ResultWidget heatingRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.heating_rate_with", with), VolumeTextHelper.formatMBt(heatedCoolant));
+			heatingRateWidget.setTooltip(burnRateTooltip);
+			consumer.accept(heatingRateWidget);
 		}
 
 		private void simulateTemp(double coolantConductivity)

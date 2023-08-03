@@ -79,10 +79,10 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 	public static class FusionReactorCategoryWidget extends MultiblockWidget
 	{
 		protected CheckBoxWidget useReactorGlassCheckBox;
+		protected CheckBoxWidget waterCooledCheckBox;
 		protected IntSliderWithButtons portsWidget;
 		protected IntSliderWithButtons logicAdaptersWidget;
 		protected IntSliderWithButtons injectionRateWidget;
-		protected CheckBoxWidget waterCooledCheckBox;
 
 		public FusionReactorCategoryWidget()
 		{
@@ -96,17 +96,17 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 			consumer.accept(this.useReactorGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.REACTOR_GLASS.getItemStack().getHoverName()), true));
 			this.useReactorGlassCheckBox.addSelectedChangedHandler(this::onUseReactorGlassChanged);
-			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 1, 0));
+			consumer.accept(this.waterCooledCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.water_cooled"), false));
+			this.waterCooledCheckBox.addSelectedChangedHandler(this::onWaterCooledChanged);
+			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 0, 0));
 			this.portsWidget.getSlider().addValueChangeHanlder(this::onPortsChanged);
 			consumer.accept(this.logicAdaptersWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.logic_adapters", 0, 0, 0));
 			this.logicAdaptersWidget.getSlider().addValueChangeHanlder(this::onLogicAdaptersChanged);
 			consumer.accept(this.injectionRateWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.injection_rate", new Mod2IntSliderWidget(0, 0, 0, 0, StringTextComponent.EMPTY, 2, 2, FluidAttributes.BUCKET_VOLUME, 1)));
 			this.injectionRateWidget.getSlider().addValueChangeHanlder(this::onInjectionRateChanged);
-			consumer.accept(this.waterCooledCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.water_cooled"), false));
-			this.waterCooledCheckBox.addSelectedChangedHandler(this::onWaterCooledChanged);
 
 			this.updatePortsSliderLimit();
-			this.setPortCount(4);
+			this.setPortCount(2);
 			this.setLogicAdapterCount(0);
 			this.updateInjectionRateInfoMessage();
 		}
@@ -139,6 +139,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		{
 			IntSliderWidget portsSlider = this.portsWidget.getSlider();
 			int valves = portsSlider.getValue();
+			portsSlider.setMinValue(this.isWaterCooled() ? 4 : 2);
 			portsSlider.setMaxValue(this.getSideBlocks());
 			portsSlider.setValue(valves);
 
@@ -177,6 +178,8 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 		protected void onWaterCooledChanged(boolean waterCooled)
 		{
+			this.updatePortsSliderLimit();
+			
 			this.markNeedUpdate();
 			this.updateInjectionRateInfoMessage();
 		}
