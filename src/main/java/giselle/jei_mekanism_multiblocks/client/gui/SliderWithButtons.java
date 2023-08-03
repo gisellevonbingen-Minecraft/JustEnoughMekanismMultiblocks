@@ -33,10 +33,6 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 		this.translationKey = translationKey;
 
 		this.addChild(this.slider = slider);
-		this.slider.addRatioChangeHanlder(v ->
-		{
-			this.updateMessage();
-		});
 		this.button2DirectionMap = new HashMap<>();
 		this.minusButton = this.createAdjustButton(new StringTextComponent("-"), -1);
 		this.plusButton = this.createAdjustButton(new StringTextComponent("+"), +1);

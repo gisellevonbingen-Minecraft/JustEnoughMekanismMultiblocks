@@ -12,6 +12,10 @@ public class IntSliderWithButtons extends SliderWithButtons<IntSliderWidget>
 	public IntSliderWithButtons(int pX, int pY, int pWidth, int pHeight, String translationKey, IntSliderWidget slider)
 	{
 		super(pX, pY, pWidth, pHeight, translationKey, slider);
+		slider.addValueChangeHanlder(v ->
+		{
+			this.updateMessage();
+		});
 	}
 
 	@Override

@@ -71,6 +71,13 @@ public class IntSliderWidget extends SliderWidget
 	@Override
 	protected void onRatioChanged()
 	{
+		this.onValueDirty();
+
+		super.onRatioChanged();
+	}
+
+	protected void onValueDirty()
+	{
 		int next = this.getValue();
 
 		if (this.prev != next)
@@ -79,7 +86,6 @@ public class IntSliderWidget extends SliderWidget
 			this.onValueChanged();
 		}
 
-		super.onRatioChanged();
 	}
 
 	protected void onValueChanged()
@@ -114,7 +120,7 @@ public class IntSliderWidget extends SliderWidget
 		if (this.getMinValue() != minValue)
 		{
 			this.minValue = minValue;
-			this.onValueChanged();
+			this.onValueDirty();
 		}
 
 	}
@@ -129,7 +135,7 @@ public class IntSliderWidget extends SliderWidget
 		if (this.getMaxValue() != maxValue)
 		{
 			this.maxValue = maxValue;
-			this.onValueChanged();
+			this.onValueDirty();
 		}
 
 	}

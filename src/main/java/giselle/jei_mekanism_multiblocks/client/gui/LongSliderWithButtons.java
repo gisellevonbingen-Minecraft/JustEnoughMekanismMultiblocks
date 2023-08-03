@@ -12,6 +12,10 @@ public class LongSliderWithButtons extends SliderWithButtons<LongSliderWidget>
 	public LongSliderWithButtons(int pX, int pY, int pWidth, int pHeight, String translationKey, LongSliderWidget slider)
 	{
 		super(pX, pY, pWidth, pHeight, translationKey, slider);
+		slider.addValueChangeHanlder(v ->
+		{
+			this.updateMessage();
+		});
 	}
 
 	@Override
