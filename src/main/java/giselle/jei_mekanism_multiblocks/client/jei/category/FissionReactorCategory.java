@@ -20,6 +20,7 @@ import mekanism.common.util.HeatUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.UnitDisplayUtils.TemperatureUnit;
 import mekanism.generators.common.GeneratorsLang;
+import mekanism.generators.common.MekanismGenerators;
 import mekanism.generators.common.config.MekanismGeneratorsConfig;
 import mekanism.generators.common.content.fission.FissionReactorMultiblockData;
 import mekanism.generators.common.registries.GeneratorsBlocks;
@@ -39,7 +40,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 {
 	public FissionReactorCategory(IGuiHelper helper)
 	{
-		super(helper, "fission_reactor", GeneratorsLang.FISSION_REACTOR.translate(), GeneratorsBlocks.CONTROL_ROD_ASSEMBLY.getItemStack());
+		super(helper, MekanismGenerators.rl("fission_reactor"), GeneratorsLang.FISSION_REACTOR.translate(), GeneratorsBlocks.CONTROL_ROD_ASSEMBLY.getItemStack());
 	}
 
 	@Override

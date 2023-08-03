@@ -13,6 +13,7 @@ import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeUnit;
 import mekanism.api.heat.HeatAPI;
 import mekanism.api.math.MathUtils;
+import mekanism.common.Mekanism;
 import mekanism.common.MekanismLang;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.content.boiler.BoilerMultiblockData;
@@ -33,7 +34,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 {
 	public ThermoelectricBoilerCategory(IGuiHelper helper)
 	{
-		super(helper, "thermoelectric_boiler", MekanismLang.BOILER.translate(), MekanismBlocks.BOILER_VALVE.getItemStack());
+		super(helper, Mekanism.rl("thermoelectric_boiler"), MekanismLang.BOILER.translate(), MekanismBlocks.BOILER_VALVE.getItemStack());
 	}
 
 	@Override

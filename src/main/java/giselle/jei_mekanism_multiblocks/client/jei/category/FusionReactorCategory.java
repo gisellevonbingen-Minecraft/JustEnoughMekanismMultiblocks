@@ -19,6 +19,7 @@ import mekanism.common.util.HeatUtils;
 import mekanism.common.util.text.EnergyDisplay;
 import mekanism.generators.common.GeneratorTags;
 import mekanism.generators.common.GeneratorsLang;
+import mekanism.generators.common.MekanismGenerators;
 import mekanism.generators.common.config.MekanismGeneratorsConfig;
 import mekanism.generators.common.content.fusion.FusionReactorMultiblockData;
 import mekanism.generators.common.registries.GeneratorsBlocks;
@@ -35,7 +36,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 {
 	public FusionReactorCategory(IGuiHelper helper)
 	{
-		super(helper, "fusion_reactor", GeneratorsLang.FUSION_REACTOR.translate(), GeneratorsBlocks.FUSION_REACTOR_CONTROLLER.getItemStack());
+		super(helper, MekanismGenerators.rl("fusion_reactor"), GeneratorsLang.FUSION_REACTOR.translate(), GeneratorsBlocks.FUSION_REACTOR_CONTROLLER.getItemStack());
 	}
 
 	@Override

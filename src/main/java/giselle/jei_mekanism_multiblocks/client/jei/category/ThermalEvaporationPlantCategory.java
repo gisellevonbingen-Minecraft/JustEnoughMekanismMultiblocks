@@ -11,6 +11,7 @@ import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.api.heat.HeatAPI;
+import mekanism.common.Mekanism;
 import mekanism.common.MekanismLang;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.content.evaporation.EvaporationMultiblockData;
@@ -30,7 +31,7 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 {
 	public ThermalEvaporationPlantCategory(IGuiHelper helper)
 	{
-		super(helper, "evaporation_plant", MekanismLang.EVAPORATION_PLANT.translate(), MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getItemStack());
+		super(helper, Mekanism.rl("evaporation_plant"), MekanismLang.EVAPORATION_PLANT.translate(), MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getItemStack());
 	}
 
 	@Override
