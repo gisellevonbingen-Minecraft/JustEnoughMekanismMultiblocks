@@ -33,11 +33,11 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurbineCategory.IndustrialTurbineWidget>
+public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineWidget>
 {
-	public IndustrialTurbineCategory(IGuiHelper helper)
+	public TurbineCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismGenerators.rl("industrial_turbine"), GeneratorsLang.TURBINE.translate(), GeneratorsBlocks.TURBINE_VALVE.getItemStack());
+		super(helper, MekanismGenerators.rl("turbine"), GeneratorsLang.TURBINE.translate(), GeneratorsBlocks.TURBINE_VALVE.getItemStack());
 	}
 
 	@Override
@@ -57,18 +57,18 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 	}
 
 	@Override
-	public void setIngredients(IndustrialTurbineWidget widget, IIngredients ingredients)
+	public void setIngredients(TurbineWidget widget, IIngredients ingredients)
 	{
 
 	}
 
 	@Override
-	public Class<? extends IndustrialTurbineWidget> getRecipeClass()
+	public Class<? extends TurbineWidget> getRecipeClass()
 	{
-		return IndustrialTurbineWidget.class;
+		return TurbineWidget.class;
 	}
 
-	public static class IndustrialTurbineWidget extends MultiblockWidget
+	public static class TurbineWidget extends MultiblockWidget
 	{
 		protected CheckBoxWidget useStructuralGlassCheckBox;
 		protected IntSliderWithButtons rotorsWidget;
@@ -78,7 +78,7 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 
 		private boolean needMoreVents;
 
-		public IndustrialTurbineWidget()
+		public TurbineWidget()
 		{
 			this.widthWidget.setTranslationKey("text.jei_mekanism_multiblocks.specs.width_length");
 		}

@@ -27,9 +27,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalEvaporationPlantCategory.ThermalEvaporationPlantWidget>
+public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlantCategory.EvaporationPlantWidget>
 {
-	public ThermalEvaporationPlantCategory(IGuiHelper helper)
+	public EvaporationPlantCategory(IGuiHelper helper)
 	{
 		super(helper, Mekanism.rl("evaporation_plant"), MekanismLang.EVAPORATION_PLANT.translate(), MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getItemStack());
 	}
@@ -51,24 +51,24 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 	}
 
 	@Override
-	public void setIngredients(ThermalEvaporationPlantWidget widget, IIngredients ingredients)
+	public void setIngredients(EvaporationPlantWidget widget, IIngredients ingredients)
 	{
 
 	}
 
 	@Override
-	public Class<? extends ThermalEvaporationPlantWidget> getRecipeClass()
+	public Class<? extends EvaporationPlantWidget> getRecipeClass()
 	{
-		return ThermalEvaporationPlantWidget.class;
+		return EvaporationPlantWidget.class;
 	}
 
-	public static class ThermalEvaporationPlantWidget extends MultiblockWidget
+	public static class EvaporationPlantWidget extends MultiblockWidget
 	{
 		protected CheckBoxWidget useStructuralGlassCheckBox;
 		protected CheckBoxWidget useAdvancedSolarGeneratorCheckBox;
 		protected IntSliderWithButtons valvesWidget;
 
-		public ThermalEvaporationPlantWidget()
+		public EvaporationPlantWidget()
 		{
 
 		}

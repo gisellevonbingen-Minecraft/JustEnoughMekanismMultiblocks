@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import giselle.jei_mekanism_multiblocks.client.jei.category.BoilerCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.DynamicTankCategory;
+import giselle.jei_mekanism_multiblocks.client.jei.category.EvaporationPlantCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.FissionReactorCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.FusionReactorCategory;
-import giselle.jei_mekanism_multiblocks.client.jei.category.InductionMatrixCategory;
-import giselle.jei_mekanism_multiblocks.client.jei.category.IndustrialTurbineCategory;
+import giselle.jei_mekanism_multiblocks.client.jei.category.MatrixCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.SPSCategory;
-import giselle.jei_mekanism_multiblocks.client.jei.category.ThermalEvaporationPlantCategory;
-import giselle.jei_mekanism_multiblocks.client.jei.category.ThermoelectricBoilerCategory;
+import giselle.jei_mekanism_multiblocks.client.jei.category.TurbineCategory;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -53,14 +53,14 @@ public class JeiPlugin implements IModPlugin
 		IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
 		this.categories.clear();
 		this.categories.add(new DynamicTankCategory(guiHelper));
-		this.categories.add(new ThermalEvaporationPlantCategory(guiHelper));
-		this.categories.add(new ThermoelectricBoilerCategory(guiHelper));
+		this.categories.add(new EvaporationPlantCategory(guiHelper));
+		this.categories.add(new BoilerCategory(guiHelper));
 		this.categories.add(new SPSCategory(guiHelper));
-		this.categories.add(new InductionMatrixCategory(guiHelper));
+		this.categories.add(new MatrixCategory(guiHelper));
 
 		if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
 		{
-			this.categories.add(new IndustrialTurbineCategory(guiHelper));
+			this.categories.add(new TurbineCategory(guiHelper));
 			this.categories.add(new FissionReactorCategory(guiHelper));
 			this.categories.add(new FusionReactorCategory(guiHelper));
 		}

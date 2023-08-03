@@ -18,11 +18,11 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class InductionMatrixCategory extends MultiblockCategory<InductionMatrixCategory.InductionMatrixWidget>
+public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidget>
 {
-	public InductionMatrixCategory(IGuiHelper helper)
+	public MatrixCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("induction_matrix"), MekanismLang.MATRIX.translate(), MekanismBlocks.INDUCTION_PORT.getItemStack());
+		super(helper, Mekanism.rl("matrix"), MekanismLang.MATRIX.translate(), MekanismBlocks.INDUCTION_PORT.getItemStack());
 	}
 
 	@Override
@@ -45,23 +45,23 @@ public class InductionMatrixCategory extends MultiblockCategory<InductionMatrixC
 	}
 
 	@Override
-	public void setIngredients(InductionMatrixWidget widget, IIngredients ingredients)
+	public void setIngredients(MatrixWidget widget, IIngredients ingredients)
 	{
 
 	}
 
 	@Override
-	public Class<? extends InductionMatrixWidget> getRecipeClass()
+	public Class<? extends MatrixWidget> getRecipeClass()
 	{
-		return InductionMatrixWidget.class;
+		return MatrixWidget.class;
 	}
 
-	public static class InductionMatrixWidget extends MultiblockWidget
+	public static class MatrixWidget extends MultiblockWidget
 	{
 		protected CheckBoxWidget useStructuralGlassCheckBox;
 		protected IntSliderWithButtons portsWidget;
 
-		public InductionMatrixWidget()
+		public MatrixWidget()
 		{
 
 		}

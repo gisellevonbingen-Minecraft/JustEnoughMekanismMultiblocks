@@ -19,8 +19,6 @@ import mekanism.common.content.boiler.BoilerMultiblockData;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.registries.MekanismGases.Coolants;
 import mekanism.common.util.HeatUtils;
-import mekanism.common.util.MekanismUtils;
-import mekanism.common.util.UnitDisplayUtils.TemperatureUnit;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.gui.widget.Widget;
@@ -29,11 +27,11 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class ThermoelectricBoilerCategory extends MultiblockCategory<ThermoelectricBoilerCategory.ThermalBoilerWidget>
+public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidget>
 {
-	public ThermoelectricBoilerCategory(IGuiHelper helper)
+	public BoilerCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("thermoelectric_boiler"), MekanismLang.BOILER.translate(), MekanismBlocks.BOILER_VALVE.getItemStack());
+		super(helper, Mekanism.rl("boiler"), MekanismLang.BOILER.translate(), MekanismBlocks.BOILER_VALVE.getItemStack());
 	}
 
 	@Override
@@ -48,20 +46,21 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 	}
 
 	@Override
-	public void setIngredients(ThermalBoilerWidget recipe, IIngredients ingredients)
+	public void setIngredients(BoilerWidget recipe, IIngredients ingredients)
 	{
 
 	}
 
 	@Override
-	public Class<? extends ThermalBoilerWidget> getRecipeClass()
+	public Class<? extends BoilerWidget> getRecipeClass()
 	{
-		return ThermalBoilerWidget.class;
+		return BoilerWidget.class;
 	}
 
-	public static class ThermalBoilerWidget extends MultiblockWidget
+	public static class BoilerWidget extends MultiblockWidget
 	{
 		protected CheckBoxWidget useStructuralGlassCheckBox;
+		protected CheckBoxWidget forSodiumCoolingCheckBox;
 		protected IntSliderWithButtons valvesWidget;
 		protected IntSliderWithButtons steamHeightWidget;
 		protected IntSliderWithButtons heatingElementsWidget;
@@ -75,6 +74,9 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
 			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
+			consumer.accept(this.forSodiumCoolingCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.for_sodium_cooling"), false));
+			this.forSodiumCoolingCheckBox.addSelectedChangedHandler(this::onForSodiumCoolingChanged);
+
 			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 2, 0));
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 			consumer.accept(this.steamHeightWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.steam_height", 0, 1, 0));
@@ -94,6 +96,15 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 			this.updateSlidersLimit();
 
+			if (this.isForSodiumCooling())
+			{
+				this.calculatePreferredSodiumCoolingLayout();
+			}
+
+		}
+
+		public void calculatePreferredSodiumCoolingLayout()
+		{
 			IntSliderWidget steamHeightSlider = this.steamHeightWidget.getSlider();
 			IntSliderWidget heatingElementsSlider = this.heatingElementsWidget.getSlider();
 			double maxBoil = 0.0D;
@@ -111,7 +122,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 					break;
 				}
 
-				ThermoelectricBoilerSimulation simulation = this.simulateMaxBoil(steamHeight, heatingElementCount);
+				BoilerCoolingSimulation simulation = this.simulateSodiumCooling(steamHeight, heatingElementCount);
 
 				if (simulation.maxBoil > maxBoil)
 				{
@@ -120,7 +131,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 					preferredHeatingElementCount = heatingElementCount;
 				}
 
-				if (simulation.needMoreSuperHeatingElemetns)
+				if (simulation.needMoreSuperHeatingElements)
 				{
 					heatingElementCount++;
 				}
@@ -142,7 +153,6 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 				this.setSteamHeight(preferredSteamHeight);
 				this.SetHeatingElementCount(preferredHeatingElementCount);
 			}
-
 		}
 
 		public void updateSlidersLimit()
@@ -195,6 +205,16 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			this.markNeedUpdate();
 		}
 
+		protected void onForSodiumCoolingChanged(boolean forSodiumCooling)
+		{
+			if (forSodiumCooling)
+			{
+				this.calculatePreferredSodiumCoolingLayout();
+			}
+
+			this.markNeedUpdate();
+		}
+
 		@Override
 		protected void collectCost(ICostConsumer consumer)
 		{
@@ -241,59 +261,79 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 			int steamHeight = this.getSteamHeight();
 			int heatingElementCount = this.getHeatingElementCount();
-			ThermoelectricBoilerSimulation simulation = this.simulateMaxBoil(steamHeight, heatingElementCount);
-			// System.out.println("needMoreSteamVolume: " + simulation.needMoreSteamVolume);
-			// System.out.println("needMoreSuperHeatingElemetns: " + simulation.needMoreSuperHeatingElemetns);
 
-			ResultWidget boilRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_boil_rate"), VolumeTextHelper.formatMBt(simulation.maxBoil));
-			this.needMoreHeatingElements = false;
-
-			if (simulation.needMoreSuperHeatingElemetns)
+			if (this.isForSodiumCooling())
 			{
-				IntSliderWidget heatingElementsSlider = this.heatingElementsWidget.getSlider();
-				int testHeatingElementCount = Math.min(heatingElementCount + 1, heatingElementsSlider.getMaxValue());
-				ThermoelectricBoilerSimulation simulation2 = this.simulateMaxBoil(steamHeight, testHeatingElementCount);
+				BoilerCoolingSimulation simulation = this.simulateSodiumCooling(steamHeight, heatingElementCount);
+				// System.out.println("needMoreSteamVolume: " + simulation.needMoreSteamVolume);
+				// System.out.println("needMoreSuperHeatingElemetns: " + simulation.needMoreSuperHeatingElemetns);
 
-				if (simulation2.maxBoil > simulation.maxBoil)
+				ResultWidget boilRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.boil_rate"), VolumeTextHelper.formatMBt(simulation.maxBoil));
+				this.needMoreHeatingElements = false;
+
+				if (simulation.needMoreSuperHeatingElements)
 				{
-					this.needMoreHeatingElements = true;
-					boilRateWidget.getValueLabel().setFGColor(0xFF8000);
-					boilRateWidget.setTooltip(//
-							new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.limited").withStyle(TextFormatting.RED), //
-							new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_more", MekanismBlocks.SUPERHEATING_ELEMENT.getTextComponent()).withStyle(TextFormatting.RED));
+					IntSliderWidget heatingElementsSlider = this.heatingElementsWidget.getSlider();
+					int testHeatingElementCount = Math.min(heatingElementCount + 1, heatingElementsSlider.getMaxValue());
+					BoilerCoolingSimulation simulation2 = this.simulateSodiumCooling(steamHeight, testHeatingElementCount);
+
+					if (simulation2.maxBoil > simulation.maxBoil)
+					{
+						this.needMoreHeatingElements = true;
+						boilRateWidget.getValueLabel().setFGColor(0xFF8000);
+						boilRateWidget.setTooltip(//
+								new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.limited").withStyle(TextFormatting.RED), //
+								new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_more", MekanismBlocks.SUPERHEATING_ELEMENT.getTextComponent()).withStyle(TextFormatting.RED));
+					}
+
 				}
 
+				consumer.accept(boilRateWidget);
+				consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(simulation.waterTank)));
+				consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(simulation.steamTank)));
+				consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.heated_coolant_tank"), VolumeTextHelper.formatMB(simulation.heatedCoolantTank)));
+				consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.cooled_coolant_tank"), VolumeTextHelper.formatMB(simulation.cooledCoolantTank)));
+			}
+			else
+			{
+				int steamVolume = this.getSteamVolume(steamHeight);
+				int waterVolume = this.getWaterVolume(steamHeight, heatingElementCount);
+
+				double boilCapacity = MekanismConfig.general.superheatingHeatTransfer.get() * this.getHeatingElementCount() / HeatUtils.getWaterThermalEnthalpy();
+				boilCapacity = MathUtils.clampToLong(boilCapacity * HeatUtils.getSteamEnergyEfficiency());
+
+				consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.boil_capacity"), VolumeTextHelper.formatMBt(boilCapacity)));
+				consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(this.getWaterTank(waterVolume))));
+				consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(this.getSteamTank(steamVolume))));
 			}
 
-			consumer.accept(boilRateWidget);
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.temp"), MekanismUtils.getTemperatureDisplay(simulation.heat / simulation.heatCapacity, TemperatureUnit.KELVIN, false)));
-
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(simulation.waterTank)));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(simulation.steamTank)));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.heated_coolant_tank"), VolumeTextHelper.formatMB(simulation.heatedCoolantTank)));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.cooled_coolant_tank"), VolumeTextHelper.formatMB(simulation.cooledCoolantTank)));
 		}
 
-		public ThermoelectricBoilerSimulation simulateMaxBoil(int steamHeight, int heatingElementCount)
+		public BoilerCoolingSimulation simulateSodiumCooling(int steamHeight, int heatingElementCount)
+		{
+			BoilerCoolingSimulation simulation = this.createSodiumCoolingSimulation(steamHeight, heatingElementCount, 0.4D, Coolants.HEATED_SODIUM_COOLANT.getThermalEnthalpy());
+			simulation.cycleForStableBoil();
+
+			return simulation;
+		}
+
+		public BoilerCoolingSimulation createSodiumCoolingSimulation(int steamHeight, int heatingElementCount, double coolantCoolingEfficiency, double coolantThermalEnthalpy)
 		{
 			int steamVolume = this.getSteamVolume(steamHeight);
 			int waterVolume = this.getWaterVolume(steamHeight, heatingElementCount);
 
-			ThermoelectricBoilerSimulation simulation = new ThermoelectricBoilerSimulation();
+			BoilerCoolingSimulation simulation = new BoilerCoolingSimulation();
 			simulation.heatCapacity = this.getHeatCapacity();
 			simulation.steamTank = this.getSteamTank(steamVolume);
 			simulation.heatedCoolantTank = this.getHeatedCoolantTank(waterVolume);
 			simulation.waterTank = this.getWaterTank(waterVolume);
 			simulation.cooledCoolantTank = this.getCooledCoolantTank(steamVolume);
-			simulation.heatingCapacity = this.getHeatingCapacity(heatingElementCount);
-			simulation.cycleForStable();
+			simulation.superHeatingElements = heatingElementCount;
+
+			simulation.coolantCoolingEfficiency = coolantCoolingEfficiency;
+			simulation.coolantThermalEnthalpy = coolantThermalEnthalpy;
 
 			return simulation;
-		}
-
-		public double getHeatingCapacity(int superHeatingElementCount)
-		{
-			return MekanismConfig.general.superheatingHeatTransfer.get() * superHeatingElementCount;
 		}
 
 		public double getHeatCapacity()
@@ -367,6 +407,16 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			this.useStructuralGlassCheckBox.setSelected(useStructuralGlass);
 		}
 
+		public boolean isForSodiumCooling()
+		{
+			return this.forSodiumCoolingCheckBox.isSelected();
+		}
+
+		public void setForSodiumCooling(boolean forSodiumCooling)
+		{
+			this.forSodiumCoolingCheckBox.setSelected(forSodiumCooling);
+		}
+
 		public int getSteamHeight()
 		{
 			return this.steamHeightWidget.getSlider().getValue();
@@ -425,29 +475,28 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 	}
 
-	public static class ThermoelectricBoilerSimulation
+	public static class BoilerCoolingSimulation
 	{
 		public double heatCapacity;
 		public long heatedCoolantTank;
 		public long cooledCoolantTank;
 		public long waterTank;
 		public long steamTank;
-		public double heatingCapacity;
 		public double coolantCoolingEfficiency;
 		public double coolantThermalEnthalpy;
+		public int superHeatingElements;
 
 		public double heat;
 		public double thermalHeat;
 		public double boilHeat;
 		public double heatOnTemp;
 		public boolean needMoreSteamVolume;
-		public boolean needMoreSuperHeatingElemetns;
+		public boolean needMoreSuperHeatingElements;
 		public long maxBoil;
 
-		public ThermoelectricBoilerSimulation()
+		public BoilerCoolingSimulation()
 		{
-			this.coolantCoolingEfficiency = 0.4D;
-			this.coolantThermalEnthalpy = Coolants.HEATED_SODIUM_COOLANT.getThermalEnthalpy();
+
 		}
 
 		public void reset()
@@ -455,22 +504,42 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 			this.heat = HeatAPI.AMBIENT_TEMP * this.heatCapacity;
 		}
 
-		public void cycleForStable()
+		public void cycleForStableBoil()
 		{
 			this.reset();
 
-			long prevMaxBoil = -1;
+			long prevBoil = -1L;
 
 			while (true)
 			{
 				this.tick();
 
-				if (prevMaxBoil > -1 && prevMaxBoil >= this.maxBoil)
+				if (prevBoil > -1L && prevBoil >= this.maxBoil)
 				{
 					break;
 				}
 
-				prevMaxBoil = this.maxBoil;
+				prevBoil = this.maxBoil;
+			}
+
+		}
+
+		public void cycleForStableTemp()
+		{
+			this.reset();
+
+			double prevHeat = -1.0D;
+
+			while (true)
+			{
+				this.tick();
+
+				if (prevHeat > -1.0D && prevHeat >= this.heat)
+				{
+					break;
+				}
+
+				prevHeat = this.heat;
 			}
 
 		}
@@ -501,15 +570,16 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 
 			this.heatOnTemp = (temp - HeatUtils.BASE_BOIL_TEMP) * (this.heatCapacity * MekanismConfig.general.boilerWaterConductivity.get());
 			double boilingHeat = this.heatOnTemp;
+			double heatingCapacity = MekanismConfig.general.superheatingHeatTransfer.get() * this.superHeatingElements;
 
-			if (this.heatOnTemp > this.heatingCapacity)
+			if (this.heatOnTemp > heatingCapacity)
 			{
-				boilingHeat = this.heatingCapacity;
-				this.needMoreSuperHeatingElemetns = true;
+				boilingHeat = heatingCapacity;
+				this.needMoreSuperHeatingElements = true;
 			}
 			else
 			{
-				this.needMoreSuperHeatingElemetns = false;
+				this.needMoreSuperHeatingElements = false;
 			}
 
 			this.maxBoil = (int) Math.floor(HeatUtils.getSteamEnergyEfficiency() * boilingHeat / HeatUtils.getWaterThermalEnthalpy());
