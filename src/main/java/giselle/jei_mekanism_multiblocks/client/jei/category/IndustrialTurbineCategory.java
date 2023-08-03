@@ -80,7 +80,7 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 
 		public IndustrialTurbineWidget()
 		{
-			this.widthWidget.setTranslationKey("text.jei_mekanism_multiblocks.specs.dimensions.width_length");
+			this.widthWidget.setTranslationKey("text.jei_mekanism_multiblocks.specs.width_length");
 		}
 
 		@Override

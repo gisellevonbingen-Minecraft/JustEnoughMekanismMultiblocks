@@ -62,13 +62,11 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 		this.createSpecDimension();
 
-		LabelWidget othersLabel = new LabelWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.others"), TextAlignment.LEFT);
 		List<Widget> otherWidgets = new ArrayList<>();
 		this.collectOtherConfigs(otherWidgets::add);
 
 		if (otherWidgets.size() > 0)
 		{
-			this.configsList.addChild(othersLabel);
 			otherWidgets.forEach(this.configsList::addChild);
 		}
 
@@ -102,21 +100,18 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	private void createSpecDimension()
 	{
-		LabelWidget dimensionLabel = new LabelWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.dimensions"), TextAlignment.LEFT);
-
 		List<IntSliderWithButtons> widgets = new ArrayList<>();
-		widgets.add(this.widthWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.dimensions.width", this.createDimensionSlider(0, this.getDimensionWidthMin(), this.getDimensionWidthMax())));
+		widgets.add(this.widthWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.width", this.createDimensionSlider(0, this.getDimensionWidthMin(), this.getDimensionWidthMax())));
 		this.widthWidget.getSlider().addValueChangeHanlder(this::onDimensionWidthChanged);
-		widgets.add(this.lengthWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.dimensions.length", this.createDimensionSlider(1, this.getDimensionLengthMin(), this.getDimensionLengthMax())));
+		widgets.add(this.lengthWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.length", this.createDimensionSlider(1, this.getDimensionLengthMin(), this.getDimensionLengthMax())));
 		this.lengthWidget.getSlider().addValueChangeHanlder(this::onDimensionLengthChanged);
-		widgets.add(this.heightWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.dimensions.height", this.createDimensionSlider(2, this.getDimensionHeightMin(), this.getDimensionHeightMax())));
+		widgets.add(this.heightWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.height", this.createDimensionSlider(2, this.getDimensionHeightMin(), this.getDimensionHeightMax())));
 		this.heightWidget.getSlider().addValueChangeHanlder(this::onDimensionHeightChanged);
 
 		List<IntSliderWithButtons> list = widgets.stream().filter(w -> this.isUseDimensionWidget(w) && w.getSlider().getMinValue() < w.getSlider().getMaxValue()).collect(Collectors.toList());
 
 		if (list.size() > 0)
 		{
-			this.configsList.addChild(dimensionLabel);
 			list.forEach(this.configsList::addChild);
 		}
 
