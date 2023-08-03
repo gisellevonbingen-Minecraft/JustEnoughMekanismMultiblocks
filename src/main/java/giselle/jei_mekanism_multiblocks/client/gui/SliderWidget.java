@@ -230,6 +230,8 @@ public class SliderWidget extends Widget
 	@Override
 	public void onRelease(double pMouseX, double pMouseY)
 	{
+		super.onRelease(pMouseX, pMouseY);
+
 		super.playDownSound(Minecraft.getInstance().getSoundManager());
 	}
 

@@ -48,6 +48,16 @@ public class JEI_MekanismMultiblocks_Client
 
 	}
 
+	@SubscribeEvent
+	public static void onMouseReleased(GuiScreenEvent.MouseReleasedEvent.Pre e)
+	{
+		foreachMouseInput(e, (category, widget, mouseX, mouseY) ->
+		{
+			category.handleReleased(widget, mouseX, mouseY, e.getButton());
+		});
+
+	}
+
 	public static void foreachMouseInput(MouseInputEvent e, MouseInputHandler handler)
 	{
 		Screen screen = e.getGui();

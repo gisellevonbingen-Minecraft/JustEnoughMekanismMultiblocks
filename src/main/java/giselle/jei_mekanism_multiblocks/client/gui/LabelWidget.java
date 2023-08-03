@@ -3,6 +3,7 @@ package giselle.jei_mekanism_multiblocks.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -44,6 +45,12 @@ public class LabelWidget extends Widget
 	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
 	{
 		GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
+	}
+
+	@Override
+	public void playDownSound(SoundHandler pHandler)
+	{
+
 	}
 
 	public boolean isShadow()

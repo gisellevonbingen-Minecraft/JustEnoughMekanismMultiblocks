@@ -117,6 +117,11 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 		return widget.mouseDragged(mouseX, mouseY, mouseButton, dragX, dragY);
 	}
 
+	public boolean handleReleased(WIDGET widget, double mouseX, double mouseY, int mouseButton)
+	{
+		return widget.mouseReleased(mouseX, mouseY, mouseButton);
+	}
+
 	@Override
 	public ResourceLocation getUid()
 	{

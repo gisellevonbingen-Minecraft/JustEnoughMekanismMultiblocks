@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.util.text.StringTextComponent;
@@ -261,24 +262,14 @@ public class ContainerWidget extends Widget
 	@Override
 	public boolean mouseReleased(double pMouseX, double pMouseY, int pButton)
 	{
-		if (this.active && this.visible)
+		Widget focused = this.getFocused();
+		this.focused = null;
+
+		if (focused != null && this.active && this.visible)
 		{
 			double childMouseX = this.toChildX(pMouseX);
 			double childMouseY = this.toChildY(pMouseY);
-
-			for (List<Widget> widgets : this.getFunctionableWidgets())
-			{
-				for (Widget widget : widgets)
-				{
-					if (widget.mouseReleased(childMouseX, childMouseY, pButton))
-					{
-						return true;
-					}
-
-				}
-
-			}
-
+			return focused.mouseReleased(childMouseX, childMouseY, pButton);
 		}
 
 		return super.mouseReleased(pMouseX, pMouseY, pButton);
@@ -345,6 +336,12 @@ public class ContainerWidget extends Widget
 		}
 
 		pMatrixStack.popPose();
+	}
+
+	@Override
+	public void playDownSound(SoundHandler pHandler)
+	{
+
 	}
 
 }

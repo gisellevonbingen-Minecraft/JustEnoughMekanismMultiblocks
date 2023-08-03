@@ -272,6 +272,12 @@ public abstract class MultiblockWidget extends ContainerWidget
 		return this.getDimensionSideBlocks();
 	}
 
+	public int getDimensionInnerVolume()
+	{
+		Vector3i inner = this.getDimensionInner();
+		return inner.getX() * inner.getY() * inner.getZ();
+	}
+
 	public Vector3i getDimensionInner()
 	{
 		int innerWidth = this.getDimensionWidth() - 2;
