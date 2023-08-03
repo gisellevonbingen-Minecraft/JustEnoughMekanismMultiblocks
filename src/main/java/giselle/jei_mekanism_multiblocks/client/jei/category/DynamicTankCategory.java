@@ -21,7 +21,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 {
 	public DynamicTankCategory(IGuiHelper helper)
 	{
-		super(helper, "dynamic_tank", null);
+		super(helper, "dynamic_tank", helper.createDrawableIngredient(MekanismBlocks.DYNAMIC_VALVE.getItemStack()));
 	}
 
 	@Override

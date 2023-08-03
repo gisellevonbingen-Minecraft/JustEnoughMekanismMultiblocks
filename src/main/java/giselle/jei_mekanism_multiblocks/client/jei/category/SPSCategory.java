@@ -22,7 +22,7 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 {
 	public SPSCategory(IGuiHelper helper)
 	{
-		super(helper, "sps", helper.createDrawableIngredient(MekanismBlocks.SPS_CASING.getItemStack()));
+		super(helper, "sps", helper.createDrawableIngredient(MekanismBlocks.SPS_PORT.getItemStack()));
 	}
 
 	@Override

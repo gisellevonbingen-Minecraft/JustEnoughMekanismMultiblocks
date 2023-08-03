@@ -36,7 +36,7 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 {
 	public IndustrialTurbineCategory(IGuiHelper helper)
 	{
-		super(helper, "industrial_turbine", null);
+		super(helper, "industrial_turbine", helper.createDrawableIngredient(GeneratorsBlocks.TURBINE_VALVE.getItemStack()));
 	}
 
 	@Override
@@ -183,7 +183,6 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 
 		protected void onVentsChanged(int vents)
 		{
-			this.needMoreVents = vents < this.getClampedMaxVentCount(this.getRotorCount());
 			this.updateCondensersSliderLimit();
 			this.updateValvesSliderLimit();
 			this.markNeedUpdate();
@@ -312,6 +311,8 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 			ResultWidget maxFlowRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_flow_rate"), VolumeTextHelper.format(maxFlow, VolumeUnit.MILLI, "B/t"));
 			consumer.accept(maxFlowRateWidget);
 
+			this.needMoreVents = vents < this.getClampedMaxVentCount(this.getRotorCount());
+			
 			if (this.needMoreVents)
 			{
 				maxFlowRateWidget.getValueLabel().setFGColor(0xFF8000);

@@ -27,7 +27,7 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 {
 	public ThermalEvaporationPlantCategory(IGuiHelper helper)
 	{
-		super(helper, "thermal_evaporation_plant", null);
+		super(helper, "thermal_evaporation_plant", helper.createDrawableIngredient(MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getItemStack()));
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 			super.collectOtherConfigs(consumer);
 
 			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
-			this.useAdvancedSolarGeneratorCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
+			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 
 			if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
 			{

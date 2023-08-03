@@ -32,7 +32,7 @@ public class ThermoelectricBoilerCategory extends MultiblockCategory<Thermoelect
 {
 	public ThermoelectricBoilerCategory(IGuiHelper helper)
 	{
-		super(helper, "thermoelectric_boiler", null);
+		super(helper, "thermoelectric_boiler", helper.createDrawableIngredient(MekanismBlocks.BOILER_VALVE.getItemStack()));
 	}
 
 	@Override
