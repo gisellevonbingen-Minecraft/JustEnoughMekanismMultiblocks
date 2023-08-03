@@ -8,9 +8,6 @@ import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
-import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
-import giselle.jei_mekanism_multiblocks.common.util.VolumeUnit;
-import mekanism.common.content.matrix.MatrixMultiblockData;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.TextUtils;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -115,7 +112,7 @@ public class InductionMatrixCategory extends MultiblockCategory<InductionMatrixC
 		protected void collectResult(Consumer<Widget> consumer)
 		{
 			super.collectResult(consumer);
-			
+
 			int innerVolume = this.getDimensionInnerVolume();
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.inner_volume"), new TranslationTextComponent("text.jei_mekanism_multiblocks.result.blocks", TextUtils.format(innerVolume))));
 		}

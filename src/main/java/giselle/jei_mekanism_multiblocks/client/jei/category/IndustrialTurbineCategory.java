@@ -312,7 +312,7 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 			consumer.accept(maxFlowRateWidget);
 
 			this.needMoreVents = vents < this.getClampedMaxVentCount(this.getRotorCount());
-			
+
 			if (this.needMoreVents)
 			{
 				maxFlowRateWidget.getValueLabel().setFGColor(0xFF8000);
