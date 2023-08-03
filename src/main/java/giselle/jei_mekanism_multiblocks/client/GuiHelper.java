@@ -53,8 +53,8 @@ public class GuiHelper
 		RenderSystem.color4f(r, g, b, a);
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
-		RenderSystem.enableDepthTest();
 		AbstractGui.blit(pMatrixStack, x, y, width, height, 0, 0, 16, 16, 256, 256);
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 
 	public static void drawScaledText(MatrixStack pMatrixStack, ITextComponent text, int x, int y, int width, int color, boolean shadow)

@@ -27,17 +27,17 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 	private final IDrawable background;
 	private final ITextComponent title;
 
-	public MultiblockCategory(IGuiHelper helper, String name, IDrawable icon)
+	public MultiblockCategory(IGuiHelper helper, String name, ITextComponent multiblockName, ItemStack icon)
 	{
-		this(helper, name, icon, 180, 120);
+		this(helper, name, multiblockName, helper.createDrawableIngredient(icon));
 	}
 
-	public MultiblockCategory(IGuiHelper helper, String name, IDrawable icon, int width, int height)
+	public MultiblockCategory(IGuiHelper helper, String name, ITextComponent multiblockName, IDrawable icon)
 	{
 		this.id = JEI_MekanismMultiblocks.rl(name);
 		this.icon = icon;
-		this.background = helper.createBlankDrawable(width, height);
-		this.title = new TranslationTextComponent("text.jei_mekanism_multiblocks.recipe_category.title", new TranslationTextComponent("text.jei_mekanism_multiblocks.multiblock." + name));
+		this.background = helper.createBlankDrawable(180, 120);
+		this.title = new TranslationTextComponent("text.jei_mekanism_multiblocks.recipe_category.title", multiblockName);
 	}
 
 	@Override

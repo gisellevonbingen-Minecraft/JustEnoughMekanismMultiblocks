@@ -9,6 +9,7 @@ import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
+import mekanism.common.MekanismLang;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.registries.MekanismBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -21,7 +22,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 {
 	public DynamicTankCategory(IGuiHelper helper)
 	{
-		super(helper, "dynamic_tank", helper.createDrawableIngredient(MekanismBlocks.DYNAMIC_VALVE.getItemStack()));
+		super(helper, "dynamic_tank", MekanismLang.DYNAMIC_TANK.translate(), MekanismBlocks.DYNAMIC_VALVE.getItemStack());
 	}
 
 	@Override

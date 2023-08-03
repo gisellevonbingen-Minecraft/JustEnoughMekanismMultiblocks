@@ -1,16 +1,5 @@
 {
 	"text.jei_mekanism_multiblocks.recipe_category.title": "Building [%s]",
-	"text.jei_mekanism_multiblocks.multiblock.dynamic_tank": "Dynamic Tank",
-	"text.jei_mekanism_multiblocks.multiblock.thermal_evaporation_plant": "Thermal Evaporation Plant",
-	"text.jei_mekanism_multiblocks.multiblock.thermoelectric_boiler": "Thermoelectric Boiler",
-	"text.jei_mekanism_multiblocks.multiblock.sps": "Supercritical Phase Shifter",
-	"text.jei_mekanism_multiblocks.multiblock.induction_matrix": "Induction Matrix",
-	"text.jei_mekanism_multiblocks.multiblock.industrial_turbine": "Industrial Turbine",
-	"text.jei_mekanism_multiblocks.multiblock.fission_reactor": "Fission Reactor",
-	"text.jei_mekanism_multiblocks.multiblock.fusion_reactor": "Fusion Reactor",
-	
-	"text.jei_mekanism_multiblocks.click.normal": "Click: %s",
-	"text.jei_mekanism_multiblocks.click.shift": "Shift+Click: %s",
 	
 	"text.jei_mekanism_multiblocks.specs": "Specs",
 	"text.jei_mekanism_multiblocks.costs": "Costs",
@@ -60,6 +49,8 @@
 	"text.jei_mekanism_multiblocks.result.inner_volume": "Inner Volume",
 	"text.jei_mekanism_multiblocks.result.blocks": "%s Blocks",
 	
+	"text.jei_mekanism_multiblocks.tooltip.click_normal": "CLICK: %s",
+	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+CLICK: %s",
 	"text.jei_mekanism_multiblocks.tooltip.warning": "※ Warning",
 	"text.jei_mekanism_multiblocks.tooltip.limited": "※ Limited",
 	"text.jei_mekanism_multiblocks.tooltip.value_limited": "※ '%s' is limited.",

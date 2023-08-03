@@ -77,8 +77,8 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 	{
 		List<ITextComponent> tooltip = new ArrayList<>();
 		Collections.addAll(tooltip, this.getSlider().getTooltip());
-		tooltip.add(new TranslationTextComponent("text.jei_mekanism_multiblocks.click.normal", DECIMAL_FORMAT.format(direction * NORMAL_DELTA)));
-		tooltip.add(new TranslationTextComponent("text.jei_mekanism_multiblocks.click.shift", DECIMAL_FORMAT.format(direction * SHIFT_DELTA)));
+		tooltip.add(new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.click_normal", DECIMAL_FORMAT.format(direction * NORMAL_DELTA)));
+		tooltip.add(new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.click_shift", DECIMAL_FORMAT.format(direction * SHIFT_DELTA)));
 		button.setTooltip(tooltip.stream().toArray(ITextComponent[]::new));
 	}
 

@@ -8,6 +8,7 @@ import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import mekanism.common.MekanismLang;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.TextUtils;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -20,7 +21,7 @@ public class InductionMatrixCategory extends MultiblockCategory<InductionMatrixC
 {
 	public InductionMatrixCategory(IGuiHelper helper)
 	{
-		super(helper, "induction_matrix", helper.createDrawableIngredient(MekanismBlocks.INDUCTION_PORT.getItemStack()));
+		super(helper, "induction_matrix", MekanismLang.MATRIX.translate(), MekanismBlocks.INDUCTION_PORT.getItemStack());
 	}
 
 	@Override

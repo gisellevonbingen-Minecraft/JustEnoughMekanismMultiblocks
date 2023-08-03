@@ -1,16 +1,5 @@
 {
 	"text.jei_mekanism_multiblocks.recipe_category.title": "[%s] 건축",
-	"text.jei_mekanism_multiblocks.multiblock.dynamic_tank": "다이나믹 탱크",
-	"text.jei_mekanism_multiblocks.multiblock.thermal_evaporation_plant": "열 증발 설비",
-	"text.jei_mekanism_multiblocks.multiblock.thermoelectric_boiler": "열전류 보일러",
-	"text.jei_mekanism_multiblocks.multiblock.sps": "초임계 상전이 장치",
-	"text.jei_mekanism_multiblocks.multiblock.induction_matrix": "유도 매트릭스",
-	"text.jei_mekanism_multiblocks.multiblock.industrial_turbine": "산업적 터빈",
-	"text.jei_mekanism_multiblocks.multiblock.fission_reactor": "원자로",
-	"text.jei_mekanism_multiblocks.multiblock.fusion_reactor": "핵융합로",
-	
-	"text.jei_mekanism_multiblocks.click.normal": "클릭: %s",
-	"text.jei_mekanism_multiblocks.click.shift": "Shift+클릭: %s",
 	
 	"text.jei_mekanism_multiblocks.specs": "사양",
 	"text.jei_mekanism_multiblocks.costs": "비용",
@@ -60,6 +49,8 @@
 	"text.jei_mekanism_multiblocks.result.inner_volume": "내부 부피",
 	"text.jei_mekanism_multiblocks.result.blocks": "%s 블록",
 	
+	"text.jei_mekanism_multiblocks.tooltip.click_normal": "클릭: %s",
+	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+클릭: %s",
 	"text.jei_mekanism_multiblocks.tooltip.warning": "※ 경고",
 	"text.jei_mekanism_multiblocks.tooltip.limited": "※ 제한됨",
 	"text.jei_mekanism_multiblocks.tooltip.value_limited": "※ '%s'이(가) 제한되었습니다.",

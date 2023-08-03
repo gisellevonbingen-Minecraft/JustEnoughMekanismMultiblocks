@@ -17,6 +17,7 @@ import mekanism.api.math.MathUtils;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.EnergyDisplay;
+import mekanism.generators.common.GeneratorsLang;
 import mekanism.generators.common.config.MekanismGeneratorsConfig;
 import mekanism.generators.common.content.turbine.TurbineMultiblockData;
 import mekanism.generators.common.content.turbine.TurbineValidator;
@@ -36,7 +37,7 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 {
 	public IndustrialTurbineCategory(IGuiHelper helper)
 	{
-		super(helper, "industrial_turbine", helper.createDrawableIngredient(GeneratorsBlocks.TURBINE_VALVE.getItemStack()));
+		super(helper, "industrial_turbine", GeneratorsLang.TURBINE.translate(), GeneratorsBlocks.TURBINE_VALVE.getItemStack());
 	}
 
 	@Override

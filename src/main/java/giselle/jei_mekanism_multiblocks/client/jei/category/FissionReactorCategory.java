@@ -39,7 +39,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 {
 	public FissionReactorCategory(IGuiHelper helper)
 	{
-		super(helper, "fission_reactor", helper.createDrawableIngredient(GeneratorsBlocks.CONTROL_ROD_ASSEMBLY.getItemStack()));
+		super(helper, "fission_reactor", GeneratorsLang.FISSION_REACTOR.translate(), GeneratorsBlocks.CONTROL_ROD_ASSEMBLY.getItemStack());
 	}
 
 	@Override

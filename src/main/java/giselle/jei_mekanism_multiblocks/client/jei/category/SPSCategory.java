@@ -9,6 +9,7 @@ import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.api.math.FloatingLong;
+import mekanism.common.MekanismLang;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.EnergyDisplay;
@@ -22,7 +23,7 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 {
 	public SPSCategory(IGuiHelper helper)
 	{
-		super(helper, "sps", helper.createDrawableIngredient(MekanismBlocks.SPS_PORT.getItemStack()));
+		super(helper, "sps", MekanismLang.SPS.translate(), MekanismBlocks.SPS_PORT.getItemStack());
 	}
 
 	@Override
