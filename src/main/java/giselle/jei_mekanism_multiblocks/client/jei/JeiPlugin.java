@@ -60,8 +60,8 @@ public class JeiPlugin implements IModPlugin
 
 		if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
 		{
-			this.categories.add(new FissionReactorCategory(guiHelper));
 			this.categories.add(new IndustrialTurbineCategory(guiHelper));
+			this.categories.add(new FissionReactorCategory(guiHelper));
 			this.categories.add(new FusionReactorCategory(guiHelper));
 		}
 

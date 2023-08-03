@@ -201,7 +201,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			long maxBurnRate = this.getMaxBurnRate();
 			long burnRate = this.getBurnRate();
 			long fuelCapacity = this.getFuelCapacity();
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.maximum_burn_rate"), VolumeTextHelper.format(maxBurnRate, VolumeUnit.MILLI, "B/t")));
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_burn_rate"), VolumeTextHelper.format(maxBurnRate, VolumeUnit.MILLI, "B/t")));
 			this.createStableTempWidget(consumer, new FluidStack(Fluids.WATER, 1).getDisplayName(), burnRate, 0.5D);
 			this.createStableTempWidget(consumer, MekanismGases.SODIUM.getTextComponent(), burnRate, Coolants.SODIUM_COOLANT.getConductivity());
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_COOLANT_TANK.translate(), VolumeTextHelper.formatMilliBuckets(coolantCapacity)));

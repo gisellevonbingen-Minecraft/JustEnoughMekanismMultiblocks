@@ -304,7 +304,7 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 			FloatingLong productionPerFlow = maxProduction.divide(maxFlow);
 			TranslationTextComponent productionPerFlowTooltip = new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.production_per_flow", new TranslationTextComponent("%1$s/%2$s", EnergyDisplay.of(productionPerFlow).getTextComponent(), "mB"));
 
-			ResultWidget maxProductionWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_production"), EnergyDisplay.of(maxProduction).getTextComponent());
+			ResultWidget maxProductionWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_production"), new TranslationTextComponent("%s/t", EnergyDisplay.of(maxProduction).getTextComponent()));
 			maxProductionWidget.setTooltip(productionPerFlowTooltip);
 
 			consumer.accept(maxProductionWidget);

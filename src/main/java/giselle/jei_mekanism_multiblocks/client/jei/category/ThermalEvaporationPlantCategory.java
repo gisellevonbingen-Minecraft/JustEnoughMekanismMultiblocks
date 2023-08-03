@@ -201,10 +201,10 @@ public class ThermalEvaporationPlantCategory extends MultiblockCategory<ThermalE
 			long dimHeight = this.getDimensionHeight();
 			long inputCapacity = dimHeight * 4 * EvaporationMultiblockData.FLUID_PER_TANK;
 			long outputCapacity = 10_000;
-			double maximumTemp = EvaporationMultiblockData.MAX_MULTIPLIER_TEMP;
-			double maximumSpeed = (maximumTemp - HeatAPI.AMBIENT_TEMP) * MekanismConfig.general.evaporationTempMultiplier.get() * ((double) dimHeight / this.getDimensionHeightMax());
-			ResultWidget speedWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.maximum_speed"), new StringTextComponent("x" + TextUtils.format(maximumSpeed)));
-			speedWidget.setTooltip(new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.when_temp_ge", MekanismUtils.getTemperatureDisplay(maximumTemp, TemperatureUnit.KELVIN, false)));
+			double maxTemp = EvaporationMultiblockData.MAX_MULTIPLIER_TEMP;
+			double maxSpeed = (maxTemp - HeatAPI.AMBIENT_TEMP) * MekanismConfig.general.evaporationTempMultiplier.get() * ((double) dimHeight / this.getDimensionHeightMax());
+			ResultWidget speedWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_speed"), new StringTextComponent("x" + TextUtils.format(maxSpeed)));
+			speedWidget.setTooltip(new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.when_temp_ge", MekanismUtils.getTemperatureDisplay(maxTemp, TemperatureUnit.KELVIN, false)));
 			consumer.accept(speedWidget);
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMilliBuckets(inputCapacity)));
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMilliBuckets(outputCapacity)));
