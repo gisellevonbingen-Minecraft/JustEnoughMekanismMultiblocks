@@ -94,14 +94,14 @@ public class IndustrialTurbineCategory extends MultiblockCategory<IndustrialTurb
 		}
 
 		@Override
-		protected boolean isUseDimensionWIidget(IntSliderWithButtons widget)
+		protected boolean isUseDimensionWidget(IntSliderWithButtons widget)
 		{
 			if (widget == this.lengthWidget)
 			{
 				return false;
 			}
 
-			return super.isUseDimensionWIidget(widget);
+			return super.isUseDimensionWidget(widget);
 		}
 
 		@Override
