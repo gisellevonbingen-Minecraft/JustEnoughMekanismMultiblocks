@@ -106,8 +106,6 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			this.injectionRateWidget.getSlider().addValueChangeHanlder(this::onInjectionRateChanged);
 
 			this.updatePortsSliderLimit();
-			this.setPortCount(2);
-			this.setLogicAdapterCount(0);
 			this.updateInjectionRateInfoMessage();
 		}
 
@@ -138,10 +136,11 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		public void updatePortsSliderLimit()
 		{
 			IntSliderWidget portsSlider = this.portsWidget.getSlider();
-			int valves = portsSlider.getValue();
+			int minPorts = portsSlider.getMinValue();
+			int ports = portsSlider.getValue();
 			portsSlider.setMinValue(this.isWaterCooled() ? 4 : 2);
 			portsSlider.setMaxValue(this.getSideBlocks());
-			portsSlider.setValue(valves);
+			portsSlider.setValue(ports + (portsSlider.getMinValue() - minPorts));
 
 			this.updateLogicAdaptersSliderLimit();
 		}
@@ -179,7 +178,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		protected void onWaterCooledChanged(boolean waterCooled)
 		{
 			this.updatePortsSliderLimit();
-			
+
 			this.markNeedUpdate();
 			this.updateInjectionRateInfoMessage();
 		}

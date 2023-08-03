@@ -34,13 +34,12 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 		consumer.accept(MekanismBlocks.STRUCTURAL_GLASS.getItemStack());
 
 		consumer.accept(MekanismBlocks.BASIC_INDUCTION_CELL.getItemStack());
-		consumer.accept(MekanismBlocks.ADVANCED_INDUCTION_CELL.getItemStack());
-		consumer.accept(MekanismBlocks.ELITE_INDUCTION_CELL.getItemStack());
-		consumer.accept(MekanismBlocks.ULTIMATE_INDUCTION_CELL.getItemStack());
-
 		consumer.accept(MekanismBlocks.BASIC_INDUCTION_PROVIDER.getItemStack());
+		consumer.accept(MekanismBlocks.ADVANCED_INDUCTION_CELL.getItemStack());
 		consumer.accept(MekanismBlocks.ADVANCED_INDUCTION_PROVIDER.getItemStack());
+		consumer.accept(MekanismBlocks.ELITE_INDUCTION_CELL.getItemStack());
 		consumer.accept(MekanismBlocks.ELITE_INDUCTION_PROVIDER.getItemStack());
+		consumer.accept(MekanismBlocks.ULTIMATE_INDUCTION_CELL.getItemStack());
 		consumer.accept(MekanismBlocks.ULTIMATE_INDUCTION_PROVIDER.getItemStack());
 	}
 
@@ -74,7 +73,7 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
 			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 
-			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 2, 2, 0));
+			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 2, 0));
 			this.portsWidget.getSlider().addValueChangeHanlder(this::onPortsChanged);
 
 			this.updatePortsSliderLimit();

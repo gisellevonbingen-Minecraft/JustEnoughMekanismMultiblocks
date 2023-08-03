@@ -86,7 +86,6 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			this.heatingElementsWidget.getSlider().addValueChangeHanlder(this::onHeatingElementsChanged);
 
 			this.updateSlidersLimit();
-			this.setValveCount(2);
 		}
 
 		@Override
@@ -158,10 +157,11 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 		public void updateSlidersLimit()
 		{
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
+			int minValves = valvesSlider.getMinValue();
 			int valves = valvesSlider.getValue();
 			valvesSlider.setMinValue(this.isForSodiumCooling() ? 4 : 2);
 			valvesSlider.setMaxValue(this.getSideBlocks());
-			valvesSlider.setValue(valves);
+			valvesSlider.setValue(valves + (valvesSlider.getMinValue() - minValves));
 
 			IntSliderWidget steamHeightSlider = this.steamHeightWidget.getSlider();
 			int steamHeight = steamHeightSlider.getValue();
@@ -209,7 +209,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 		protected void onForSodiumCoolingChanged(boolean forSodiumCooling)
 		{
 			this.updateSlidersLimit();
-			
+
 			if (forSodiumCooling)
 			{
 				this.calculatePreferredSodiumCoolingLayout();

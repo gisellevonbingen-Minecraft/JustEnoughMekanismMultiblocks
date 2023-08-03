@@ -104,7 +104,6 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 
 			this.updateValveSliderLimit();
-			this.setValveCount(2);
 		}
 
 		@Override
@@ -118,9 +117,11 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 		public void updateValveSliderLimit()
 		{
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
+			int minValves = valvesSlider.getMinValue();
 			int valves = valvesSlider.getValue();
+			valvesSlider.setMinValue(this.useAdvancedSolarGeneratorCheckBox.isSelected() ? 2 : 3);
 			valvesSlider.setMaxValue(this.getSideBlocks());
-			valvesSlider.setValue(valves);
+			valvesSlider.setValue(valves + (valvesSlider.getMinValue() - minValves));
 		}
 
 		protected void onValvesChanged(int valves)
@@ -130,6 +131,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 
 		protected void onUseStructuralGlassChanged(boolean useStructuralGlass)
 		{
+			this.updateValveSliderLimit();
 			this.markNeedUpdate();
 		}
 

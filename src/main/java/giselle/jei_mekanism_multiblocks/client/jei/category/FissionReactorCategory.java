@@ -93,8 +93,6 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			this.burnRateWidget.getSlider().addValueChangeHanlder(this::onBurnRateChanged);
 
 			this.updatePortsSliderLimit();
-			this.setPortCount(4);
-			this.setLogicAdapterCount(0);
 			this.updateBurnRateSliderLimit();
 			this.setBurnRate(this.getMaxBurnRate());
 		}

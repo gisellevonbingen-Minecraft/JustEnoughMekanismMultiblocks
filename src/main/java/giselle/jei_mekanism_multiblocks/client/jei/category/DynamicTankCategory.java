@@ -68,7 +68,6 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 
 			this.updateValvesSliderLimit();
-			this.setValveCount(2);
 		}
 
 		@Override
