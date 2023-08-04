@@ -17,15 +17,18 @@ import mekanism.common.MekanismLang;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.content.boiler.BoilerMultiblockData;
 import mekanism.common.registries.MekanismBlocks;
+import mekanism.common.registries.MekanismGases;
 import mekanism.common.registries.MekanismGases.Coolants;
 import mekanism.common.util.HeatUtils;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fluids.FluidStack;
 
 public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidget>
 {
@@ -123,9 +126,9 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 
 				BoilerCoolingSimulation simulation = this.simulateSodiumCooling(steamHeight, heatingElementCount);
 
-				if (simulation.maxBoil > maxBoil)
+				if (simulation.boilRate > maxBoil)
 				{
-					maxBoil = simulation.maxBoil;
+					maxBoil = simulation.boilRate;
 					preferredSteamHeight = steamHeight;
 					preferredHeatingElementCount = heatingElementCount;
 				}
@@ -271,7 +274,8 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 				// System.out.println("needMoreSteamVolume: " + simulation.needMoreSteamVolume);
 				// System.out.println("needMoreSuperHeatingElemetns: " + simulation.needMoreSuperHeatingElemetns);
 
-				ResultWidget boilRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.boil_rate"), VolumeTextHelper.formatMBt(simulation.maxBoil));
+				ResultWidget boilRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.boil_rate_with", new FluidStack(Fluids.WATER, 1).getDisplayName()), VolumeTextHelper.formatMBt(simulation.boilRate));
+				ResultWidget coolingRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.cooling_rate_with", MekanismGases.SODIUM.getTextComponent()), VolumeTextHelper.formatMBt(simulation.coolingRate));
 				this.needMoreHeatingElements = false;
 
 				if (simulation.needMoreSuperHeatingElements)
@@ -280,7 +284,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 					int testHeatingElementCount = Math.min(heatingElementCount + 1, heatingElementsSlider.getMaxValue());
 					BoilerCoolingSimulation simulation2 = this.simulateSodiumCooling(steamHeight, testHeatingElementCount);
 
-					if (simulation2.maxBoil > simulation.maxBoil)
+					if (simulation2.boilRate > simulation.boilRate)
 					{
 						this.needMoreHeatingElements = true;
 						boilRateWidget.getValueLabel().setFGColor(0xFF8000);
@@ -292,6 +296,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 				}
 
 				consumer.accept(boilRateWidget);
+				consumer.accept(coolingRateWidget);
 				consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(simulation.waterTank)));
 				consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(simulation.steamTank)));
 				consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.heated_coolant_tank"), VolumeTextHelper.formatMB(simulation.heatedCoolantTank)));
@@ -495,7 +500,8 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 		public double heatOnTemp;
 		public boolean needMoreSteamVolume;
 		public boolean needMoreSuperHeatingElements;
-		public long maxBoil;
+		public long coolingRate;
+		public long boilRate;
 
 		public BoilerCoolingSimulation()
 		{
@@ -517,12 +523,12 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			{
 				this.tick();
 
-				if (prevBoil > -1L && prevBoil >= this.maxBoil)
+				if (prevBoil > -1L && prevBoil >= this.boilRate)
 				{
 					break;
 				}
 
-				prevBoil = this.maxBoil;
+				prevBoil = this.boilRate;
 			}
 
 		}
@@ -551,12 +557,12 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 		{
 			double temp = this.heat / this.heatCapacity;
 
-			long toCool = Math.round(this.heatedCoolantTank * this.coolantCoolingEfficiency);
-			toCool = MathUtils.clampToLong(toCool * (1.0D - (temp / HeatUtils.HEATED_COOLANT_TEMP)));
+			this.coolingRate = Math.round(this.heatedCoolantTank * this.coolantCoolingEfficiency);
+			this.coolingRate = MathUtils.clampToLong(this.coolingRate * (1.0D - (temp / HeatUtils.HEATED_COOLANT_TEMP)));
 
-			if (toCool > this.cooledCoolantTank)
+			if (this.coolingRate > this.cooledCoolantTank)
 			{
-				toCool = this.cooledCoolantTank;
+				this.coolingRate = this.cooledCoolantTank;
 				this.needMoreSteamVolume = true;
 			}
 			else
@@ -564,7 +570,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 				this.needMoreSteamVolume = false;
 			}
 
-			this.thermalHeat = Math.max(toCool * this.coolantThermalEnthalpy, 0.0D);
+			this.thermalHeat = Math.max(this.coolingRate * this.coolantThermalEnthalpy, 0.0D);
 
 			if (this.thermalHeat > 0.0D)
 			{
@@ -585,9 +591,9 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 				this.needMoreSuperHeatingElements = false;
 			}
 
-			this.maxBoil = (int) Math.floor(HeatUtils.getSteamEnergyEfficiency() * boilingHeat / HeatUtils.getWaterThermalEnthalpy());
-			this.maxBoil = Math.min(this.maxBoil, Math.min(this.waterTank, this.steamTank));
-			this.boilHeat = this.maxBoil * HeatUtils.getWaterThermalEnthalpy() / HeatUtils.getSteamEnergyEfficiency();
+			this.boilRate = (int) Math.floor(HeatUtils.getSteamEnergyEfficiency() * boilingHeat / HeatUtils.getWaterThermalEnthalpy());
+			this.boilRate = Math.min(this.boilRate, Math.min(this.waterTank, this.steamTank));
+			this.boilHeat = this.boilRate * HeatUtils.getWaterThermalEnthalpy() / HeatUtils.getSteamEnergyEfficiency();
 
 			if (this.boilHeat > 0)
 			{
