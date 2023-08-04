@@ -15,7 +15,7 @@ public class RecipeLayoutMixin<T> implements IRecipeLayout<T>
 	{
 		return ((RecipeLayout<T>) (Object) this).getRecipe();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public IRecipeCategory<?> jei_mekanism_multiblocks$getRecipeCategory()

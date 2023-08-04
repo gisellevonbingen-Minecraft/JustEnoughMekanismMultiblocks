@@ -213,7 +213,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		{
 			this.createStableTempWidget(consumer, with, toBurn, coolant.getConductivity(), coolant.getThermalEnthalpy());
 		}
-		
+
 		private void createStableTempWidget(Consumer<Widget> consumer, ITextComponent with, long toBurn, double conductivity, double thermalEnthalpy)
 		{
 			double stableTemp = this.getCoolingStableTemp(toBurn, conductivity, thermalEnthalpy);

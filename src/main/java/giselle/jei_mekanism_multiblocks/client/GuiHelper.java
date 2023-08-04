@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import giselle.jei_mekanism_multiblocks.client.gui.TextAlignment;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
@@ -12,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 
 public class GuiHelper
@@ -26,7 +26,6 @@ public class GuiHelper
 		{
 			minecraft.screen.renderComponentTooltip(pMatrixStack, Arrays.asList(tooltip), pMouseX, pMouseY);
 		}
-
 	}
 
 	public static void renderComponentTooltip(MatrixStack pMatrixStack, int pMouseX, int pMouseY, List<ITextComponent> tooltip)
@@ -42,20 +41,13 @@ public class GuiHelper
 
 	public static void fillRectagleBlack(MatrixStack pMatrixStack, int x, int y, int width, int height)
 	{
-		fillRectagle(pMatrixStack, x, y, width, height, 0.0F, 0.0F, 0.0F, 1.0F);
+		AbstractGui.fill(pMatrixStack, x, y, x + width, y + height, 0xFF000000);
 	}
 
-	@SuppressWarnings("deprecation")
 	public static void fillRectagle(MatrixStack pMatrixStack, int x, int y, int width, int height, float r, float g, float b, float a)
 	{
-		Minecraft minecraft = Minecraft.getInstance();
-		minecraft.getTextureManager().bind(WIDGETS_LOCATION);
-		RenderSystem.color4f(r, g, b, a);
-		RenderSystem.enableBlend();
-		RenderSystem.defaultBlendFunc();
-		RenderSystem.enableDepthTest();
-		AbstractGui.blit(pMatrixStack, x, y, width, height, 0, 0, 16, 16, 256, 256);
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		int color = MathHelper.color(r, g, b) | (MathHelper.floor(255.0F * a) << 0x18);
+		AbstractGui.fill(pMatrixStack, x, y, x + width, y + height, color);
 	}
 
 	public static void drawScaledText(MatrixStack pMatrixStack, ITextComponent text, int x, int y, int width, int color, boolean shadow)
