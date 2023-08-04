@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
+import giselle.jei_mekanism_multiblocks.client.IRecipeLogicStateListener;
 import giselle.jei_mekanism_multiblocks.client.gui.ContainerWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
@@ -17,7 +18,6 @@ import giselle.jei_mekanism_multiblocks.client.gui.ListWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.TabButtonWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.TextAlignment;
 import giselle.jei_mekanism_multiblocks.client.jei.category.ICostConsumer;
-import mezz.jei.gui.recipes.IRecipeLogicStateListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.AbstractButton;
@@ -229,7 +229,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 		if (minecraft.screen instanceof IRecipeLogicStateListener)
 		{
-			((IRecipeLogicStateListener) minecraft.screen).onStateChange();
+			((IRecipeLogicStateListener) minecraft.screen).jei_mekanism_multiblocks$onStateChange();
 		}
 
 	}

@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
-import mezz.jei.gui.recipes.RecipeLayout;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
@@ -68,15 +67,15 @@ public class JEI_MekanismMultiblocks_Client
 		{
 			getRecipeLayouts(screen).forEach(pair ->
 			{
-				RecipeLayout<MultiblockWidget> recipeLayout = pair.getRecipeLayout();
+				IRecipeLayout<MultiblockWidget> recipeLayout = pair.getRecipeLayout();
 
-				if (recipeLayout.isMouseOver(mouseX, mouseY))
+				if (recipeLayout.jei_mekanism_multiblocks$isMouseOver(mouseX, mouseY))
 				{
-					int posX = recipeLayout.getPosX();
-					int posY = recipeLayout.getPosY();
+					int posX = recipeLayout.jei_mekanism_multiblocks$getPosX();
+					int posY = recipeLayout.jei_mekanism_multiblocks$getPosY();
 					double recipeMouseX = mouseX - posX;
 					double recipeMouseY = mouseY - posY;
-					handler.handle(pair.getRecipeCategory(), recipeLayout.getRecipe(), recipeMouseX, recipeMouseY);
+					handler.handle(pair.getRecipeCategory(), recipeLayout.jei_mekanism_multiblocks$getRecipe(), recipeMouseX, recipeMouseY);
 				}
 
 			});
@@ -91,8 +90,8 @@ public class JEI_MekanismMultiblocks_Client
 		if (screen instanceof IRecipeLayoutHolder)
 		{
 			return ((IRecipeLayoutHolder) screen).jei_mekanism_multiblocks$getRecipeLayouts().stream()//
-					.filter(recipeLayout -> recipeLayout.getRecipeCategory() instanceof MultiblockCategory<?>)//
-					.map(recipeLayout -> new RecipeLayoutWithCategory<>((RecipeLayout<MultiblockWidget>) recipeLayout, (MultiblockCategory<MultiblockWidget>) recipeLayout.getRecipeCategory())).collect(Collectors.toList());
+					.filter(recipeLayout -> recipeLayout.jei_mekanism_multiblocks$getRecipeCategory() instanceof MultiblockCategory<?>)//
+					.map(recipeLayout -> new RecipeLayoutWithCategory<>((IRecipeLayout<MultiblockWidget>) recipeLayout, (MultiblockCategory<MultiblockWidget>) recipeLayout.jei_mekanism_multiblocks$getRecipeCategory())).collect(Collectors.toList());
 		}
 		else
 		{
