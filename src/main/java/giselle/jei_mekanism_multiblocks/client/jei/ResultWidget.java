@@ -3,19 +3,19 @@ package giselle.jei_mekanism_multiblocks.client.jei;
 import giselle.jei_mekanism_multiblocks.client.gui.ContainerWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.TextAlignment;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ResultWidget extends ContainerWidget
 {
 	private final LabelWidget textLabel;
 	private final LabelWidget valueLabel;
 
-	public ResultWidget(ITextComponent text, ITextComponent value)
+	public ResultWidget(Component text, Component value)
 	{
 		this(0, 0, 0, 0, text, value);
 	}
 
-	public ResultWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent text, ITextComponent value)
+	public ResultWidget(int pX, int pY, int pWidth, int pHeight, Component text, Component value)
 	{
 		super(pX, pY, pWidth, pHeight);
 
@@ -82,7 +82,7 @@ public class ResultWidget extends ContainerWidget
 		return this.valueLabel;
 	}
 
-	public void setTooltip(ITextComponent... tooltip)
+	public void setTooltip(Component... tooltip)
 	{
 		this.getTextLabel().setTooltip(tooltip);
 		this.getValueLabel().setTooltip(tooltip);

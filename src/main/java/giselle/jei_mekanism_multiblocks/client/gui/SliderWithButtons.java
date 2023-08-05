@@ -9,10 +9,10 @@ import java.util.Map.Entry;
 
 import com.ibm.icu.text.DecimalFormat;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends ContainerWidget
 {
@@ -34,14 +34,14 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 
 		this.addChild(this.slider = slider);
 		this.button2DirectionMap = new HashMap<>();
-		this.minusButton = this.createAdjustButton(new StringTextComponent("-"), -1);
-		this.plusButton = this.createAdjustButton(new StringTextComponent("+"), +1);
+		this.minusButton = this.createAdjustButton(new TextComponent("-"), -1);
+		this.plusButton = this.createAdjustButton(new TextComponent("+"), +1);
 
 		this.updateMessage();
 		this.onHeightChanged();
 	}
 
-	public void setTooltip(ITextComponent... tooltip)
+	public void setTooltip(Component... tooltip)
 	{
 		this.getSlider().setTooltip(tooltip);
 
@@ -56,10 +56,10 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 
 	protected void updateMessage()
 	{
-		this.getSlider().setMessage(new TranslationTextComponent(this.translationKey, this.getDisplayValue()));
+		this.getSlider().setMessage(new TranslatableComponent(this.translationKey, this.getDisplayValue()));
 	}
 
-	private ButtonWidget createAdjustButton(ITextComponent message, int direction)
+	private ButtonWidget createAdjustButton(Component message, int direction)
 	{
 		ButtonWidget button = new ButtonWidget(0, 0, 0, 0, message);
 		this.updateAdjustButtonTooltip(button, direction);
@@ -75,11 +75,11 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 
 	private void updateAdjustButtonTooltip(ButtonWidget button, int direction)
 	{
-		List<ITextComponent> tooltip = new ArrayList<>();
+		List<Component> tooltip = new ArrayList<>();
 		Collections.addAll(tooltip, this.getSlider().getTooltip());
-		tooltip.add(new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.click_normal", DECIMAL_FORMAT.format(direction * NORMAL_DELTA)));
-		tooltip.add(new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.click_shift", DECIMAL_FORMAT.format(direction * SHIFT_DELTA)));
-		button.setTooltip(tooltip.stream().toArray(ITextComponent[]::new));
+		tooltip.add(new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.click_normal", DECIMAL_FORMAT.format(direction * NORMAL_DELTA)));
+		tooltip.add(new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.click_shift", DECIMAL_FORMAT.format(direction * SHIFT_DELTA)));
+		button.setTooltip(tooltip.stream().toArray(Component[]::new));
 	}
 
 	protected void onAdjustButtonPress(int delta)

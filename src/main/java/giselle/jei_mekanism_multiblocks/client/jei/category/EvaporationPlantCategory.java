@@ -21,17 +21,16 @@ import mekanism.common.util.UnitDisplayUtils.TemperatureUnit;
 import mekanism.common.util.text.TextUtils;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
 
 public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlantCategory.EvaporationPlantWidget>
 {
 	public EvaporationPlantCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("evaporation_plant"), MekanismLang.EVAPORATION_PLANT.translate(), MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getItemStack());
+		super(helper, Mekanism.rl("evaporation_plant"), EvaporationPlantWidget.class, MekanismLang.EVAPORATION_PLANT.translate(), MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getItemStack());
 	}
 
 	@Override
@@ -48,18 +47,6 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			consumer.accept(GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR.getItemStack());
 		}
 
-	}
-
-	@Override
-	public void setIngredients(EvaporationPlantWidget widget, IIngredients ingredients)
-	{
-
-	}
-
-	@Override
-	public Class<? extends EvaporationPlantWidget> getRecipeClass()
-	{
-		return EvaporationPlantWidget.class;
 	}
 
 	public static class EvaporationPlantWidget extends MultiblockWidget
@@ -82,21 +69,21 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 		}
 
 		@Override
-		protected void collectOtherConfigs(Consumer<Widget> consumer)
+		protected void collectOtherConfigs(Consumer<AbstractWidget> consumer)
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
+			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
 			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 
 			if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
 			{
-				consumer.accept(this.useAdvancedSolarGeneratorCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR.getItemStack().getHoverName()), true));
+				consumer.accept(this.useAdvancedSolarGeneratorCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR.getItemStack().getHoverName()), true));
 				this.useAdvancedSolarGeneratorCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 			}
 			else
 			{
-				this.useAdvancedSolarGeneratorCheckBox = new CheckBoxWidget(0, 0, 0, 0, StringTextComponent.EMPTY, false);
+				this.useAdvancedSolarGeneratorCheckBox = new CheckBoxWidget(0, 0, 0, 0, TextComponent.EMPTY, false);
 				this.useAdvancedSolarGeneratorCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 			}
 
@@ -198,7 +185,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 		}
 
 		@Override
-		protected void collectResult(Consumer<Widget> consumer)
+		protected void collectResult(Consumer<AbstractWidget> consumer)
 		{
 			super.collectResult(consumer);
 
@@ -207,11 +194,11 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			long outputCapacity = 10_000;
 			double maxTemp = EvaporationMultiblockData.MAX_MULTIPLIER_TEMP;
 			double maxSpeed = (maxTemp - HeatAPI.AMBIENT_TEMP) * MekanismConfig.general.evaporationTempMultiplier.get() * ((double) dimHeight / this.getDimensionHeightMax());
-			ResultWidget speedWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_speed"), new StringTextComponent("x" + TextUtils.format(maxSpeed)));
-			speedWidget.setTooltip(new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.when_temp_ge", MekanismUtils.getTemperatureDisplay(maxTemp, TemperatureUnit.KELVIN, false)));
+			ResultWidget speedWidget = new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.max_speed"), new TextComponent("x" + TextUtils.format(maxSpeed)));
+			speedWidget.setTooltip(new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.when_temp_ge", MekanismUtils.getTemperatureDisplay(maxTemp, TemperatureUnit.KELVIN, false)));
 			consumer.accept(speedWidget);
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(inputCapacity)));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(outputCapacity)));
+			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(inputCapacity)));
+			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(outputCapacity)));
 		}
 
 		public int getValveCount()

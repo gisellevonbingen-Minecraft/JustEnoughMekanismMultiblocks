@@ -4,75 +4,75 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.InputConstants.Key;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implements IRecipeCategory<WIDGET>
 {
-	private final ResourceLocation id;
+	private final RecipeType<WIDGET> type;
 	private final IDrawable icon;
 	private final IDrawable background;
-	private final ITextComponent title;
+	private final Component title;
 
-	public MultiblockCategory(IGuiHelper helper, ResourceLocation name, ITextComponent multiblockName, ItemStack icon)
+	public MultiblockCategory(IGuiHelper helper, ResourceLocation name, Class<? extends WIDGET> clazz, Component multiblockName, ItemStack icon)
 	{
-		this(helper, name, multiblockName, helper.createDrawableIngredient(icon));
+		this(helper, name, clazz, multiblockName, helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, icon));
 	}
 
-	public MultiblockCategory(IGuiHelper helper, ResourceLocation name, ITextComponent multiblockName, IDrawable icon)
+	public MultiblockCategory(IGuiHelper helper, ResourceLocation name, Class<? extends WIDGET> clazz, Component multiblockName, IDrawable icon)
 	{
-		this.id = JEI_MekanismMultiblocks.rl("multiblock." + name.getNamespace() + "." + name.getPath());
+		this.type = RecipeType.create(JEI_MekanismMultiblocks.MODID, "multiblock." + name.getNamespace() + "." + name.getPath(), clazz);
 		this.icon = icon;
 		this.background = helper.createBlankDrawable(180, 120);
-		this.title = new TranslationTextComponent("text.jei_mekanism_multiblocks.recipe_category.title", multiblockName);
+		this.title = new TranslatableComponent("text.jei_mekanism_multiblocks.recipe_category.title", multiblockName);
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, WIDGET widget, IIngredients ingredients)
+	public void setRecipe(IRecipeLayoutBuilder recipeLayout, WIDGET widget, IFocusGroup focuses)
 	{
 		IDrawable background = this.getBackground();
 		widget.setWidth(background.getWidth());
 		widget.setHeight(background.getHeight());
 
-		IGuiItemStackGroup items = recipeLayout.getItemStacks();
-		int slotIndex = 0;
-
 		for (ItemStack cost : widget.getCosts())
 		{
-			slotIndex = this.addSlots(items, slotIndex, cost);
+			this.addSlots(recipeLayout, cost);
 		}
 
 	}
 
-	private int addSlots(IGuiItemStackGroup items, int slotIndex, ItemStack cost)
+	private void addSlots(IRecipeLayoutBuilder recipeLayout, ItemStack cost)
 	{
 		int maxStackSize = cost.getMaxStackSize();
 		int count = cost.getCount();
 
-		for (; count > 0; slotIndex++)
+		while (count > 0)
 		{
 			ItemStack item = cost.copy();
 			item.setCount(Math.min(maxStackSize, count));
 			count -= item.getCount();
 
-			items.init(slotIndex, true, -9999, -9999);
-			items.set(slotIndex, item);
+			recipeLayout.addSlot(RecipeIngredientRole.INPUT, 9999, 9999).addItemStack(item);
 		}
 
-		return slotIndex;
 	}
 
 	protected void getRecipeCatalystItemStacks(Consumer<ItemStack> consumer)
@@ -82,29 +82,34 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration)
 	{
-		ResourceLocation uid = this.getUid();
+		RecipeType<WIDGET> type = this.getRecipeType();
 		List<ItemStack> list = new ArrayList<>();
 		this.getRecipeCatalystItemStacks(list::add);
 
 		for (ItemStack itemStack : list)
 		{
-			registration.addRecipeCatalyst(itemStack, uid);
+			registration.addRecipeCatalyst(itemStack, type);
 		}
 
 	}
 
 	@Override
-	public void draw(WIDGET widget, MatrixStack matrix, double mouseX, double mouseY)
+	public void draw(WIDGET widget, IRecipeSlotsView recipeSlotsView, PoseStack pPoseStack, double mouseX, double mouseY)
 	{
 		Minecraft minecraft = Minecraft.getInstance();
 		float partialTicks = minecraft.getDeltaFrameTime();
-		widget.render(matrix, (int) mouseX, (int) mouseY, partialTicks);
+		widget.render(pPoseStack, (int) mouseX, (int) mouseY, partialTicks);
 	}
 
 	@Override
-	public boolean handleClick(WIDGET widget, double mouseX, double mouseY, int mouseButton)
+	public boolean handleInput(WIDGET widget, double mouseX, double mouseY, Key input)
 	{
-		return widget.mouseClicked(mouseX, mouseY, mouseButton);
+		if (input.getType() == InputConstants.Type.MOUSE)
+		{
+			return widget.mouseClicked(mouseX, mouseY, input.getValue());
+		}
+
+		return IRecipeCategory.super.handleInput(widget, mouseX, mouseY, input);
 	}
 
 	public boolean handleScroll(WIDGET widget, double mouseX, double mouseY, double delta)
@@ -123,9 +128,21 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 	}
 
 	@Override
+	public RecipeType<WIDGET> getRecipeType()
+	{
+		return this.type;
+	}
+
+	@Override
 	public ResourceLocation getUid()
 	{
-		return this.id;
+		return this.getRecipeType().getUid();
+	}
+
+	@Override
+	public Class<? extends WIDGET> getRecipeClass()
+	{
+		return this.getRecipeType().getRecipeClass();
 	}
 
 	@Override
@@ -141,15 +158,9 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 	}
 
 	@Override
-	public ITextComponent getTitleAsTextComponent()
+	public Component getTitle()
 	{
 		return this.title;
-	}
-
-	@Override
-	public String getTitle()
-	{
-		return this.title.getString();
 	}
 
 }

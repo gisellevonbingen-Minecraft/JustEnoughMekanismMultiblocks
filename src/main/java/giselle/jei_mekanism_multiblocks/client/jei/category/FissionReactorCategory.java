@@ -25,22 +25,21 @@ import mekanism.generators.common.config.MekanismGeneratorsConfig;
 import mekanism.generators.common.content.fission.FissionReactorMultiblockData;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.core.Vec3i;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FissionReactorCategory extends MultiblockCategory<FissionReactorCategory.FissionReactorCategoryWidget>
 {
 	public FissionReactorCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismGenerators.rl("fission_reactor"), GeneratorsLang.FISSION_REACTOR.translate(), GeneratorsBlocks.CONTROL_ROD_ASSEMBLY.getItemStack());
+		super(helper, MekanismGenerators.rl("fission_reactor"), FissionReactorCategoryWidget.class, GeneratorsLang.FISSION_REACTOR.translate(), GeneratorsBlocks.CONTROL_ROD_ASSEMBLY.getItemStack());
 	}
 
 	@Override
@@ -53,18 +52,6 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		consumer.accept(GeneratorsBlocks.FISSION_FUEL_ASSEMBLY.getItemStack());
 		consumer.accept(GeneratorsBlocks.CONTROL_ROD_ASSEMBLY.getItemStack());
 		consumer.accept(GeneratorsBlocks.REACTOR_GLASS.getItemStack());
-	}
-
-	@Override
-	public void setIngredients(FissionReactorCategoryWidget widget, IIngredients ingredients)
-	{
-
-	}
-
-	@Override
-	public Class<? extends FissionReactorCategoryWidget> getRecipeClass()
-	{
-		return FissionReactorCategoryWidget.class;
 	}
 
 	public static class FissionReactorCategoryWidget extends MultiblockWidget
@@ -80,11 +67,11 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		}
 
 		@Override
-		protected void collectOtherConfigs(Consumer<Widget> consumer)
+		protected void collectOtherConfigs(Consumer<AbstractWidget> consumer)
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useReactorGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.REACTOR_GLASS.getItemStack().getHoverName()), true));
+			consumer.accept(this.useReactorGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.REACTOR_GLASS.getItemStack().getHoverName()), true));
 			this.useReactorGlassCheckBox.addSelectedChangedHandler(this::onUseReactorGlassChanged);
 			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 4, 0));
 			this.portsWidget.getSlider().addValueChangeHanlder(this::onPortsChanged);
@@ -191,7 +178,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		}
 
 		@Override
-		protected void collectResult(Consumer<Widget> consumer)
+		protected void collectResult(Consumer<AbstractWidget> consumer)
 		{
 			super.collectResult(consumer);
 
@@ -200,24 +187,24 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			long maxBurnRate = this.getMaxBurnRate();
 			long burnRate = this.getBurnRate();
 			long fuelCapacity = this.getFuelCapacity();
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_burn_rate"), VolumeTextHelper.formatMBt(maxBurnRate)));
+			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.max_burn_rate"), VolumeTextHelper.formatMBt(maxBurnRate)));
 			this.createStableTempWidget(consumer, new FluidStack(Fluids.WATER, 1).getDisplayName(), burnRate, 0.5D, HeatUtils.getWaterThermalEnthalpy() / HeatUtils.getSteamEnergyEfficiency());
-			this.createStableTempWidget(consumer, MekanismGases.SODIUM.getTextComponent(), burnRate,Coolants.SODIUM_COOLANT);
+			this.createStableTempWidget(consumer, MekanismGases.SODIUM.getTextComponent(), burnRate, Coolants.SODIUM_COOLANT);
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(coolantCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_FUEL_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_HEATED_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(heatedCoolantCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_WASTE_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
 		}
 
-		private void createStableTempWidget(Consumer<Widget> consumer, ITextComponent with, long toBurn, Coolant coolant)
+		private void createStableTempWidget(Consumer<AbstractWidget> consumer, Component with, long toBurn, Coolant coolant)
 		{
 			this.createStableTempWidget(consumer, with, toBurn, coolant.getConductivity(), coolant.getThermalEnthalpy());
 		}
-		
-		private void createStableTempWidget(Consumer<Widget> consumer, ITextComponent with, long toBurn, double conductivity, double thermalEnthalpy)
+
+		private void createStableTempWidget(Consumer<AbstractWidget> consumer, Component with, long toBurn, double conductivity, double thermalEnthalpy)
 		{
 			double stableTemp = this.getCoolingStableTemp(toBurn, conductivity, thermalEnthalpy);
-			ResultWidget tempWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.temp_with", with), MekanismUtils.getTemperatureDisplay(stableTemp, TemperatureUnit.KELVIN, false));
+			ResultWidget tempWidget = new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.temp_with", with), MekanismUtils.getTemperatureDisplay(stableTemp, TemperatureUnit.KELVIN, false));
 			consumer.accept(tempWidget);
 
 			boolean warning = false;
@@ -230,18 +217,18 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			else if (stableTemp >= FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE)
 			{
 				warning = true;
-				double ratio = MathHelper.inverseLerp(stableTemp, FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE, FissionReactorMultiblockData.MAX_DAMAGE_TEMPERATURE);
-				int g = (int) MathHelper.clampedLerp(255, 0, ratio);
+				double ratio = Mth.inverseLerp(stableTemp, FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE, FissionReactorMultiblockData.MAX_DAMAGE_TEMPERATURE);
+				int g = (int) Mth.clampedLerp(255, 0, ratio);
 				tempWidget.getValueLabel().setFGColor(0xFF0000 + g * 256);
 			}
 
-			TranslationTextComponent burnRateTooltip = new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.when_burn_rate", VolumeTextHelper.formatMBt(toBurn));
+			TranslatableComponent burnRateTooltip = new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.when_burn_rate", VolumeTextHelper.formatMBt(toBurn));
 
 			if (warning)
 			{
 				tempWidget.setTooltip(burnRateTooltip, //
-						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.warning").withStyle(TextFormatting.RED), //
-						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.reactor_will_damage").withStyle(TextFormatting.RED));
+						new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.warning").withStyle(ChatFormatting.RED), //
+						new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.reactor_will_damage").withStyle(ChatFormatting.RED));
 			}
 			else
 			{
@@ -249,7 +236,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			}
 
 			long heatedCoolant = this.getHeatedCoolant(stableTemp, conductivity, thermalEnthalpy);
-			ResultWidget heatingRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.heating_rate_with", with), VolumeTextHelper.formatMBt(heatedCoolant));
+			ResultWidget heatingRateWidget = new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.heating_rate_with", with), VolumeTextHelper.formatMBt(heatedCoolant));
 			heatingRateWidget.setTooltip(burnRateTooltip);
 			consumer.accept(heatingRateWidget);
 		}
@@ -349,7 +336,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 		public int getControlRodAssemblyCount()
 		{
-			Vector3i inner = this.getDimensionInner();
+			Vec3i inner = this.getDimensionInner();
 			int rods = 0;
 			rods += ((inner.getX() + 1) / 2) * ((inner.getZ() + 1) / 2);
 			rods += ((inner.getX() + 0) / 2) * ((inner.getZ() + 0) / 2);
@@ -358,7 +345,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 		public int getFissionFuelAssemblyCount()
 		{
-			Vector3i inner = this.getDimensionInner();
+			Vec3i inner = this.getDimensionInner();
 			return this.getControlRodAssemblyCount() * (inner.getY() - 1);
 		}
 

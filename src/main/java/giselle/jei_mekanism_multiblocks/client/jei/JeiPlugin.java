@@ -2,6 +2,7 @@ package giselle.jei_mekanism_multiblocks.client.jei;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,10 +17,11 @@ import giselle.jei_mekanism_multiblocks.client.jei.category.TurbineCategory;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 @mezz.jei.api.JeiPlugin
 public class JeiPlugin implements IModPlugin
@@ -37,7 +39,7 @@ public class JeiPlugin implements IModPlugin
 		return JEI_MekanismMultiblocks.rl("jei_plugin");
 	}
 
-	private final List<MultiblockCategory<?>> categories;
+	private final List<MultiblockCategory<? extends MultiblockWidget>> categories;
 
 	public JeiPlugin()
 	{
@@ -93,8 +95,10 @@ public class JeiPlugin implements IModPlugin
 		{
 			try
 			{
-				Object recipe = category.getRecipeClass().getDeclaredConstructor().newInstance();
-				registration.addRecipes(Collections.singleton(recipe), category.getUid());
+				@SuppressWarnings("unchecked")
+				RecipeType<MultiblockWidget> recipeType = (RecipeType<MultiblockWidget>) category.getRecipeType();
+				MultiblockWidget recipe = recipeType.getRecipeClass().getDeclaredConstructor().newInstance();
+				registration.addRecipes(recipeType, Arrays.asList(recipe));
 			}
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
 			{
@@ -106,7 +110,7 @@ public class JeiPlugin implements IModPlugin
 
 	}
 
-	public List<MultiblockCategory<?>> getCategories()
+	public List<MultiblockCategory<? extends MultiblockWidget>> getCategories()
 	{
 		return Collections.unmodifiableList(this.categories);
 	}

@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import giselle.jei_mekanism_multiblocks.client.IRecipeLayout;
 import giselle.jei_mekanism_multiblocks.client.IRecipeLayoutHolder;
 import giselle.jei_mekanism_multiblocks.client.IRecipeLogicStateListener;
-import mezz.jei.gui.recipes.RecipeLayout;
-import mezz.jei.gui.recipes.RecipesGui;
+import mezz.jei.common.gui.recipes.RecipesGui;
+import mezz.jei.common.gui.recipes.layout.RecipeLayout;
 
 @Mixin(value = RecipesGui.class, remap = false)
 public class RecipesGuiMixin implements IRecipeLayoutHolder, IRecipeLogicStateListener

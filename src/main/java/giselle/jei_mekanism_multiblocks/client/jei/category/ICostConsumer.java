@@ -1,7 +1,7 @@
 package giselle.jei_mekanism_multiblocks.client.jei.category;
 
 import giselle.jei_mekanism_multiblocks.client.jei.CostWidget;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface ICostConsumer
 {

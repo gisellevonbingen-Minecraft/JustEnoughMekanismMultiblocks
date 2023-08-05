@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.IntConsumer;
 
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 
 public class IntSliderWidget extends SliderWidget
 {
@@ -14,9 +14,9 @@ public class IntSliderWidget extends SliderWidget
 	private int maxValue;
 	private int prev;
 
-	public IntSliderWidget(int x, int y, int width, int height, ITextComponent pMessage, int value, int min, int max)
+	public IntSliderWidget(int x, int y, int width, int height, Component pMessage, int value, int min, int max)
 	{
-		super(x, y, width, height, pMessage, MathHelper.inverseLerp(value, min, max));
+		super(x, y, width, height, pMessage, Mth.inverseLerp(value, min, max));
 		this.valueChangeHandlers = new ArrayList<>();
 		this.minValue = min;
 		this.maxValue = max;
@@ -39,7 +39,7 @@ public class IntSliderWidget extends SliderWidget
 		}
 		else
 		{
-			return (int) Math.round(MathHelper.clampedLerp(minValue, maxValue, pRatio));
+			return (int) Math.round(Mth.clampedLerp(minValue, maxValue, pRatio));
 		}
 
 	}
@@ -55,8 +55,8 @@ public class IntSliderWidget extends SliderWidget
 		}
 		else
 		{
-			value = MathHelper.clamp(value, minValue, maxValue);
-			return MathHelper.inverseLerp(value, minValue, maxValue);
+			value = Mth.clamp(value, minValue, maxValue);
+			return Mth.inverseLerp(value, minValue, maxValue);
 		}
 
 	}

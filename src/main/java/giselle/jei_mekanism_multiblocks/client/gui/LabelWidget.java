@@ -1,54 +1,55 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 
-public class LabelWidget extends Widget
+public class LabelWidget extends AbstractWidget
 {
 	private boolean shadow;
 	private TextAlignment alignment;
-	private ITextComponent[] tooltip;
+	private Component[] tooltip;
 
-	public LabelWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage)
+	public LabelWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage)
 	{
 		this(pX, pY, pWidth, pHeight, pMessage, TextAlignment.CENTER);
 	}
 
-	public LabelWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, TextAlignment alignment)
+	public LabelWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, TextAlignment alignment)
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.shadow = true;
 		this.alignment = alignment;
-		this.tooltip = new ITextComponent[0];
+		this.tooltip = new Component[0];
 	}
 
 	@Override
-	public void renderButton(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks)
+	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
 	{
-		int color = this.getFGColor() | MathHelper.ceil(this.alpha * 255.0F) << 24;
-		ITextComponent message = this.getMessage();
-		GuiHelper.drawScaledText(pMatrixStack, message, this.x, this.y, this.width, color, this.isShadow(), this.getAlignment());
+		int color = this.getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24;
+		Component message = this.getMessage();
+		GuiHelper.drawScaledText(pPoseStack, message, this.x, this.y, this.width, color, this.isShadow(), this.getAlignment());
 
-		if (this.isHovered())
+		if (this.isHoveredOrFocused())
 		{
-			this.renderToolTip(pMatrixStack, pMouseX, pMouseY);
+			this.renderToolTip(pPoseStack, pMouseX, pMouseY);
 		}
 
 	}
 
 	@Override
-	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
+	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
 	{
-		GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
+		GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
 	}
 
 	@Override
-	public void playDownSound(SoundHandler pHandler)
+	public void playDownSound(SoundManager pHandler)
 	{
 
 	}
@@ -78,14 +79,20 @@ public class LabelWidget extends Widget
 		this.alignment = alignment;
 	}
 
-	public ITextComponent[] getTooltip()
+	public Component[] getTooltip()
 	{
 		return this.tooltip.clone();
 	}
 
-	public void setTooltip(ITextComponent... tooltip)
+	public void setTooltip(Component... tooltip)
 	{
 		this.tooltip = tooltip.clone();
+	}
+
+	@Override
+	public void updateNarration(NarrationElementOutput pNarrationElementOutput)
+	{
+
 	}
 
 }

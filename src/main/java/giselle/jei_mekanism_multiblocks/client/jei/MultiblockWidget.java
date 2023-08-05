@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import giselle.jei_mekanism_multiblocks.client.IRecipeLogicStateListener;
@@ -19,12 +18,12 @@ import giselle.jei_mekanism_multiblocks.client.gui.TabButtonWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.TextAlignment;
 import giselle.jei_mekanism_multiblocks.client.jei.category.ICostConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.AbstractButton;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.core.Vec3i;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
 
 public abstract class MultiblockWidget extends ContainerWidget
 {
@@ -44,14 +43,14 @@ public abstract class MultiblockWidget extends ContainerWidget
 	{
 		super(0, 0, 0, 0);
 
-		this.addChild(new LabelWidget(00, 00, 100, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs"), TextAlignment.LEFT));
+		this.addChild(new LabelWidget(00, 00, 100, 10, new TranslatableComponent("text.jei_mekanism_multiblocks.specs"), TextAlignment.LEFT));
 		this.addChild(this.configsList = new ListWidget(00, 10, 100, 110, 10));
 		this.configsList.setItemsPadding(2);
 		this.configsList.setItemOffset(2);
 
-		this.addChild(this.costsButton = new TabButtonWidget(99, 0, 41, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.costs")));
+		this.addChild(this.costsButton = new TabButtonWidget(99, 0, 41, 10, new TranslatableComponent("text.jei_mekanism_multiblocks.costs")));
 		this.costsButton.addPressHandler(this::onCostsButtonClick);
-		this.addChild(this.resultsButton = new TabButtonWidget(139, 0, 41, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.results")));
+		this.addChild(this.resultsButton = new TabButtonWidget(139, 0, 41, 10, new TranslatableComponent("text.jei_mekanism_multiblocks.results")));
 		this.resultsButton.addPressHandler(this::onResultsButtonClick);
 		this.addChild(this.costsList = new CostList(100, 10, 80, 110, 20));
 		this.costsList.setItemsTop(2);
@@ -62,7 +61,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 		this.createSpecDimension();
 
-		List<Widget> otherWidgets = new ArrayList<>();
+		List<AbstractWidget> otherWidgets = new ArrayList<>();
 		this.collectOtherConfigs(otherWidgets::add);
 
 		if (otherWidgets.size() > 0)
@@ -93,7 +92,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		this.showRightPanel(false);
 	}
 
-	protected void collectOtherConfigs(Consumer<Widget> consumer)
+	protected void collectOtherConfigs(Consumer<AbstractWidget> consumer)
 	{
 
 	}
@@ -108,7 +107,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		widgets.add(this.heightWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.height", this.createDimensionSlider(2, this.getDimensionHeightMin(), this.getDimensionHeightMax())));
 		this.heightWidget.getSlider().addValueChangeHanlder(this::onDimensionHeightChanged);
 
-		List<IntSliderWithButtons> list = widgets.stream().filter(w -> this.isUseDimensionWidget(w) && w.getSlider().getMinValue() < w.getSlider().getMaxValue()).collect(Collectors.toList());
+		List<IntSliderWithButtons> list = widgets.stream().filter(w -> this.isUseDimensionWidget(w) && w.getSlider().getMinValue() < w.getSlider().getMaxValue()).toList();
 
 		if (list.size() > 0)
 		{
@@ -119,7 +118,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	protected IntSliderWidget createDimensionSlider(int index, int min, int max)
 	{
-		return new IntSliderWidget(0, 0, 0, 0, StringTextComponent.EMPTY, min, min, max);
+		return new IntSliderWidget(0, 0, 0, 0, TextComponent.EMPTY, min, min, max);
 	}
 
 	protected boolean isUseDimensionWidget(IntSliderWithButtons widget)
@@ -170,38 +169,38 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	private void updateResults()
 	{
-		List<Widget> costs = new ArrayList<>();
+		List<AbstractWidget> costs = new ArrayList<>();
 		this.collectResult(costs::add);
 
 		this.resultsList.clearChildren();
 		costs.forEach(this.resultsList::addChild);
 	}
 
-	protected void collectResult(Consumer<Widget> consumer)
+	protected void collectResult(Consumer<AbstractWidget> consumer)
 	{
 
 	}
 
 	@Override
-	public void render(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks)
+	public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 		int lineTop = this.y + this.configsList.y;
-		GuiHelper.fillRectagleBlack(pMatrixStack, this.x, lineTop, this.configsList.getWidth(), 1);
+		GuiHelper.fillRectagleBlack(pPoseStack, this.x, lineTop, this.configsList.getWidth(), 1);
 
 		if (!this.costsButton.isSelected())
 		{
-			GuiHelper.fillRectagleBlack(pMatrixStack, this.x + this.costsButton.x, lineTop, this.costsButton.getWidth(), 1);
+			GuiHelper.fillRectagleBlack(pPoseStack, this.x + this.costsButton.x, lineTop, this.costsButton.getWidth(), 1);
 		}
 
 		if (!this.resultsButton.isSelected())
 		{
-			GuiHelper.fillRectagleBlack(pMatrixStack, this.x + this.resultsButton.x, lineTop, this.resultsButton.getWidth(), 1);
+			GuiHelper.fillRectagleBlack(pPoseStack, this.x + this.resultsButton.x, lineTop, this.resultsButton.getWidth(), 1);
 		}
 
-		GuiHelper.fillRectagleBlack(pMatrixStack, this.x, this.y + this.configsList.y, 1, this.height - this.configsList.y);
-		GuiHelper.fillRectagleBlack(pMatrixStack, this.x, this.y + this.height - 1, this.width, 1);
+		GuiHelper.fillRectagleBlack(pPoseStack, this.x, this.y + this.configsList.y, 1, this.height - this.configsList.y);
+		GuiHelper.fillRectagleBlack(pPoseStack, this.x, this.y + this.height - 1, this.width, 1);
 
-		super.render(pMatrixStack, pMouseX, pMouseY, pPartialTicks);
+		super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
 
 		if (this.needNotifyStateChange)
 		{
@@ -227,28 +226,28 @@ public abstract class MultiblockWidget extends ContainerWidget
 	{
 		Minecraft minecraft = Minecraft.getInstance();
 
-		if (minecraft.screen instanceof IRecipeLogicStateListener)
+		if (minecraft.screen instanceof IRecipeLogicStateListener listener)
 		{
-			((IRecipeLogicStateListener) minecraft.screen).jei_mekanism_multiblocks$onStateChange();
+			listener.jei_mekanism_multiblocks$onStateChange();
 		}
 
 	}
 
 	public int getDimensionVolume()
 	{
-		Vector3i dimension = this.getDimension();
+		Vec3i dimension = this.getDimension();
 		return dimension.getX() * dimension.getY() * dimension.getZ();
 	}
 
 	public int getDimensionCornerBlocks()
 	{
-		Vector3i innerDimension = this.getDimensionInner();
+		Vec3i innerDimension = this.getDimensionInner();
 		return 8 + (innerDimension.getX() * 4) + (innerDimension.getZ() * 4) + (innerDimension.getY() * 4);
 	}
 
 	public int getDimensionSideBlocks()
 	{
-		Vector3i innerDimension = this.getDimensionInner();
+		Vec3i innerDimension = this.getDimensionInner();
 		return (innerDimension.getX() * innerDimension.getZ() * 2) + (innerDimension.getX() * innerDimension.getY() * 2) + (innerDimension.getZ() * innerDimension.getY() * 2);
 	}
 
@@ -269,24 +268,24 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	public int getDimensionInnerVolume()
 	{
-		Vector3i inner = this.getDimensionInner();
+		Vec3i inner = this.getDimensionInner();
 		return inner.getX() * inner.getY() * inner.getZ();
 	}
 
-	public Vector3i getDimensionInner()
+	public Vec3i getDimensionInner()
 	{
 		int innerWidth = this.getDimensionWidth() - 2;
 		int innerLength = this.getDimensionLength() - 2;
 		int innerHeight = this.getDimensionHeight() - 2;
-		return new Vector3i(innerWidth, innerHeight, innerLength);
+		return new Vec3i(innerWidth, innerHeight, innerLength);
 	}
 
-	public Vector3i getDimension()
+	public Vec3i getDimension()
 	{
 		int width = this.getDimensionWidth();
 		int length = this.getDimensionLength();
 		int height = this.getDimensionHeight();
-		return new Vector3i(width, height, length);
+		return new Vec3i(width, height, length);
 	}
 
 	public int getDimensionWidth()

@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mekanism.common.util.text.TextUtils;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public class VolumeTextHelper
 {
@@ -20,22 +20,22 @@ public class VolumeTextHelper
 
 	}
 
-	public static ITextComponent formatMB(double value)
+	public static Component formatMB(double value)
 	{
 		return format(value, VolumeUnit.MILLI, "B");
 	}
 
-	public static ITextComponent formatMBt(double value)
+	public static Component formatMBt(double value)
 	{
 		return format(value, VolumeUnit.MILLI, "B/t");
 	}
 
-	public static ITextComponent format(double value, VolumeUnit from, String unit)
+	public static Component format(double value, VolumeUnit from, String unit)
 	{
 		return format(value, from, unit, 3);
 	}
 
-	public static ITextComponent format(double value, VolumeUnit from, String unit, int decimals)
+	public static Component format(double value, VolumeUnit from, String unit, int decimals)
 	{
 		VolumeUnit to = from;
 		int multiplier = from.getMultiplier();
@@ -87,7 +87,7 @@ public class VolumeTextHelper
 			text = new StringBuilder().append(exponentialPart).append(".").append(deciamlPart).toString();
 		}
 
-		return new StringTextComponent(new StringBuilder().append(text).append(" ").append(to.getShortName()).append(unit).toString());
+		return new TextComponent(new StringBuilder().append(text).append(" ").append(to.getShortName()).append(unit).toString());
 	}
 
 	private VolumeTextHelper()

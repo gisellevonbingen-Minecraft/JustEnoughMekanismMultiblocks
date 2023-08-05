@@ -15,16 +15,15 @@ import mekanism.common.config.MekanismConfig;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.EnergyDisplay;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
 
 public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 {
 	public SPSCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("sps"), MekanismLang.SPS.translate(), MekanismBlocks.SPS_PORT.getItemStack());
+		super(helper, Mekanism.rl("sps"), SPSWidget.class, MekanismLang.SPS.translate(), MekanismBlocks.SPS_PORT.getItemStack());
 	}
 
 	@Override
@@ -35,18 +34,6 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 		consumer.accept(MekanismBlocks.SPS_PORT.getItemStack());
 		consumer.accept(MekanismBlocks.SUPERCHARGED_COIL.getItemStack());
 		consumer.accept(MekanismBlocks.STRUCTURAL_GLASS.getItemStack());
-	}
-
-	@Override
-	public void setIngredients(SPSWidget widget, IIngredients ingredients)
-	{
-
-	}
-
-	@Override
-	public Class<? extends SPSWidget> getRecipeClass()
-	{
-		return SPSWidget.class;
 	}
 
 	public static class SPSWidget extends MultiblockWidget
@@ -60,11 +47,11 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 		}
 
 		@Override
-		protected void collectOtherConfigs(Consumer<Widget> consumer)
+		protected void collectOtherConfigs(Consumer<AbstractWidget> consumer)
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
+			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
 			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 3, this.getSideBlocks()));
 			this.portsWidget.getSlider().addValueChangeHanlder(this::onPortsChanged);
@@ -101,14 +88,14 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 		}
 
 		@Override
-		protected void collectResult(Consumer<Widget> consumer)
+		protected void collectResult(Consumer<AbstractWidget> consumer)
 		{
 			super.collectResult(consumer);
 
 			FloatingLong energyPerAntimatter = MekanismConfig.general.spsEnergyPerInput.get().multiply(MekanismConfig.general.spsInputPerAntimatter.get());
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.energy_per_antimatter"), new TranslationTextComponent("%s/%s", EnergyDisplay.of(energyPerAntimatter).getTextComponent(), "mB")));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(MekanismConfig.general.spsInputPerAntimatter.get() * 2L)));
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(1_000)));
+			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.energy_per_antimatter"), new TranslatableComponent("%s/%s", EnergyDisplay.of(energyPerAntimatter).getTextComponent(), "mB")));
+			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(MekanismConfig.general.spsInputPerAntimatter.get() * 2L)));
+			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(1_000)));
 		}
 
 		protected void onPortsChanged(int ports)

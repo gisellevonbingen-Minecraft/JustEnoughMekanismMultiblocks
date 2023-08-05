@@ -13,16 +13,15 @@ import mekanism.common.MekanismLang;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.TextUtils;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
 
 public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidget>
 {
 	public MatrixCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("matrix"), MekanismLang.MATRIX.translate(), MekanismBlocks.INDUCTION_PORT.getItemStack());
+		super(helper, Mekanism.rl("matrix"), MatrixWidget.class, MekanismLang.MATRIX.translate(), MekanismBlocks.INDUCTION_PORT.getItemStack());
 	}
 
 	@Override
@@ -43,18 +42,6 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 		consumer.accept(MekanismBlocks.ULTIMATE_INDUCTION_PROVIDER.getItemStack());
 	}
 
-	@Override
-	public void setIngredients(MatrixWidget widget, IIngredients ingredients)
-	{
-
-	}
-
-	@Override
-	public Class<? extends MatrixWidget> getRecipeClass()
-	{
-		return MatrixWidget.class;
-	}
-
 	public static class MatrixWidget extends MultiblockWidget
 	{
 		protected CheckBoxWidget useStructuralGlassCheckBox;
@@ -66,11 +53,11 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 		}
 
 		@Override
-		protected void collectOtherConfigs(Consumer<Widget> consumer)
+		protected void collectOtherConfigs(Consumer<AbstractWidget> consumer)
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
+			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
 			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 
 			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 2, 0));
@@ -110,12 +97,12 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 		}
 
 		@Override
-		protected void collectResult(Consumer<Widget> consumer)
+		protected void collectResult(Consumer<AbstractWidget> consumer)
 		{
 			super.collectResult(consumer);
 
 			int innerVolume = this.getDimensionInnerVolume();
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.inner_volume"), new TranslationTextComponent("text.jei_mekanism_multiblocks.result.blocks", TextUtils.format(innerVolume))));
+			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.inner_volume"), new TranslatableComponent("text.jei_mekanism_multiblocks.result.blocks", TextUtils.format(innerVolume))));
 		}
 
 		@Override

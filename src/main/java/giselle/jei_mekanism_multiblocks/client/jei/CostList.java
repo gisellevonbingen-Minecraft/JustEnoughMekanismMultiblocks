@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.world.item.ItemStack;
 
 public class CostList extends ListLineWidget
 {
@@ -16,11 +16,11 @@ public class CostList extends ListLineWidget
 
 	public Optional<Object> getIngredientUnderMouse(double pMouseX, double pMouseY)
 	{
-		for (Widget widget : this.getChildren())
+		for (AbstractWidget widget : this.getChildren())
 		{
-			if (widget instanceof CostWidget && widget.isMouseOver(pMouseX, pMouseY))
+			if (widget instanceof CostWidget cost && widget.isMouseOver(pMouseX, pMouseY))
 			{
-				return Optional.ofNullable(((CostWidget) widget).getItemStack());
+				return Optional.ofNullable(cost.getItemStack());
 			}
 
 		}
@@ -48,11 +48,11 @@ public class CostList extends ListLineWidget
 	{
 		List<ItemStack> costs = new ArrayList<>();
 
-		for (Widget widget : this.getChildren())
+		for (AbstractWidget widget : this.getChildren())
 		{
-			if (widget instanceof CostWidget)
+			if (widget instanceof CostWidget cost)
 			{
-				costs.add(((CostWidget) widget).getItemStack());
+				costs.add(cost.getItemStack());
 			}
 
 		}

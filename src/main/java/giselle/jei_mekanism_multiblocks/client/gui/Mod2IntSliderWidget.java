@@ -1,12 +1,12 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 
 public class Mod2IntSliderWidget extends IntSliderWidget
 {
 	private int remainder;
 
-	public Mod2IntSliderWidget(int x, int y, int width, int height, ITextComponent pMessage, int value, int min, int max, int remainder)
+	public Mod2IntSliderWidget(int x, int y, int width, int height, Component pMessage, int value, int min, int max, int remainder)
 	{
 		super(x, y, width, height, pMessage, value, min, max);
 

@@ -1,10 +1,10 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.AbstractButton;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.TextComponent;
 
 public class ListWidget extends ContainerWidget
 {
@@ -38,13 +38,13 @@ public class ListWidget extends ContainerWidget
 		this.itemOffset = 0;
 		this.scrollBarWidth = 12;
 
-		this.addFunctionWidget(this.upButton = new ButtonWidget(0, 0, 0, 0, new StringTextComponent("▲")));
+		this.addFunctionWidget(this.upButton = new ButtonWidget(0, 0, 0, 0, new TextComponent("▲")));
 		this.upButton.addPressHandler(this::onScrollButtonClick);
 
-		this.addFunctionWidget(this.downButton = new ButtonWidget(0, 0, 0, 0, new StringTextComponent("▼")));
+		this.addFunctionWidget(this.downButton = new ButtonWidget(0, 0, 0, 0, new TextComponent("▼")));
 		this.downButton.addPressHandler(this::onScrollButtonClick);
 
-		this.addFunctionWidget(this.scrollBar = new IntSliderWidget(0, 0, 0, 0, StringTextComponent.EMPTY, 0, 0, 0));
+		this.addFunctionWidget(this.scrollBar = new IntSliderWidget(0, 0, 0, 0, TextComponent.EMPTY, 0, 0, 0));
 		this.scrollBar.addValueChangeHanlder(this::onScrollChanged);
 
 		this.scrollBar.setVertical();
@@ -96,7 +96,7 @@ public class ListWidget extends ContainerWidget
 	}
 
 	@Override
-	public void render(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks)
+	public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 		if (this.scrollBarHorizontalChanged)
 		{
@@ -135,7 +135,7 @@ public class ListWidget extends ContainerWidget
 			this.updateItemsVertical();
 		}
 
-		super.render(pMatrixStack, pMouseX, pMouseY, pPartialTicks);
+		super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
 	}
 
 	protected void updateItemsVertical()
@@ -146,7 +146,7 @@ public class ListWidget extends ContainerWidget
 		int top = 0;
 		int bottom = this.getHeight() - this.getItemsBottom() - itemHeight;
 
-		for (Widget widget : this.getChildren())
+		for (AbstractWidget widget : this.getChildren())
 		{
 			widget.y = itemY;
 			widget.setHeight(itemHeight);
@@ -159,21 +159,21 @@ public class ListWidget extends ContainerWidget
 
 	protected void updateItemsHorizontal()
 	{
-		for (Widget widget : this.getChildren())
+		for (AbstractWidget widget : this.getChildren())
 		{
 			this.updateItemHorizontal(widget);
 		}
 
 	}
 
-	protected void updateItemHorizontal(Widget widget)
+	protected void updateItemHorizontal(AbstractWidget widget)
 	{
 		widget.x = this.getItemsLeft();
 		widget.setWidth(this.scrollBar.x - this.getItemsRight() - widget.x);
 	}
 
 	@Override
-	protected void onChildAdded(Widget widget)
+	protected void onChildAdded(AbstractWidget widget)
 	{
 		super.onChildAdded(widget);
 
@@ -183,7 +183,7 @@ public class ListWidget extends ContainerWidget
 	}
 
 	@Override
-	protected void onChildRemoved(Widget widget)
+	protected void onChildRemoved(AbstractWidget widget)
 	{
 		super.onChildRemoved(widget);
 

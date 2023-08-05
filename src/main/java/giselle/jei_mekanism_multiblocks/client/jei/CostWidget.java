@@ -4,31 +4,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector4f;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import mekanism.common.util.text.TextUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.vector.Vector4f;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.ItemStack;
 
-public class CostWidget extends Widget
+public class CostWidget extends AbstractWidget
 {
 	private final ItemStack itemStack;
 	private final boolean hasCountExpressionComponent;
-	private final ITextComponent countExpressionComponent;
-	private final ITextComponent countTotalComponent;
-	private ITextComponent[] headTooltip;
-	private ITextComponent[] tailTooltip;
+	private final Component countExpressionComponent;
+	private final Component countTotalComponent;
+	private Component[] headTooltip;
+	private Component[] tailTooltip;
 
 	public CostWidget(int pX, int pY, int pWidth, int pHeight, ItemStack itemStack)
 	{
-		super(pX, pY, pWidth, pHeight, StringTextComponent.EMPTY);
+		super(pX, pY, pWidth, pHeight, TextComponent.EMPTY);
 		this.itemStack = itemStack;
 		this.packedFGColor = 0x3F3F3F;
 
@@ -56,25 +57,25 @@ public class CostWidget extends Widget
 		}
 
 		this.hasCountExpressionComponent = stacks > 0;
-		this.countExpressionComponent = new StringTextComponent(builder.toString());
-		this.countTotalComponent = new StringTextComponent("=").append(TextUtils.format(count));
-		this.headTooltip = new ITextComponent[0];
-		this.tailTooltip = new ITextComponent[0];
+		this.countExpressionComponent = new TextComponent(builder.toString());
+		this.countTotalComponent = new TextComponent("=").append(TextUtils.format(count));
+		this.headTooltip = new Component[0];
+		this.tailTooltip = new Component[0];
 	}
 
 	@Override
-	public void renderButton(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks)
+	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 		Minecraft minecraft = Minecraft.getInstance();
 		ItemRenderer itemRenderer = minecraft.getItemRenderer();
-		FontRenderer font = minecraft.font;
+		Font font = minecraft.font;
 
 		int itemX = this.x + 2;
 		int itemY = this.y + 2;
 		ItemStack itemStack = this.getItemStack();
 		Vector4f vector4f = new Vector4f(0.0F, 0.0F, 0.0F, 1.0F);
-		vector4f.transform(pMatrixStack.last().pose());
-		itemRenderer.renderAndDecorateItem(null, itemStack, (int) vector4f.x() + itemX, (int) vector4f.y() + itemY);
+		vector4f.transform(pPoseStack.last().pose());
+		itemRenderer.renderAndDecorateItem(null, itemStack, (int) vector4f.x() + itemX, (int) vector4f.y() + itemY, 0);
 
 		int textX = itemX + 18;
 		int textY = itemY;
@@ -84,27 +85,27 @@ public class CostWidget extends Widget
 
 		if (this.hasCountExpressionComponent)
 		{
-			GuiHelper.drawScaledText(pMatrixStack, this.countExpressionComponent, textX, textY, textWidth, color, shadow);
-			GuiHelper.drawScaledText(pMatrixStack, this.countTotalComponent, textX, textY + font.lineHeight, textWidth, color, shadow);
+			GuiHelper.drawScaledText(pPoseStack, this.countExpressionComponent, textX, textY, textWidth, color, shadow);
+			GuiHelper.drawScaledText(pPoseStack, this.countTotalComponent, textX, textY + font.lineHeight, textWidth, color, shadow);
 		}
 		else
 		{
-			GuiHelper.drawScaledText(pMatrixStack, this.countTotalComponent, textX, textY + font.lineHeight / 2, textWidth, color, shadow);
+			GuiHelper.drawScaledText(pPoseStack, this.countTotalComponent, textX, textY + font.lineHeight / 2, textWidth, color, shadow);
 		}
 
-		this.renderToolTip(pMatrixStack, pMouseX, pMouseY);
+		this.renderToolTip(pPoseStack, pMouseX, pMouseY);
 	}
 
 	@Override
-	public void renderToolTip(MatrixStack pPoseStack, int pMouseX, int pMouseY)
+	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
 	{
 		super.renderToolTip(pPoseStack, pMouseX, pMouseY);
 
 		Minecraft minecraft = Minecraft.getInstance();
 
-		if (minecraft.screen != null && this.visible && this.isHovered())
+		if (minecraft.screen != null && this.visible && this.isHoveredOrFocused())
 		{
-			List<ITextComponent> tooltip = new ArrayList<>();
+			List<Component> tooltip = new ArrayList<>();
 			tooltip.addAll(Arrays.asList(this.getHeadTooltip()));
 			tooltip.addAll(minecraft.screen.getTooltipFromItem(this.getItemStack()));
 			tooltip.addAll(Arrays.asList(this.getTailTooltip()));
@@ -119,24 +120,30 @@ public class CostWidget extends Widget
 		return this.itemStack;
 	}
 
-	public ITextComponent[] getHeadTooltip()
+	public Component[] getHeadTooltip()
 	{
 		return this.headTooltip.clone();
 	}
 
-	public void setHeadTooltip(ITextComponent... tooltip)
+	public void setHeadTooltip(Component... tooltip)
 	{
 		this.headTooltip = tooltip.clone();
 	}
 
-	public ITextComponent[] getTailTooltip()
+	public Component[] getTailTooltip()
 	{
 		return this.tailTooltip.clone();
 	}
 
-	public void setTailTooltip(ITextComponent... tooltip)
+	public void setTailTooltip(Component... tooltip)
 	{
 		this.tailTooltip = tooltip.clone();
+	}
+
+	@Override
+	public void updateNarration(NarrationElementOutput pNarrationElementOutput)
+	{
+
 	}
 
 }

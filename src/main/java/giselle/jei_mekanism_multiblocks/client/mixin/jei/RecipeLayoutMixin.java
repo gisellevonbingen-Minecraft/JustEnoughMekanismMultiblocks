@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 import giselle.jei_mekanism_multiblocks.client.IRecipeLayout;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import mezz.jei.gui.recipes.RecipeLayout;
+import mezz.jei.common.gui.recipes.layout.RecipeLayout;
 
 @Mixin(value = RecipeLayout.class, remap = false)
 public class RecipeLayoutMixin<T> implements IRecipeLayout<T>
@@ -15,7 +15,7 @@ public class RecipeLayoutMixin<T> implements IRecipeLayout<T>
 	{
 		return ((RecipeLayout<T>) (Object) this).getRecipe();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public IRecipeCategory<?> jei_mekanism_multiblocks$getRecipeCategory()

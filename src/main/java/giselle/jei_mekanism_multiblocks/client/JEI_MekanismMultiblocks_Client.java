@@ -2,13 +2,12 @@ package giselle.jei_mekanism_multiblocks.client;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent.MouseInputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -28,7 +27,7 @@ public class JEI_MekanismMultiblocks_Client
 	}
 
 	@SubscribeEvent
-	public static void onMouseScroll(GuiScreenEvent.MouseScrollEvent.Pre e)
+	public static void onMouseScroll(ScreenEvent.MouseScrollEvent.Pre e)
 	{
 		foreachMouseInput(e, (category, widget, mouseX, mouseY) ->
 		{
@@ -38,7 +37,7 @@ public class JEI_MekanismMultiblocks_Client
 	}
 
 	@SubscribeEvent
-	public static void onMouseDrag(GuiScreenEvent.MouseDragEvent.Pre e)
+	public static void onMouseDrag(ScreenEvent.MouseDragEvent.Pre e)
 	{
 		foreachMouseInput(e, (category, widget, mouseX, mouseY) ->
 		{
@@ -48,7 +47,7 @@ public class JEI_MekanismMultiblocks_Client
 	}
 
 	@SubscribeEvent
-	public static void onMouseReleased(GuiScreenEvent.MouseReleasedEvent.Pre e)
+	public static void onMouseReleased(ScreenEvent.MouseReleasedEvent.Pre e)
 	{
 		foreachMouseInput(e, (category, widget, mouseX, mouseY) ->
 		{
@@ -59,7 +58,7 @@ public class JEI_MekanismMultiblocks_Client
 
 	public static void foreachMouseInput(MouseInputEvent e, MouseInputHandler handler)
 	{
-		Screen screen = e.getGui();
+		Screen screen = e.getScreen();
 		double mouseX = e.getMouseX();
 		double mouseY = e.getMouseY();
 
@@ -87,11 +86,11 @@ public class JEI_MekanismMultiblocks_Client
 	@SuppressWarnings("unchecked")
 	public static List<RecipeLayoutWithCategory<MultiblockCategory<MultiblockWidget>, MultiblockWidget>> getRecipeLayouts(Screen screen)
 	{
-		if (screen instanceof IRecipeLayoutHolder)
+		if (screen instanceof IRecipeLayoutHolder holder)
 		{
-			return ((IRecipeLayoutHolder) screen).jei_mekanism_multiblocks$getRecipeLayouts().stream()//
+			return holder.jei_mekanism_multiblocks$getRecipeLayouts().stream()//
 					.filter(recipeLayout -> recipeLayout.jei_mekanism_multiblocks$getRecipeCategory() instanceof MultiblockCategory<?>)//
-					.map(recipeLayout -> new RecipeLayoutWithCategory<>((IRecipeLayout<MultiblockWidget>) recipeLayout, (MultiblockCategory<MultiblockWidget>) recipeLayout.jei_mekanism_multiblocks$getRecipeCategory())).collect(Collectors.toList());
+					.map(recipeLayout -> new RecipeLayoutWithCategory<>((IRecipeLayout<MultiblockWidget>) recipeLayout, (MultiblockCategory<MultiblockWidget>) recipeLayout.jei_mekanism_multiblocks$getRecipeCategory())).toList();
 		}
 		else
 		{

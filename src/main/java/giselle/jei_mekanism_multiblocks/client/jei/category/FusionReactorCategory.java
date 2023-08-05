@@ -11,6 +11,7 @@ import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
+import mekanism.api.chemical.ChemicalTags;
 import mekanism.api.chemical.gas.Gas;
 import mekanism.api.math.FloatingLong;
 import mekanism.common.util.ChemicalUtil;
@@ -24,18 +25,17 @@ import mekanism.generators.common.content.fusion.FusionReactorMultiblockData;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mekanism.generators.common.registries.GeneratorsItems;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidAttributes;
 
 public class FusionReactorCategory extends MultiblockCategory<FusionReactorCategory.FusionReactorCategoryWidget>
 {
 	public FusionReactorCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismGenerators.rl("fusion_reactor"), GeneratorsLang.FUSION_REACTOR.translate(), GeneratorsBlocks.FUSION_REACTOR_CONTROLLER.getItemStack());
+		super(helper, MekanismGenerators.rl("fusion_reactor"), FusionReactorCategoryWidget.class, GeneratorsLang.FUSION_REACTOR.translate(), GeneratorsBlocks.FUSION_REACTOR_CONTROLLER.getItemStack());
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		consumer.accept(GeneratorsBlocks.LASER_FOCUS_MATRIX.getItemStack());
 		consumer.accept(GeneratorsBlocks.REACTOR_GLASS.getItemStack());
 
-		List<Gas> fusionFuelGases = GeneratorTags.Gases.FUSION_FUEL.getValues();
+		List<Gas> fusionFuelGases = ChemicalTags.GAS.getManager().get().getTag(GeneratorTags.Gases.FUSION_FUEL).stream().toList();
 
 		if (fusionFuelGases.size() > 0)
 		{
@@ -62,18 +62,6 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			consumer.accept(GeneratorsItems.HOHLRAUM.getItemStack());
 		}
 
-	}
-
-	@Override
-	public void setIngredients(FusionReactorCategoryWidget widget, IIngredients ingredients)
-	{
-
-	}
-
-	@Override
-	public Class<? extends FusionReactorCategoryWidget> getRecipeClass()
-	{
-		return FusionReactorCategoryWidget.class;
 	}
 
 	public static class FusionReactorCategoryWidget extends MultiblockWidget
@@ -90,19 +78,19 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		}
 
 		@Override
-		protected void collectOtherConfigs(Consumer<Widget> consumer)
+		protected void collectOtherConfigs(Consumer<AbstractWidget> consumer)
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useReactorGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.REACTOR_GLASS.getItemStack().getHoverName()), true));
+			consumer.accept(this.useReactorGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.REACTOR_GLASS.getItemStack().getHoverName()), true));
 			this.useReactorGlassCheckBox.addSelectedChangedHandler(this::onUseReactorGlassChanged);
-			consumer.accept(this.waterCooledCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.water_cooled"), false));
+			consumer.accept(this.waterCooledCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.water_cooled"), false));
 			this.waterCooledCheckBox.addSelectedChangedHandler(this::onWaterCooledChanged);
 			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 0, 0));
 			this.portsWidget.getSlider().addValueChangeHanlder(this::onPortsChanged);
 			consumer.accept(this.logicAdaptersWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.logic_adapters", 0, 0, 0));
 			this.logicAdaptersWidget.getSlider().addValueChangeHanlder(this::onLogicAdaptersChanged);
-			consumer.accept(this.injectionRateWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.injection_rate", new Mod2IntSliderWidget(0, 0, 0, 0, StringTextComponent.EMPTY, 2, 2, FluidAttributes.BUCKET_VOLUME, 1)));
+			consumer.accept(this.injectionRateWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.injection_rate", new Mod2IntSliderWidget(0, 0, 0, 0, TextComponent.EMPTY, 2, 2, FluidAttributes.BUCKET_VOLUME, 1)));
 			this.injectionRateWidget.getSlider().addValueChangeHanlder(this::onInjectionRateChanged);
 
 			this.updatePortsSliderLimit();
@@ -188,7 +176,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			if (this.isWaterCooled())
 			{
 				int limitedInjectionRate = Math.min(this.getInjectionRate(), FusionReactorMultiblockData.MAX_INJECTION);
-				TranslationTextComponent tooltip = new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate);
+				TranslatableComponent tooltip = new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate);
 				this.waterCooledCheckBox.setTooltip(tooltip);
 				this.injectionRateWidget.setTooltip(tooltip);
 			}
@@ -235,7 +223,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		}
 
 		@Override
-		protected void collectResult(Consumer<Widget> consumer)
+		protected void collectResult(Consumer<AbstractWidget> consumer)
 		{
 			super.collectResult(consumer);
 
@@ -265,22 +253,22 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 			double fusionThermocoupleEfficiency = MekanismGeneratorsConfig.generators.fusionThermocoupleEfficiency.get();
 			FloatingLong passiveGeneration = FloatingLong.create(fusionThermocoupleEfficiency * casingThermalConductivity * casingTemp);
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.passive_generation"), EnergyDisplay.of(passiveGeneration).getTextComponent()));
+			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.passive_generation"), EnergyDisplay.of(passiveGeneration).getTextComponent()));
 
 			if (steamProduction > 0L)
 			{
-				consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_production"), VolumeTextHelper.formatMBt(steamProduction)));
+				consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.steam_production"), VolumeTextHelper.formatMBt(steamProduction)));
 			}
 
-			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.fuel_tank"), VolumeTextHelper.formatMB(fuelTank)));
+			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.fuel_tank"), VolumeTextHelper.formatMB(fuelTank)));
 
 			if (this.isWaterCooled())
 			{
-				TranslationTextComponent injectionRateTooltip = new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate);
-				ResultWidget watTankWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(waterTank));
+				TranslatableComponent injectionRateTooltip = new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate);
+				ResultWidget watTankWidget = new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(waterTank));
 				watTankWidget.setTooltip(injectionRateTooltip);
 				consumer.accept(watTankWidget);
-				ResultWidget steamTankWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(steamTank));
+				ResultWidget steamTankWidget = new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(steamTank));
 				steamTankWidget.setTooltip(injectionRateTooltip);
 				consumer.accept(steamTankWidget);
 			}

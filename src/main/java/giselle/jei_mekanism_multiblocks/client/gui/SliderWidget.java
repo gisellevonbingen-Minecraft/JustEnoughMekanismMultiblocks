@@ -3,39 +3,41 @@ package giselle.jei_mekanism_multiblocks.client.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import it.unimi.dsi.fastutil.doubles.DoubleConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.Mth;
 
-public class SliderWidget extends Widget
+public class SliderWidget extends AbstractWidget
 {
 	private final List<DoubleConsumer> ratioChangeHandlers;
 	private double ratio;
 	private boolean horizontal;
-	private ITextComponent[] tooltip;
+	private Component[] tooltip;
 
 	public SliderWidget()
 	{
-		this(0, 0, 0, 0, StringTextComponent.EMPTY, 0);
+		this(0, 0, 0, 0, TextComponent.EMPTY, 0);
 	}
 
-	public SliderWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, double pRatio)
+	public SliderWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, double pRatio)
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.ratioChangeHandlers = new ArrayList<>();
-		this.ratio = MathHelper.clamp(pRatio, 0.0D, 1.0D);
+		this.ratio = Mth.clamp(pRatio, 0.0D, 1.0D);
 		this.horizontal = true;
-		this.tooltip = new ITextComponent[0];
+		this.tooltip = new Component[0];
 	}
 
 	public void addRatioChangeHanlder(DoubleConsumer handler)
@@ -44,9 +46,9 @@ public class SliderWidget extends Widget
 	}
 
 	@Override
-	protected IFormattableTextComponent createNarrationMessage()
+	protected MutableComponent createNarrationMessage()
 	{
-		return new TranslationTextComponent("gui.narrate.slider", this.getMessage());
+		return new TranslatableComponent("gui.narrate.slider", this.getMessage());
 	}
 
 	@Override
@@ -55,37 +57,35 @@ public class SliderWidget extends Widget
 		return 0;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	public void renderButton(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks)
+	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 		Minecraft minecraft = Minecraft.getInstance();
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.enableDepthTest();
-		GuiHelper.blitButton(pMatrixStack, this.x, this.y, this.width, this.height, false, false);
+		GuiHelper.blitButton(pPoseStack, this.x, this.y, this.width, this.height, false, false);
 
-		this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
+		this.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);
 		int j = this.getFGColor();
-		GuiHelper.drawScaledText(pMatrixStack, this.getMessage(), this.x + 2, this.y + 1, this.width - 4, j, true, TextAlignment.CENTER);
+		GuiHelper.drawScaledText(pPoseStack, this.getMessage(), this.x + 2, this.y + 1, this.width - 4, j, true, TextAlignment.CENTER);
 
-		if (this.isHovered())
+		if (this.isHoveredOrFocused())
 		{
-			this.renderToolTip(pMatrixStack, pMouseX, pMouseY);
+			this.renderToolTip(pPoseStack, pMouseX, pMouseY);
 		}
 
 	}
 
 	@Override
-	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
+	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
 	{
-		GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
+		GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
-	protected void renderBg(MatrixStack pMatrixStack, Minecraft pMinecraft, int pMouseX, int pMouseY)
+	protected void renderBg(PoseStack pPoseStack, Minecraft pMinecraft, int pMouseX, int pMouseY)
 	{
 		if (!this.active)
 		{
@@ -112,11 +112,11 @@ public class SliderWidget extends Widget
 			cursorHeight = 8;
 		}
 
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.enableDepthTest();
-		GuiHelper.blitButton(pMatrixStack, cursorX, cursorY, cursorWidth, cursorHeight, true, this.isHovered());
+		GuiHelper.blitButton(pPoseStack, cursorX, cursorY, cursorWidth, cursorHeight, true, this.isHoveredOrFocused());
 	}
 
 	protected void setRatioFromMouse(double pMouseX, double pMouseY)
@@ -175,7 +175,7 @@ public class SliderWidget extends Widget
 
 	public void setRatio(double pRatio)
 	{
-		pRatio = MathHelper.clamp(pRatio, 0.0D, 1.0D);
+		pRatio = Mth.clamp(pRatio, 0.0D, 1.0D);
 
 		if (this.getRatio() != pRatio)
 		{
@@ -222,7 +222,7 @@ public class SliderWidget extends Widget
 	}
 
 	@Override
-	public void playDownSound(SoundHandler pHandler)
+	public void playDownSound(SoundManager pHandler)
 	{
 
 	}
@@ -235,14 +235,34 @@ public class SliderWidget extends Widget
 		super.playDownSound(Minecraft.getInstance().getSoundManager());
 	}
 
-	public void setTooltip(ITextComponent... tooltip)
+	public void setTooltip(Component... tooltip)
 	{
 		this.tooltip = tooltip.clone();
 	}
 
-	public ITextComponent[] getTooltip()
+	public Component[] getTooltip()
 	{
 		return tooltip.clone();
+	}
+
+	@Override
+	public void updateNarration(NarrationElementOutput pNarrationElementOutput)
+	{
+		pNarrationElementOutput.add(NarratedElementType.TITLE, this.createNarrationMessage());
+
+		if (this.active)
+		{
+			if (this.isFocused())
+			{
+				pNarrationElementOutput.add(NarratedElementType.USAGE, new TranslatableComponent("narration.slider.usage.focused"));
+			}
+			else
+			{
+				pNarrationElementOutput.add(NarratedElementType.USAGE, new TranslatableComponent("narration.slider.usage.hovered"));
+			}
+
+		}
+
 	}
 
 }

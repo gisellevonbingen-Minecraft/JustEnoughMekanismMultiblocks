@@ -3,27 +3,28 @@ package giselle.jei_mekanism_multiblocks.client.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.button.AbstractButton;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 
 public class ButtonWidget extends AbstractButton
 {
 	private final List<IPressHandler> pressHandlers;
-	private ITextComponent[] tooltip;
+	private Component[] tooltip;
 
-	public ButtonWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage)
+	public ButtonWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage)
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.pressHandlers = new ArrayList<>();
-		this.tooltip = new ITextComponent[0];
+		this.tooltip = new Component[0];
 	}
 
 	public void addPressHandler(IPressHandler handler)
@@ -42,40 +43,45 @@ public class ButtonWidget extends AbstractButton
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
-	public void renderButton(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks)
+	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 		Minecraft minecraft = Minecraft.getInstance();
-		FontRenderer font = minecraft.font;
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
+		Font font = minecraft.font;
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.enableDepthTest();
-		GuiHelper.blitButton(pMatrixStack, this.x, this.y, this.width, this.height, this.active, this.isHovered());
+		GuiHelper.blitButton(pPoseStack, this.x, this.y, this.width, this.height, this.active, this.isHoveredOrFocused());
 
-		this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
+		this.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);
 		int j = getFGColor();
-		AbstractGui.drawCenteredString(pMatrixStack, font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
+		GuiComponent.drawCenteredString(pPoseStack, font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
 
-		if (this.isHovered())
+		if (this.isHoveredOrFocused())
 		{
-			this.renderToolTip(pMatrixStack, pMouseX, pMouseY);
+			this.renderToolTip(pPoseStack, pMouseX, pMouseY);
 		}
 
 	}
 
 	@Override
-	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
+	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
 	{
-		GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
+		GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
 	}
 
-	public void setTooltip(ITextComponent... tooltip)
+	@Override
+	public void updateNarration(NarrationElementOutput pNarrationElementOutput)
+	{
+		this.defaultButtonNarrationText(pNarrationElementOutput);
+	}
+
+	public void setTooltip(Component... tooltip)
 	{
 		this.tooltip = tooltip.clone();
 	}
 
-	public ITextComponent[] getTooltip()
+	public Component[] getTooltip()
 	{
 		return this.tooltip.clone();
 	}
