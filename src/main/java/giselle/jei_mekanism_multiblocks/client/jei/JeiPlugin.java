@@ -102,7 +102,7 @@ public class JeiPlugin implements IModPlugin
 			}
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
 			{
-				System.err.println("Exception - " + category.getUid());
+				System.err.println("Exception - " + category.getRecipeType());
 				e.printStackTrace();
 			}
 

@@ -1,13 +1,13 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
 import mekanism.common.util.text.TextUtils;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class LongSliderWithButtons extends SliderWithButtons<LongSliderWidget>
 {
 	public LongSliderWithButtons(int pX, int pY, int pWidth, int pHeight, String translationKey, long value, long min, long max)
 	{
-		this(pX, pY, pWidth, pHeight, translationKey, new LongSliderWidget(0, 0, 0, 0, TextComponent.EMPTY, value, min, max));
+		this(pX, pY, pWidth, pHeight, translationKey, new LongSliderWidget(0, 0, 0, 0, Component.empty(), value, min, max));
 	}
 
 	public LongSliderWithButtons(int pX, int pY, int pWidth, int pHeight, String translationKey, LongSliderWidget slider)

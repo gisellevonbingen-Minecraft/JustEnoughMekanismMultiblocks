@@ -1,19 +1,20 @@
 package giselle.jei_mekanism_multiblocks.client;
 
+import mezz.jei.api.gui.IRecipeLayoutDrawable;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 
 public class RecipeLayoutWithCategory<CATEGORY extends IRecipeCategory<RECIPE>, RECIPE>
 {
-	private IRecipeLayout<RECIPE> recipeLayout;
+	private IRecipeLayoutDrawable<RECIPE> recipeLayout;
 	private CATEGORY recipeCategory;
 
-	public RecipeLayoutWithCategory(IRecipeLayout<RECIPE> recipeLayout, CATEGORY recipeCategory)
+	public RecipeLayoutWithCategory(IRecipeLayoutDrawable<RECIPE> recipeLayout, CATEGORY recipeCategory)
 	{
 		this.recipeLayout = recipeLayout;
 		this.recipeCategory = recipeCategory;
 	}
 
-	public IRecipeLayout<RECIPE> getRecipeLayout()
+	public IRecipeLayoutDrawable<RECIPE> getRecipeLayout()
 	{
 		return this.recipeLayout;
 	}

@@ -24,7 +24,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.Vec3i;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
@@ -62,16 +62,16 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
+			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
 			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
-			consumer.accept(this.forSodiumCoolingCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.for_sodium_cooling"), false));
+			consumer.accept(this.forSodiumCoolingCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.for_sodium_cooling"), false));
 			this.forSodiumCoolingCheckBox.addSelectedChangedHandler(this::onForSodiumCoolingChanged);
 
 			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 0, 0));
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 			consumer.accept(this.steamHeightWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.steam_height", 0, 1, 0));
 			this.steamHeightWidget.getSlider().addValueChangeHanlder(this::onSteamHeightChanged);
-			this.steamHeightWidget.setTooltip(new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.steam_height", MekanismBlocks.PRESSURE_DISPERSER.getTextComponent()));
+			this.steamHeightWidget.setTooltip(Component.translatable("text.jei_mekanism_multiblocks.tooltip.steam_height", MekanismBlocks.PRESSURE_DISPERSER.getTextComponent()));
 			consumer.accept(this.heatingElementsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.heating_elements", 0, 1, 0));
 			this.heatingElementsWidget.getSlider().addValueChangeHanlder(this::onHeatingElementsChanged);
 
@@ -242,7 +242,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			{
 				heatingElements.setFGColor(0xFF8000);
 				heatingElements.setHeadTooltip(//
-						new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.value_limited", new TranslatableComponent("text.jei_mekanism_multiblocks.result.max_boil_rate")).withStyle(ChatFormatting.RED), new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.need_more", MekanismBlocks.SUPERHEATING_ELEMENT.getTextComponent()).withStyle(ChatFormatting.RED));
+						Component.translatable("text.jei_mekanism_multiblocks.tooltip.value_limited", Component.translatable("text.jei_mekanism_multiblocks.result.max_boil_rate")).withStyle(ChatFormatting.RED), Component.translatable("text.jei_mekanism_multiblocks.tooltip.need_more", MekanismBlocks.SUPERHEATING_ELEMENT.getTextComponent()).withStyle(ChatFormatting.RED));
 			}
 
 		}
@@ -261,8 +261,8 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 				// System.out.println("needMoreSteamVolume: " + simulation.needMoreSteamVolume);
 				// System.out.println("needMoreSuperHeatingElemetns: " + simulation.needMoreSuperHeatingElemetns);
 
-				ResultWidget boilRateWidget = new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.boil_rate_with", new FluidStack(Fluids.WATER, 1).getDisplayName()), VolumeTextHelper.formatMBt(simulation.boilRate));
-				ResultWidget coolingRateWidget = new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.cooling_rate_with", MekanismGases.SODIUM.getTextComponent()), VolumeTextHelper.formatMBt(simulation.coolingRate));
+				ResultWidget boilRateWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.boil_rate_with", new FluidStack(Fluids.WATER, 1).getDisplayName()), VolumeTextHelper.formatMBt(simulation.boilRate));
+				ResultWidget coolingRateWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.cooling_rate_with", MekanismGases.SODIUM.getTextComponent()), VolumeTextHelper.formatMBt(simulation.coolingRate));
 				this.needMoreHeatingElements = false;
 
 				if (simulation.needMoreSuperHeatingElements)
@@ -276,18 +276,18 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 						this.needMoreHeatingElements = true;
 						boilRateWidget.getValueLabel().setFGColor(0xFF8000);
 						boilRateWidget.setTooltip(//
-								new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.limited").withStyle(ChatFormatting.RED), //
-								new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.need_more", MekanismBlocks.SUPERHEATING_ELEMENT.getTextComponent()).withStyle(ChatFormatting.RED));
+								Component.translatable("text.jei_mekanism_multiblocks.tooltip.limited").withStyle(ChatFormatting.RED), //
+								Component.translatable("text.jei_mekanism_multiblocks.tooltip.need_more", MekanismBlocks.SUPERHEATING_ELEMENT.getTextComponent()).withStyle(ChatFormatting.RED));
 					}
 
 				}
 
 				consumer.accept(boilRateWidget);
 				consumer.accept(coolingRateWidget);
-				consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(simulation.waterTank)));
-				consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(simulation.steamTank)));
-				consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.heated_coolant_tank"), VolumeTextHelper.formatMB(simulation.heatedCoolantTank)));
-				consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.cooled_coolant_tank"), VolumeTextHelper.formatMB(simulation.cooledCoolantTank)));
+				consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(simulation.waterTank)));
+				consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(simulation.steamTank)));
+				consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.heated_coolant_tank"), VolumeTextHelper.formatMB(simulation.heatedCoolantTank)));
+				consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.cooled_coolant_tank"), VolumeTextHelper.formatMB(simulation.cooledCoolantTank)));
 			}
 			else
 			{
@@ -297,9 +297,9 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 				double boilCapacity = MekanismConfig.general.superheatingHeatTransfer.get() * this.getHeatingElementCount() / HeatUtils.getWaterThermalEnthalpy();
 				boilCapacity = MathUtils.clampToLong(boilCapacity * HeatUtils.getSteamEnergyEfficiency());
 
-				consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.boil_capacity"), VolumeTextHelper.formatMBt(boilCapacity)));
-				consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(this.getWaterTank(waterVolume))));
-				consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(this.getSteamTank(steamVolume))));
+				consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.boil_capacity"), VolumeTextHelper.formatMBt(boilCapacity)));
+				consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(this.getWaterTank(waterVolume))));
+				consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(this.getSteamTank(steamVolume))));
 			}
 
 		}
@@ -351,24 +351,24 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			return outer.getX() * outer.getZ() * steamHeight;
 		}
 
-		public long getWaterTank(int waterVolume)
+		public int getWaterTank(int waterVolume)
 		{
-			return waterVolume * 16_000L;
+			return waterVolume * MekanismConfig.general.boilerWaterPerTank.get();
 		}
 
 		public long getSteamTank(int steamVolume)
 		{
-			return steamVolume * 160_000L;
+			return steamVolume * MekanismConfig.general.boilerSteamPerTank.get();
 		}
 
 		public long getHeatedCoolantTank(int steamVolume)
 		{
-			return steamVolume * 256_000L;
+			return steamVolume * MekanismConfig.general.boilerHeatedCoolantPerTank.get();
 		}
 
 		public long getCooledCoolantTank(int waterVolume)
 		{
-			return waterVolume * 256_000L;
+			return waterVolume * MekanismConfig.general.boilerCooledCoolantPerTank.get();
 		}
 
 		public int getPressureDispenserCount()

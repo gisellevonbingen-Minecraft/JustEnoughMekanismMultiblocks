@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ListWidget extends ContainerWidget
 {
@@ -38,13 +38,13 @@ public class ListWidget extends ContainerWidget
 		this.itemOffset = 0;
 		this.scrollBarWidth = 12;
 
-		this.addFunctionWidget(this.upButton = new ButtonWidget(0, 0, 0, 0, new TextComponent("▲")));
+		this.addFunctionWidget(this.upButton = new ButtonWidget(0, 0, 0, 0, Component.literal("▲")));
 		this.upButton.addPressHandler(this::onScrollButtonClick);
 
-		this.addFunctionWidget(this.downButton = new ButtonWidget(0, 0, 0, 0, new TextComponent("▼")));
+		this.addFunctionWidget(this.downButton = new ButtonWidget(0, 0, 0, 0, Component.literal("▼")));
 		this.downButton.addPressHandler(this::onScrollButtonClick);
 
-		this.addFunctionWidget(this.scrollBar = new IntSliderWidget(0, 0, 0, 0, TextComponent.EMPTY, 0, 0, 0));
+		this.addFunctionWidget(this.scrollBar = new IntSliderWidget(0, 0, 0, 0, Component.empty(), 0, 0, 0));
 		this.scrollBar.addValueChangeHanlder(this::onScrollChanged);
 
 		this.scrollBar.setVertical();

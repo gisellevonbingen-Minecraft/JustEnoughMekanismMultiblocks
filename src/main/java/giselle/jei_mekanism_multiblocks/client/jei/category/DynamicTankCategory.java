@@ -15,7 +15,7 @@ import mekanism.common.config.MekanismConfig;
 import mekanism.common.registries.MekanismBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.DynamicTankWidget>
@@ -49,7 +49,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
+			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
 			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 2, 0));
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
@@ -119,8 +119,8 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 			int volume = this.getDimensionVolume();
 			long fluidCapacity = volume * MekanismConfig.general.dynamicTankFluidPerTank.get();
 			long chemicalCapacity = volume * MekanismConfig.general.dynamicTankChemicalPerTank.get();
-			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.fluid_tank"), VolumeTextHelper.formatMB(fluidCapacity)));
-			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.chemical_tank"), VolumeTextHelper.formatMB(chemicalCapacity)));
+			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.fluid_tank"), VolumeTextHelper.formatMB(fluidCapacity)));
+			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.chemical_tank"), VolumeTextHelper.formatMB(chemicalCapacity)));
 		}
 
 		public int getValveCount()

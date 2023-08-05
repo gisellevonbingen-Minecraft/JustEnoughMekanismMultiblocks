@@ -11,7 +11,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ContainerWidget extends AbstractWidget
 {
@@ -24,7 +24,7 @@ public class ContainerWidget extends AbstractWidget
 
 	public ContainerWidget(int pX, int pY, int pWidth, int pHeight)
 	{
-		super(pX, pY, pWidth, pHeight, TextComponent.EMPTY);
+		super(pX, pY, pWidth, pHeight, Component.empty());
 
 		this.children = new ArrayList<>();
 		this.unmodifiableChildren = Collections.unmodifiableList(this.children);

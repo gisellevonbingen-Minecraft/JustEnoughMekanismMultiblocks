@@ -22,8 +22,7 @@ import mekanism.common.util.text.TextUtils;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlantCategory.EvaporationPlantWidget>
@@ -73,17 +72,17 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
+			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
 			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 
 			if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
 			{
-				consumer.accept(this.useAdvancedSolarGeneratorCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR.getItemStack().getHoverName()), true));
+				consumer.accept(this.useAdvancedSolarGeneratorCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR.getItemStack().getHoverName()), true));
 				this.useAdvancedSolarGeneratorCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 			}
 			else
 			{
-				this.useAdvancedSolarGeneratorCheckBox = new CheckBoxWidget(0, 0, 0, 0, TextComponent.EMPTY, false);
+				this.useAdvancedSolarGeneratorCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.empty(), false);
 				this.useAdvancedSolarGeneratorCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 			}
 
@@ -190,15 +189,15 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			super.collectResult(consumer);
 
 			long dimHeight = this.getDimensionHeight();
-			long inputCapacity = dimHeight * 4 * EvaporationMultiblockData.FLUID_PER_TANK;
-			long outputCapacity = 10_000;
+			long inputCapacity = dimHeight * 4 * MekanismConfig.general.evaporationFluidPerTank.get();
+			long outputCapacity = MekanismConfig.general.evaporationOutputTankCapacity.get();
 			double maxTemp = EvaporationMultiblockData.MAX_MULTIPLIER_TEMP;
 			double maxSpeed = (maxTemp - HeatAPI.AMBIENT_TEMP) * MekanismConfig.general.evaporationTempMultiplier.get() * ((double) dimHeight / this.getDimensionHeightMax());
-			ResultWidget speedWidget = new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.max_speed"), new TextComponent("x" + TextUtils.format(maxSpeed)));
-			speedWidget.setTooltip(new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.when_temp_ge", MekanismUtils.getTemperatureDisplay(maxTemp, TemperatureUnit.KELVIN, false)));
+			ResultWidget speedWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.max_speed"), Component.literal("x" + TextUtils.format(maxSpeed)));
+			speedWidget.setTooltip(Component.translatable("text.jei_mekanism_multiblocks.tooltip.when_temp_ge", MekanismUtils.getTemperatureDisplay(maxTemp, TemperatureUnit.KELVIN, false)));
 			consumer.accept(speedWidget);
-			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(inputCapacity)));
-			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(outputCapacity)));
+			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(inputCapacity)));
+			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(outputCapacity)));
 		}
 
 		public int getValveCount()

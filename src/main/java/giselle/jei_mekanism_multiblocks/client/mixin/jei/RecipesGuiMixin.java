@@ -6,11 +6,11 @@ import java.util.List;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-import giselle.jei_mekanism_multiblocks.client.IRecipeLayout;
 import giselle.jei_mekanism_multiblocks.client.IRecipeLayoutHolder;
 import giselle.jei_mekanism_multiblocks.client.IRecipeLogicStateListener;
-import mezz.jei.common.gui.recipes.RecipesGui;
-import mezz.jei.common.gui.recipes.layout.RecipeLayout;
+import mezz.jei.api.gui.IRecipeLayoutDrawable;
+import mezz.jei.gui.recipes.RecipesGui;
+import mezz.jei.library.gui.recipes.RecipeLayout;
 
 @Mixin(value = RecipesGui.class, remap = false)
 public class RecipesGuiMixin implements IRecipeLayoutHolder, IRecipeLogicStateListener
@@ -19,13 +19,13 @@ public class RecipesGuiMixin implements IRecipeLayoutHolder, IRecipeLogicStateLi
 	private final List<RecipeLayout<?>> recipeLayouts = new ArrayList<>();
 
 	@Override
-	public List<IRecipeLayout<?>> jei_mekanism_multiblocks$getRecipeLayouts()
+	public List<IRecipeLayoutDrawable<?>> jei_mekanism_multiblocks$getRecipeLayouts()
 	{
-		List<IRecipeLayout<?>> list = new ArrayList<>();
+		List<IRecipeLayoutDrawable<?>> list = new ArrayList<>();
 
 		for (RecipeLayout<?> recipeLayout : this.recipeLayouts)
 		{
-			list.add((IRecipeLayout<?>) recipeLayout);
+			list.add(recipeLayout);
 		}
 
 		return list;

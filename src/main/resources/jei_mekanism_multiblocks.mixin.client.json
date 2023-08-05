@@ -4,7 +4,6 @@
 	"minVersion": "0.0.0",
 	"compatibilityLevel": "JAVA_17",
 	"client": [
-		"jei.RecipeLayoutMixin",
 		"jei.RecipesGuiMixin"
 	],
 	"mixins": [],

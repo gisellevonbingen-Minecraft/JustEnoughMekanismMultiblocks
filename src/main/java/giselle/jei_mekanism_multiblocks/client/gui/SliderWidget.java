@@ -15,8 +15,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 
 public class SliderWidget extends AbstractWidget
@@ -28,7 +26,7 @@ public class SliderWidget extends AbstractWidget
 
 	public SliderWidget()
 	{
-		this(0, 0, 0, 0, TextComponent.EMPTY, 0);
+		this(0, 0, 0, 0, Component.empty(), 0);
 	}
 
 	public SliderWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, double pRatio)
@@ -48,7 +46,7 @@ public class SliderWidget extends AbstractWidget
 	@Override
 	protected MutableComponent createNarrationMessage()
 	{
-		return new TranslatableComponent("gui.narrate.slider", this.getMessage());
+		return Component.translatable("gui.narrate.slider", this.getMessage());
 	}
 
 	@Override
@@ -254,11 +252,11 @@ public class SliderWidget extends AbstractWidget
 		{
 			if (this.isFocused())
 			{
-				pNarrationElementOutput.add(NarratedElementType.USAGE, new TranslatableComponent("narration.slider.usage.focused"));
+				pNarrationElementOutput.add(NarratedElementType.USAGE, Component.translatable("narration.slider.usage.focused"));
 			}
 			else
 			{
-				pNarrationElementOutput.add(NarratedElementType.USAGE, new TranslatableComponent("narration.slider.usage.hovered"));
+				pNarrationElementOutput.add(NarratedElementType.USAGE, Component.translatable("narration.slider.usage.hovered"));
 			}
 
 		}

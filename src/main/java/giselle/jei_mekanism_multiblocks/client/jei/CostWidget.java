@@ -15,7 +15,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 
 public class CostWidget extends AbstractWidget
@@ -29,7 +28,7 @@ public class CostWidget extends AbstractWidget
 
 	public CostWidget(int pX, int pY, int pWidth, int pHeight, ItemStack itemStack)
 	{
-		super(pX, pY, pWidth, pHeight, TextComponent.EMPTY);
+		super(pX, pY, pWidth, pHeight, Component.empty());
 		this.itemStack = itemStack;
 		this.packedFGColor = 0x3F3F3F;
 
@@ -57,8 +56,8 @@ public class CostWidget extends AbstractWidget
 		}
 
 		this.hasCountExpressionComponent = stacks > 0;
-		this.countExpressionComponent = new TextComponent(builder.toString());
-		this.countTotalComponent = new TextComponent("=").append(TextUtils.format(count));
+		this.countExpressionComponent = Component.literal(builder.toString());
+		this.countTotalComponent = Component.literal("=").append(TextUtils.format(count));
 		this.headTooltip = new Component[0];
 		this.tailTooltip = new Component[0];
 	}

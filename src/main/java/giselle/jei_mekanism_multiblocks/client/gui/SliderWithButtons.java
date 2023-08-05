@@ -11,8 +11,6 @@ import com.ibm.icu.text.DecimalFormat;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends ContainerWidget
 {
@@ -34,8 +32,8 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 
 		this.addChild(this.slider = slider);
 		this.button2DirectionMap = new HashMap<>();
-		this.minusButton = this.createAdjustButton(new TextComponent("-"), -1);
-		this.plusButton = this.createAdjustButton(new TextComponent("+"), +1);
+		this.minusButton = this.createAdjustButton(Component.literal("-"), -1);
+		this.plusButton = this.createAdjustButton(Component.literal("+"), +1);
 
 		this.updateMessage();
 		this.onHeightChanged();
@@ -56,7 +54,7 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 
 	protected void updateMessage()
 	{
-		this.getSlider().setMessage(new TranslatableComponent(this.translationKey, this.getDisplayValue()));
+		this.getSlider().setMessage(Component.translatable(this.translationKey, this.getDisplayValue()));
 	}
 
 	private ButtonWidget createAdjustButton(Component message, int direction)
@@ -77,8 +75,8 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 	{
 		List<Component> tooltip = new ArrayList<>();
 		Collections.addAll(tooltip, this.getSlider().getTooltip());
-		tooltip.add(new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.click_normal", DECIMAL_FORMAT.format(direction * NORMAL_DELTA)));
-		tooltip.add(new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.click_shift", DECIMAL_FORMAT.format(direction * SHIFT_DELTA)));
+		tooltip.add(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_normal", DECIMAL_FORMAT.format(direction * NORMAL_DELTA)));
+		tooltip.add(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_shift", DECIMAL_FORMAT.format(direction * SHIFT_DELTA)));
 		button.setTooltip(tooltip.stream().toArray(Component[]::new));
 	}
 

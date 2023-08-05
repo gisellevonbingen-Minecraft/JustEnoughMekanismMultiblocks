@@ -21,12 +21,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.Vec3i;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class MultiblockWidget extends ContainerWidget
 {
+	private boolean initialzed = false;
+
 	protected final ListWidget configsList;
 	protected final TabButtonWidget costsButton;
 	protected final TabButtonWidget resultsButton;
@@ -43,14 +44,14 @@ public abstract class MultiblockWidget extends ContainerWidget
 	{
 		super(0, 0, 0, 0);
 
-		this.addChild(new LabelWidget(00, 00, 100, 10, new TranslatableComponent("text.jei_mekanism_multiblocks.specs"), TextAlignment.LEFT));
+		this.addChild(new LabelWidget(00, 00, 100, 10, Component.translatable("text.jei_mekanism_multiblocks.specs"), TextAlignment.LEFT));
 		this.addChild(this.configsList = new ListWidget(00, 10, 100, 110, 10));
 		this.configsList.setItemsPadding(2);
 		this.configsList.setItemOffset(2);
 
-		this.addChild(this.costsButton = new TabButtonWidget(99, 0, 41, 10, new TranslatableComponent("text.jei_mekanism_multiblocks.costs")));
+		this.addChild(this.costsButton = new TabButtonWidget(99, 0, 41, 10, Component.translatable("text.jei_mekanism_multiblocks.costs")));
 		this.costsButton.addPressHandler(this::onCostsButtonClick);
-		this.addChild(this.resultsButton = new TabButtonWidget(139, 0, 41, 10, new TranslatableComponent("text.jei_mekanism_multiblocks.results")));
+		this.addChild(this.resultsButton = new TabButtonWidget(139, 0, 41, 10, Component.translatable("text.jei_mekanism_multiblocks.results")));
 		this.resultsButton.addPressHandler(this::onResultsButtonClick);
 		this.addChild(this.costsList = new CostList(100, 10, 80, 110, 20));
 		this.costsList.setItemsTop(2);
@@ -118,7 +119,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	protected IntSliderWidget createDimensionSlider(int index, int min, int max)
 	{
-		return new IntSliderWidget(0, 0, 0, 0, TextComponent.EMPTY, min, min, max);
+		return new IntSliderWidget(0, 0, 0, 0, Component.empty(), min, min, max);
 	}
 
 	protected boolean isUseDimensionWidget(IntSliderWithButtons widget)
@@ -205,11 +206,27 @@ public abstract class MultiblockWidget extends ContainerWidget
 		if (this.needNotifyStateChange)
 		{
 			this.needNotifyStateChange = false;
-			this.updateResults();
-			this.updateCosts();
+			this.updateAll();
 			this.notifyStateChange();
 		}
 
+	}
+
+	public void initialize()
+	{
+		if (this.initialzed)
+		{
+			return;
+		}
+
+		this.initialzed = true;
+		this.updateAll();
+	}
+
+	private void updateAll()
+	{
+		this.updateResults();
+		this.updateCosts();
 	}
 
 	public Optional<Object> getIngredientUnderMouse(double pMouseX, double pMouseY)

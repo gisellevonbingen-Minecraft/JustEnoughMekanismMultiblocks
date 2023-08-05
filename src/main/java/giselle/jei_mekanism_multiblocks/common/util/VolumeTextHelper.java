@@ -5,7 +5,6 @@ import java.util.Map;
 
 import mekanism.common.util.text.TextUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public class VolumeTextHelper
 {
@@ -87,7 +86,7 @@ public class VolumeTextHelper
 			text = new StringBuilder().append(exponentialPart).append(".").append(deciamlPart).toString();
 		}
 
-		return new TextComponent(new StringBuilder().append(text).append(" ").append(to.getShortName()).append(unit).toString());
+		return Component.literal(new StringBuilder().append(text).append(" ").append(to.getShortName()).append(unit).toString());
 	}
 
 	private VolumeTextHelper()

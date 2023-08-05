@@ -21,7 +21,6 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -42,13 +41,14 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 		this.type = RecipeType.create(JEI_MekanismMultiblocks.MODID, "multiblock." + name.getNamespace() + "." + name.getPath(), clazz);
 		this.icon = icon;
 		this.background = helper.createBlankDrawable(180, 120);
-		this.title = new TranslatableComponent("text.jei_mekanism_multiblocks.recipe_category.title", multiblockName);
+		this.title = Component.translatable("text.jei_mekanism_multiblocks.recipe_category.title", multiblockName);
 	}
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder recipeLayout, WIDGET widget, IFocusGroup focuses)
 	{
 		IDrawable background = this.getBackground();
+		widget.initialize();
 		widget.setWidth(background.getWidth());
 		widget.setHeight(background.getHeight());
 
@@ -131,18 +131,6 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 	public RecipeType<WIDGET> getRecipeType()
 	{
 		return this.type;
-	}
-
-	@Override
-	public ResourceLocation getUid()
-	{
-		return this.getRecipeType().getUid();
-	}
-
-	@Override
-	public Class<? extends WIDGET> getRecipeClass()
-	{
-		return this.getRecipeType().getRecipeClass();
 	}
 
 	@Override
