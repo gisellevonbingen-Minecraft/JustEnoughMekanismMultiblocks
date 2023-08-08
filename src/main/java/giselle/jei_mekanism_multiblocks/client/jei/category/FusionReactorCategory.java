@@ -272,6 +272,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 				consumer.accept(steamTankWidget);
 			}
 
+			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.energy_capacity"), EnergyDisplay.of(MekanismGeneratorsConfig.generators.fusionEnergyCapacity.get()).getTextComponent()));
 		}
 
 		public int getPortCount()
