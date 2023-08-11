@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 import giselle.jei_mekanism_multiblocks.client.jei.category.BoilerCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.DynamicTankCategory;
@@ -14,12 +15,15 @@ import giselle.jei_mekanism_multiblocks.client.jei.category.MatrixCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.SPSCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.TurbineCategory;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
+import giselle.jei_mekanism_multiblocks.common.config.ClientConfig;
+import giselle.jei_mekanism_multiblocks.common.config.JEI_MekanismMultiblocks_Config;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 
 @mezz.jei.api.JeiPlugin
 public class JeiPlugin implements IModPlugin
@@ -50,24 +54,34 @@ public class JeiPlugin implements IModPlugin
 	{
 		IModPlugin.super.registerCategories(registration);
 
+		ClientConfig config = JEI_MekanismMultiblocks_Config.CLIENT;
 		IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
 		this.categories.clear();
-		this.categories.add(new DynamicTankCategory(guiHelper));
-		this.categories.add(new EvaporationPlantCategory(guiHelper));
-		this.categories.add(new BoilerCategory(guiHelper));
-		this.categories.add(new SPSCategory(guiHelper));
-		this.categories.add(new MatrixCategory(guiHelper));
+		this.addCategory(config.dynamicTankVisible, () -> new DynamicTankCategory(guiHelper));
+		this.addCategory(config.evaporationPlantVisible, () -> new EvaporationPlantCategory(guiHelper));
+		this.addCategory(config.boilerVisible, () -> new BoilerCategory(guiHelper));
+		this.addCategory(config.spsVisible, () -> new SPSCategory(guiHelper));
+		this.addCategory(config.matrixVisible, () -> new MatrixCategory(guiHelper));
 
 		if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
 		{
-			this.categories.add(new TurbineCategory(guiHelper));
-			this.categories.add(new FissionReactorCategory(guiHelper));
-			this.categories.add(new FusionReactorCategory(guiHelper));
+			this.addCategory(config.turbineVisible, () -> new TurbineCategory(guiHelper));
+			this.addCategory(config.fissionReactorVisible, () -> new FissionReactorCategory(guiHelper));
+			this.addCategory(config.fusionReactorVisible, () -> new FusionReactorCategory(guiHelper));
 		}
 
 		for (MultiblockCategory<?> category : this.getCategories())
 		{
 			registration.addRecipeCategories(category);
+		}
+
+	}
+
+	private <CATEGOERY extends MultiblockCategory<?>> void addCategory(BooleanValue config, Supplier<CATEGOERY> constructor)
+	{
+		if (config.get())
+		{
+			this.categories.add(constructor.get());
 		}
 
 	}
