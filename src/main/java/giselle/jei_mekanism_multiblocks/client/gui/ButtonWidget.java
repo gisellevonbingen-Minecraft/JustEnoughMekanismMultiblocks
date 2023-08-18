@@ -56,18 +56,16 @@ public class ButtonWidget extends AbstractButton
 		this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
 		int j = getFGColor();
 		AbstractGui.drawCenteredString(pMatrixStack, font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
-
-		if (this.isHovered())
-		{
-			this.renderToolTip(pMatrixStack, pMouseX, pMouseY);
-		}
-
 	}
 
 	@Override
 	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
 	{
-		GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
+		if (this.visible && this.isHovered())
+		{
+			GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
+		}
+
 	}
 
 	public void setTooltip(ITextComponent... tooltip)

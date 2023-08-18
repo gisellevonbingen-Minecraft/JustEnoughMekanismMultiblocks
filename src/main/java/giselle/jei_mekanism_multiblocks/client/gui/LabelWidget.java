@@ -33,18 +33,16 @@ public class LabelWidget extends Widget
 		int color = this.getFGColor() | MathHelper.ceil(this.alpha * 255.0F) << 24;
 		ITextComponent message = this.getMessage();
 		GuiHelper.drawScaledText(pMatrixStack, message, this.x, this.y, this.width, color, this.isShadow(), this.getAlignment());
-
-		if (this.isHovered())
-		{
-			this.renderToolTip(pMatrixStack, pMouseX, pMouseY);
-		}
-
 	}
 
 	@Override
 	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
 	{
-		GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
+		if (this.visible && this.isHovered())
+		{
+			GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
+		}
+
 	}
 
 	@Override

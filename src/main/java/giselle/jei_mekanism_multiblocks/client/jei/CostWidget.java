@@ -92,7 +92,6 @@ public class CostWidget extends Widget
 			GuiHelper.drawScaledText(pMatrixStack, this.countTotalComponent, textX, textY + font.lineHeight / 2, textWidth, color, shadow);
 		}
 
-		this.renderToolTip(pMatrixStack, pMouseX, pMouseY);
 	}
 
 	@Override
