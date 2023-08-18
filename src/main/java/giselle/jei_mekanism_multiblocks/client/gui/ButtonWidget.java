@@ -56,18 +56,16 @@ public class ButtonWidget extends AbstractButton
 		this.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);
 		int j = getFGColor();
 		GuiComponent.drawCenteredString(pPoseStack, font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
-
-		if (this.isHoveredOrFocused())
-		{
-			this.renderToolTip(pPoseStack, pMouseX, pMouseY);
-		}
-
 	}
 
 	@Override
 	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
 	{
-		GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
+		if (this.visible && this.isHoveredOrFocused())
+		{
+			GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
+		}
+
 	}
 
 	@Override
