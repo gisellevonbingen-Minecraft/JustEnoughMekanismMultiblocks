@@ -70,18 +70,16 @@ public class SliderWidget extends AbstractWidget
 		this.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);
 		int j = this.getFGColor();
 		GuiHelper.drawScaledText(pPoseStack, this.getMessage(), this.x + 2, this.y + 1, this.width - 4, j, true, TextAlignment.CENTER);
-
-		if (this.isHoveredOrFocused())
-		{
-			this.renderToolTip(pPoseStack, pMouseX, pMouseY);
-		}
-
 	}
 
 	@Override
 	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
 	{
-		GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
+		if (this.visible && this.isHoveredOrFocused())
+		{
+			GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
+		}
+
 	}
 
 	@Override
