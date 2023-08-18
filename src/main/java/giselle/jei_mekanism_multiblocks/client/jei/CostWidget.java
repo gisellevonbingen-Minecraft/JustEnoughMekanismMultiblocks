@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector4f;
 import net.minecraft.util.text.ITextComponent;
@@ -69,15 +70,14 @@ public class CostWidget extends Widget
 		ItemRenderer itemRenderer = minecraft.getItemRenderer();
 		FontRenderer font = minecraft.font;
 
-		int itemX = this.x + 2;
-		int itemY = this.y + 2;
+		Rectangle2d itemRect = this.getItemBounds();
 		ItemStack itemStack = this.getItemStack();
 		Vector4f vector4f = new Vector4f(0.0F, 0.0F, 0.0F, 1.0F);
 		vector4f.transform(pMatrixStack.last().pose());
-		itemRenderer.renderAndDecorateItem(null, itemStack, (int) vector4f.x() + itemX, (int) vector4f.y() + itemY);
+		itemRenderer.renderAndDecorateItem(null, itemStack, (int) vector4f.x() + itemRect.getX(), (int) vector4f.y() + itemRect.getY());
 
-		int textX = itemX + 18;
-		int textY = itemY;
+		int textX = itemRect.getX() + 18;
+		int textY = itemRect.getY();
 		int textWidth = this.width - textX;
 		int color = this.getFGColor();
 		boolean shadow = false;
@@ -112,6 +112,13 @@ public class CostWidget extends Widget
 			GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, tooltip);
 		}
 
+	}
+
+	public Rectangle2d getItemBounds()
+	{
+		int itemX = this.x + 2;
+		int itemY = this.y + 2;
+		return new Rectangle2d(itemX, itemY, 16, 16);
 	}
 
 	public ItemStack getItemStack()
