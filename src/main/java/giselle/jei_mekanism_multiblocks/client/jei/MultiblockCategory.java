@@ -99,6 +99,7 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 		Minecraft minecraft = Minecraft.getInstance();
 		float partialTicks = minecraft.getDeltaFrameTime();
 		widget.render(matrix, (int) mouseX, (int) mouseY, partialTicks);
+		widget.renderToolTip(matrix, (int) mouseX, (int) mouseY);
 	}
 
 	@Override

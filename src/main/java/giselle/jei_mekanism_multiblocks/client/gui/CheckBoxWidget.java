@@ -37,7 +37,7 @@ public class CheckBoxWidget extends AbstractButton
 	@Override
 	public void onPress()
 	{
-		this.setSelected(!this.selected);
+		this.setSelected(!this.isSelected());
 	}
 
 	public boolean isSelected()
@@ -77,18 +77,16 @@ public class CheckBoxWidget extends AbstractButton
 		this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
 
 		GuiHelper.drawScaledText(pMatrixStack, this.getMessage(), this.x + checkerLength + 1, this.y, this.width - checkerLength - 1, 14737632 | MathHelper.ceil(this.alpha * 255.0F) << 24, true);
-
-		if (this.isHovered())
-		{
-			this.renderToolTip(pMatrixStack, pMouseX, pMouseY);
-		}
-
 	}
 
 	@Override
 	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
 	{
-		GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
+		if (this.visible && this.isHovered())
+		{
+			GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
+		}
+
 	}
 
 	public void setTooltip(ITextComponent... tooltip)

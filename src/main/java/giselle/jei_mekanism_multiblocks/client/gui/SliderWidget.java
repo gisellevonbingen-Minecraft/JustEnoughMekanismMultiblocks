@@ -69,18 +69,16 @@ public class SliderWidget extends Widget
 		this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
 		int j = this.getFGColor();
 		GuiHelper.drawScaledText(pMatrixStack, this.getMessage(), this.x + 2, this.y + 1, this.width - 4, j, true, TextAlignment.CENTER);
-
-		if (this.isHovered())
-		{
-			this.renderToolTip(pMatrixStack, pMouseX, pMouseY);
-		}
-
 	}
 
 	@Override
 	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
 	{
-		GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
+		if (this.visible && this.isHovered())
+		{
+			GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
+		}
+
 	}
 
 	@Override

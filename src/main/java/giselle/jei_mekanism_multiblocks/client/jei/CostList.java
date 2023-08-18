@@ -20,7 +20,7 @@ public class CostList extends ListLineWidget
 		{
 			double childMouseX = this.toChildX(pMouseX);
 			double childMouseY = this.toChildY(pMouseY);
-			
+
 			if (widget instanceof CostWidget && widget.isMouseOver(childMouseX, childMouseY))
 			{
 				return Optional.ofNullable(((CostWidget) widget).getItemStack());
