@@ -43,14 +43,12 @@ public class GuiHelper
 
 	public static void fillRectagleBlack(PoseStack pPoseStack, int x, int y, int width, int height)
 	{
-		RenderSystem.enableDepthTest();
 		GuiComponent.fill(pPoseStack, x, y, x + width, y + height, 0xFF000000);
 	}
 
 	public static void fillRectagle(PoseStack pPoseStack, int x, int y, int width, int height, float r, float g, float b, float a)
 	{
 		int color = Mth.color(r, g, b) | (Mth.floor(255.0F * a) << 0x18);
-		RenderSystem.enableDepthTest();
 		GuiComponent.fill(pPoseStack, x, y, x + width, y + height, color);
 	}
 

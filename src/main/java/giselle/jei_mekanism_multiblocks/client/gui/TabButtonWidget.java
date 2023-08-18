@@ -35,12 +35,6 @@ public class TabButtonWidget extends ButtonWidget
 		int j = this.getFGColor();
 		Component message = this.getMessage();
 		GuiHelper.drawScaledText(pPoseStack, message, this.x + 3, this.y + (this.height - 8) / 2, this.width - 6, j | Mth.ceil(this.alpha * 255.0F) << 24, true, TextAlignment.CENTER);
-
-		if (this.isHoveredOrFocused())
-		{
-			this.renderToolTip(pPoseStack, pMouseX, pMouseY);
-		}
-
 	}
 
 	public boolean isSelected()
