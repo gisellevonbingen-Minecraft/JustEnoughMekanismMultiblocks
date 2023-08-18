@@ -34,18 +34,16 @@ public class LabelWidget extends AbstractWidget
 		int color = this.getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24;
 		Component message = this.getMessage();
 		GuiHelper.drawScaledText(pPoseStack, message, this.x, this.y, this.width, color, this.isShadow(), this.getAlignment());
-
-		if (this.isHoveredOrFocused())
-		{
-			this.renderToolTip(pPoseStack, pMouseX, pMouseY);
-		}
-
 	}
 
 	@Override
 	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
 	{
-		GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
+		if (this.visible && this.isHoveredOrFocused())
+		{
+			GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
+		}
+
 	}
 
 	@Override
