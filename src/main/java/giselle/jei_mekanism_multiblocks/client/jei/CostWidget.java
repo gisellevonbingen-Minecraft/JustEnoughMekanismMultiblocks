@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -69,15 +70,14 @@ public class CostWidget extends AbstractWidget
 		ItemRenderer itemRenderer = minecraft.getItemRenderer();
 		Font font = minecraft.font;
 
-		int itemX = this.x + 2;
-		int itemY = this.y + 2;
+		Rect2i itemRect = this.getItemBounds();
 		ItemStack itemStack = this.getItemStack();
 		Vector4f vector4f = new Vector4f(0.0F, 0.0F, 0.0F, 1.0F);
 		vector4f.transform(pPoseStack.last().pose());
-		itemRenderer.renderAndDecorateItem(null, itemStack, (int) vector4f.x() + itemX, (int) vector4f.y() + itemY, 0);
+		itemRenderer.renderAndDecorateItem(null, itemStack, (int) vector4f.x() + itemRect.getX(), (int) vector4f.y() + itemRect.getY(), 0);
 
-		int textX = itemX + 18;
-		int textY = itemY;
+		int textX = itemRect.getX() + 18;
+		int textY = itemRect.getY();
 		int textWidth = this.width - textX;
 		int color = this.getFGColor();
 		boolean shadow = false;
@@ -112,6 +112,13 @@ public class CostWidget extends AbstractWidget
 			GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, tooltip);
 		}
 
+	}
+
+	public Rect2i getItemBounds()
+	{
+		int itemX = this.x + 2;
+		int itemY = this.y + 2;
+		return new Rect2i(itemX, itemY, 16, 16);
 	}
 
 	public ItemStack getItemStack()
