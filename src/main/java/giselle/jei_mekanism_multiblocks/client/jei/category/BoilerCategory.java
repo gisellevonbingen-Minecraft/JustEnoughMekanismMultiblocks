@@ -242,7 +242,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			{
 				heatingElements.setFGColor(0xFF8000);
 				heatingElements.setHeadTooltip(//
-						new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.value_limited", new TranslatableComponent("text.jei_mekanism_multiblocks.result.max_boil_rate")).withStyle(ChatFormatting.RED), new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.need_more", MekanismBlocks.SUPERHEATING_ELEMENT.getTextComponent()).withStyle(ChatFormatting.RED));
+						new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.value_limited", new TranslatableComponent("text.jei_mekanism_multiblocks.result.boil_rate_with", new FluidStack(Fluids.WATER, 1).getDisplayName())).withStyle(ChatFormatting.RED), new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.need_more", MekanismBlocks.SUPERHEATING_ELEMENT.getTextComponent()).withStyle(ChatFormatting.RED));
 			}
 
 		}
