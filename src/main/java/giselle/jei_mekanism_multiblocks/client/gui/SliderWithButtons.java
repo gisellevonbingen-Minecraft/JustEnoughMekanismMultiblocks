@@ -1,6 +1,8 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -8,11 +10,10 @@ import javax.annotation.Nullable;
 
 import com.ibm.icu.text.DecimalFormat;
 
-import giselle.jei_mekanism_multiblocks.client.mixin.minecraft.TooltipAccessor;
+import giselle.jei_mekanism_multiblocks.client.TooltipHelper;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 
 public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends ContainerWidget
 {
@@ -76,20 +77,10 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 
 	private void updateAdjustButtonTooltip(ButtonWidget button, int direction)
 	{
-		MutableComponent component = Component.empty();
-		Component narration = null;
-		Tooltip tooltip = this.getSlider().getTooltip();
-
-		if (tooltip != null)
-		{
-			TooltipAccessor accessor = (TooltipAccessor) tooltip;
-			component.append(accessor.getMessage()).append("\n");
-			narration = accessor.getNarration();
-		}
-
-		component.append(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_normal", DECIMAL_FORMAT.format(direction * NORMAL_DELTA))).append("\n");
-		component.append(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_shift", DECIMAL_FORMAT.format(direction * SHIFT_DELTA)));
-		button.setTooltip(Tooltip.create(component, narration));
+		List<Component> elements = new ArrayList<>();
+		elements.add(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_normal", DECIMAL_FORMAT.format(direction * NORMAL_DELTA)));
+		elements.add(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_shift", DECIMAL_FORMAT.format(direction * SHIFT_DELTA)));
+		button.setTooltip(TooltipHelper.mergeMessage(this.getSlider().getTooltip(), elements));
 	}
 
 	protected void onAdjustButtonPress(int delta)

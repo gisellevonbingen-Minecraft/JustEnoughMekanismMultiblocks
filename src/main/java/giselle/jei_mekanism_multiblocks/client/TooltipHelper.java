@@ -5,23 +5,22 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import giselle.jei_mekanism_multiblocks.client.mixin.minecraft.TooltipAccessor;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class TooltipHelper
 {
-	public static Tooltip mergetMessage(Tooltip pTooltip, Collection<Component> additions)
+	public static Tooltip mergeMessage(Tooltip pTooltip, Collection<Component> additions)
 	{
 		List<Component> elements = new ArrayList<>();
 		Component narration = null;
 
 		if (pTooltip != null)
 		{
-			TooltipAccessor accessor = (TooltipAccessor) pTooltip;
-			elements.add(accessor.getMessage());
-			narration = accessor.getNarration();
+			ITooltipAccessor accessor = (ITooltipAccessor) pTooltip;
+			elements.add(accessor.jei_mekanism_multiblocks$getMessage());
+			narration = accessor.jei_mekanism_multiblocks$getNarration();
 		}
 
 		elements.addAll(additions);

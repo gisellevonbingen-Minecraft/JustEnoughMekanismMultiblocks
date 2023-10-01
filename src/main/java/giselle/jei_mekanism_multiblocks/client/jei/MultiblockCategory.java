@@ -113,8 +113,9 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 			if (cost != null)
 			{
 				Minecraft minecraft = Minecraft.getInstance();
-				List<Component> tooltip = new ArrayList<>(Screen.getTooltipFromItem(minecraft, cost.getItemStack()));
+				List<Component> tooltip = new ArrayList<>();
 				tooltip.addAll(Arrays.asList(cost.getHeadTooltip()));
+				tooltip.addAll(Screen.getTooltipFromItem(minecraft, cost.getItemStack()));
 				tooltip.addAll(Arrays.asList(cost.getTailTooltip()));
 				return tooltip;
 			}
