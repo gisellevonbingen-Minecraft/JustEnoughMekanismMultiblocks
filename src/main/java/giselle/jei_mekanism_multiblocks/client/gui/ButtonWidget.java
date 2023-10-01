@@ -8,8 +8,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -46,7 +44,6 @@ public class ButtonWidget extends AbstractButton
 	public void renderButton(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 		Minecraft minecraft = Minecraft.getInstance();
-		FontRenderer font = minecraft.font;
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
@@ -55,7 +52,7 @@ public class ButtonWidget extends AbstractButton
 
 		this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
 		int j = getFGColor();
-		AbstractGui.drawCenteredString(pMatrixStack, font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
+		GuiHelper.drawScaledText(pMatrixStack, this.getMessage(), this.x + 2, this.y + this.height / 2 - 4, this.width - 4, j | MathHelper.ceil(this.alpha * 255.0F) << 24, true, TextAlignment.CENTER);
 	}
 
 	@Override
