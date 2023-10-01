@@ -3,6 +3,7 @@ package giselle.jei_mekanism_multiblocks.client.jei;
 import giselle.jei_mekanism_multiblocks.client.gui.ContainerWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.TextAlignment;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
 public class ResultWidget extends ContainerWidget
@@ -51,11 +52,11 @@ public class ResultWidget extends ContainerWidget
 		int width = this.getWidth();
 
 		LabelWidget textLabel = this.getTextLabel();
-		textLabel.x = 0;
+		textLabel.setX(0);
 		textLabel.setWidth(width);
 
 		LabelWidget valueLabel = this.getValueLabel();
-		valueLabel.x = 0;
+		valueLabel.setX(0);
 		valueLabel.setWidth(width);
 	}
 
@@ -64,11 +65,11 @@ public class ResultWidget extends ContainerWidget
 		int height = this.getHeight() / 2;
 
 		LabelWidget textLabel = this.getTextLabel();
-		textLabel.y = 1;
+		textLabel.setY(1);
 		textLabel.setHeight(height);
 
 		LabelWidget valueLabel = this.getValueLabel();
-		valueLabel.y = textLabel.y + textLabel.getHeight();
+		valueLabel.setY(textLabel.getY() + textLabel.getHeight());
 		valueLabel.setHeight(height);
 	}
 
@@ -82,7 +83,8 @@ public class ResultWidget extends ContainerWidget
 		return this.valueLabel;
 	}
 
-	public void setTooltip(Component... tooltip)
+	@Override
+	public void setTooltip(Tooltip tooltip)
 	{
 		this.getTextLabel().setTooltip(tooltip);
 		this.getValueLabel().setTooltip(tooltip);

@@ -1,16 +1,18 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Nullable;
+
 import com.ibm.icu.text.DecimalFormat;
 
+import giselle.jei_mekanism_multiblocks.client.mixin.minecraft.TooltipAccessor;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends ContainerWidget
 {
@@ -39,9 +41,10 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 		this.onHeightChanged();
 	}
 
-	public void setTooltip(Component... tooltip)
+	@Override
+	public void setTooltip(@Nullable Tooltip pTooltip)
 	{
-		this.getSlider().setTooltip(tooltip);
+		this.getSlider().setTooltip(pTooltip);
 
 		for (Entry<ButtonWidget, Integer> entry : this.button2DirectionMap.entrySet())
 		{
@@ -73,11 +76,20 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 
 	private void updateAdjustButtonTooltip(ButtonWidget button, int direction)
 	{
-		List<Component> tooltip = new ArrayList<>();
-		Collections.addAll(tooltip, this.getSlider().getTooltip());
-		tooltip.add(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_normal", DECIMAL_FORMAT.format(direction * NORMAL_DELTA)));
-		tooltip.add(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_shift", DECIMAL_FORMAT.format(direction * SHIFT_DELTA)));
-		button.setTooltip(tooltip.stream().toArray(Component[]::new));
+		MutableComponent component = Component.empty();
+		Component narration = null;
+		Tooltip tooltip = this.getSlider().getTooltip();
+
+		if (tooltip != null)
+		{
+			TooltipAccessor accessor = (TooltipAccessor) tooltip;
+			component.append(accessor.getMessage()).append("\n");
+			narration = accessor.getNarration();
+		}
+
+		component.append(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_normal", DECIMAL_FORMAT.format(direction * NORMAL_DELTA))).append("\n");
+		component.append(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_shift", DECIMAL_FORMAT.format(direction * SHIFT_DELTA)));
+		button.setTooltip(Tooltip.create(component, narration));
 	}
 
 	protected void onAdjustButtonPress(int delta)
@@ -117,17 +129,17 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 	protected void updateChildrenBounds()
 	{
 		ButtonWidget plusButton = this.getPlusButton();
-		plusButton.x = this.getWidth() - plusButton.getWidth();
-		plusButton.y = 0;
+		plusButton.setX(this.getWidth() - plusButton.getWidth());
+		plusButton.setY(0);
 
 		ButtonWidget minusButton = this.getMinusButton();
-		minusButton.x = plusButton.x - minusButton.getWidth();
-		minusButton.y = plusButton.y;
+		minusButton.setX(plusButton.getX() - minusButton.getWidth());
+		minusButton.setY(plusButton.getY());
 
 		SLIDER slider = this.getSlider();
-		slider.x = 0;
-		slider.y = minusButton.y;
-		slider.setWidth(minusButton.x - slider.x);
+		slider.setX(0);
+		slider.setY(minusButton.getY());
+		slider.setWidth(minusButton.getX() - slider.getX());
 	}
 
 	public void setTranslationKey(String translationKey)

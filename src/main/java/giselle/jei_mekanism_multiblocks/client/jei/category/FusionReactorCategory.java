@@ -3,6 +3,7 @@ package giselle.jei_mekanism_multiblocks.client.jei.category;
 import java.util.List;
 import java.util.function.Consumer;
 
+import giselle.jei_mekanism_multiblocks.client.TooltipHelper;
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
@@ -26,6 +27,7 @@ import mekanism.generators.common.registries.GeneratorsBlocks;
 import mekanism.generators.common.registries.GeneratorsItems;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidType;
@@ -175,14 +177,14 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			if (this.isWaterCooled())
 			{
 				int limitedInjectionRate = Math.min(this.getInjectionRate(), FusionReactorMultiblockData.MAX_INJECTION);
-				Component tooltip = Component.translatable("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate);
+				Tooltip tooltip = Tooltip.create(Component.translatable("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate));
 				this.waterCooledCheckBox.setTooltip(tooltip);
 				this.injectionRateWidget.setTooltip(tooltip);
 			}
 			else
 			{
-				this.waterCooledCheckBox.setTooltip();
-				this.injectionRateWidget.setTooltip();
+				this.waterCooledCheckBox.setTooltip(null);
+				this.injectionRateWidget.setTooltip(null);
 			}
 
 		}
@@ -265,10 +267,10 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			{
 				Component injectionRateTooltip = Component.translatable("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate);
 				ResultWidget watTankWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(waterTank));
-				watTankWidget.setTooltip(injectionRateTooltip);
+				watTankWidget.setTooltip(TooltipHelper.createMessageOnly(injectionRateTooltip));
 				consumer.accept(watTankWidget);
 				ResultWidget steamTankWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(steamTank));
-				steamTankWidget.setTooltip(injectionRateTooltip);
+				steamTankWidget.setTooltip(TooltipHelper.createMessageOnly(injectionRateTooltip));
 				consumer.accept(steamTankWidget);
 			}
 

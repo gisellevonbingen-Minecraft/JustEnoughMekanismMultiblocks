@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.Rect2i;
@@ -134,7 +135,7 @@ public class ContainerWidget extends AbstractWidget
 
 	public Rect2i getBounds()
 	{
-		return new Rect2i(this.x, this.y, this.getWidth(), this.getHeight());
+		return new Rect2i(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 	}
 
 	@Override
@@ -181,30 +182,31 @@ public class ContainerWidget extends AbstractWidget
 
 	}
 
-	protected void transformClient(PoseStack pPoseStack)
+	protected void transformClient(PoseStack pose)
 	{
-		pPoseStack.translate(this.x, this.y, 0.0D);
+		pose.translate(this.getX(), this.getY(), 0.0D);
 	}
 
 	protected double toChildX(double x)
 	{
-		return x - this.x;
+		return x - this.getX();
 	}
 
 	protected double toChildY(double y)
 	{
-		return y - this.y;
+		return y - this.getY();
 	}
 
 	@Override
-	public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
+	public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
 	{
-		super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
+		super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
 
 		if (this.visible)
 		{
-			pPoseStack.pushPose();
-			this.transformClient(pPoseStack);
+			PoseStack pose = pGuiGraphics.pose();
+			pose.pushPose();
+			this.transformClient(pose);
 			int childMouseX = (int) this.toChildX(pMouseX);
 			int childMouseY = (int) this.toChildY(pMouseY);
 
@@ -212,23 +214,23 @@ public class ContainerWidget extends AbstractWidget
 			{
 				for (AbstractWidget widget : widgets)
 				{
-					this.onRenderWidget(widgets, widget, pPoseStack, childMouseX, childMouseY, pPartialTicks);
+					this.onRenderWidget(widgets, widget, pGuiGraphics, childMouseX, childMouseY, pPartialTicks);
 				}
 
 			}
 
-			pPoseStack.popPose();
+			pose.popPose();
 		}
 
 	}
 
-	protected void onRenderWidget(List<AbstractWidget> widgets, AbstractWidget widget, PoseStack pPoseStack, int childMouseX, int childMouseY, float pPartialTicks)
+	protected void onRenderWidget(List<AbstractWidget> widgets, AbstractWidget widget, GuiGraphics pGuiGraphics, int childMouseX, int childMouseY, float pPartialTicks)
 	{
-		widget.render(pPoseStack, childMouseX, childMouseY, pPartialTicks);
+		widget.render(pGuiGraphics, childMouseX, childMouseY, pPartialTicks);
 	}
 
 	@Override
-	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
+	public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 
 	}
@@ -318,35 +320,13 @@ public class ContainerWidget extends AbstractWidget
 	}
 
 	@Override
-	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
-	{
-		super.renderToolTip(pPoseStack, pMouseX, pMouseY);
-
-		pPoseStack.pushPose();
-		this.transformClient(pPoseStack);
-		int childMouseX = (int) this.toChildX(pMouseX);
-		int childMouseY = (int) this.toChildY(pMouseY);
-
-		for (List<AbstractWidget> widgets : this.getFunctionableWidgets())
-		{
-			for (AbstractWidget widget : widgets)
-			{
-				widget.renderToolTip(pPoseStack, childMouseX, childMouseY);
-			}
-
-		}
-
-		pPoseStack.popPose();
-	}
-
-	@Override
 	public void playDownSound(SoundManager pHandler)
 	{
 
 	}
 
 	@Override
-	public void updateNarration(NarrationElementOutput pNarrationElementOutput)
+	protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput)
 	{
 
 	}

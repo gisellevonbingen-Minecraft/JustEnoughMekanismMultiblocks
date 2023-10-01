@@ -2,10 +2,7 @@ package giselle.jei_mekanism_multiblocks.client.jei;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
-
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import giselle.jei_mekanism_multiblocks.client.IRecipeLogicStateListener;
@@ -18,6 +15,7 @@ import giselle.jei_mekanism_multiblocks.client.gui.TabButtonWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.TextAlignment;
 import giselle.jei_mekanism_multiblocks.client.jei.category.ICostConsumer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.Vec3i;
@@ -183,25 +181,28 @@ public abstract class MultiblockWidget extends ContainerWidget
 	}
 
 	@Override
-	public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
+	public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
 	{
-		int lineTop = this.y + this.configsList.y;
-		GuiHelper.fillRectagleBlack(pPoseStack, this.x, lineTop, this.configsList.getWidth(), 1);
+		int x = this.getX();
+		int y = this.getY();
+		int costListY = this.configsList.getY();
+		int lineTop = y + costListY;
+		GuiHelper.fillRectagleBlack(pGuiGraphics, x, lineTop, this.configsList.getWidth(), 1);
 
 		if (!this.costsButton.isSelected())
 		{
-			GuiHelper.fillRectagleBlack(pPoseStack, this.x + this.costsButton.x, lineTop, this.costsButton.getWidth(), 1);
+			GuiHelper.fillRectagleBlack(pGuiGraphics, x + this.costsButton.getX(), lineTop, this.costsButton.getWidth(), 1);
 		}
 
 		if (!this.resultsButton.isSelected())
 		{
-			GuiHelper.fillRectagleBlack(pPoseStack, this.x + this.resultsButton.x, lineTop, this.resultsButton.getWidth(), 1);
+			GuiHelper.fillRectagleBlack(pGuiGraphics, x + this.resultsButton.getX(), lineTop, this.resultsButton.getWidth(), 1);
 		}
 
-		GuiHelper.fillRectagleBlack(pPoseStack, this.x, this.y + this.configsList.y, 1, this.height - this.configsList.y);
-		GuiHelper.fillRectagleBlack(pPoseStack, this.x, this.y + this.height - 1, this.width, 1);
+		GuiHelper.fillRectagleBlack(pGuiGraphics, x, y + costListY, 1, this.height - costListY);
+		GuiHelper.fillRectagleBlack(pGuiGraphics, x, y + this.height - 1, this.width, 1);
 
-		super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
+		super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
 
 		if (this.needNotifyStateChange)
 		{
@@ -229,9 +230,9 @@ public abstract class MultiblockWidget extends ContainerWidget
 		this.updateCosts();
 	}
 
-	public Optional<Object> getIngredientUnderMouse(double pMouseX, double pMouseY)
+	public CostWidget getCostUnderMouse(double pMouseX, double pMouseY)
 	{
-		return this.costsList.getIngredientUnderMouse(this.toChildX(pMouseX), this.toChildY(pMouseY));
+		return this.costsList.getCostUnderMouse(this.toChildX(pMouseX), this.toChildY(pMouseY));
 	}
 
 	public void markNeedUpdate()

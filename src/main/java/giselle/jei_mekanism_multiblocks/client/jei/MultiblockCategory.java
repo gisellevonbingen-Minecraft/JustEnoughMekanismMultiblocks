@@ -1,12 +1,12 @@
 package giselle.jei_mekanism_multiblocks.client.jei;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.InputConstants.Key;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
 import mezz.jei.api.constants.VanillaTypes;
@@ -20,6 +20,8 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -94,12 +96,32 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 	}
 
 	@Override
-	public void draw(WIDGET widget, IRecipeSlotsView recipeSlotsView, PoseStack pPoseStack, double mouseX, double mouseY)
+	public void draw(WIDGET widget, IRecipeSlotsView recipeSlotsView, GuiGraphics pGuiGraphics, double mouseX, double mouseY)
 	{
 		Minecraft minecraft = Minecraft.getInstance();
 		float partialTicks = minecraft.getDeltaFrameTime();
-		widget.render(pPoseStack, (int) mouseX, (int) mouseY, partialTicks);
-		widget.renderToolTip(pPoseStack, (int) mouseX, (int) mouseY);
+		widget.render(pGuiGraphics, (int) mouseX, (int) mouseY, partialTicks);
+	}
+
+	@Override
+	public List<Component> getTooltipStrings(WIDGET widget, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY)
+	{
+		if (widget.costsButton.isSelected())
+		{
+			CostWidget cost = widget.getCostUnderMouse(mouseX, mouseY);
+
+			if (cost != null)
+			{
+				Minecraft minecraft = Minecraft.getInstance();
+				List<Component> tooltip = new ArrayList<>(Screen.getTooltipFromItem(minecraft, cost.getItemStack()));
+				tooltip.addAll(Arrays.asList(cost.getHeadTooltip()));
+				tooltip.addAll(Arrays.asList(cost.getTailTooltip()));
+				return tooltip;
+			}
+
+		}
+
+		return IRecipeCategory.super.getTooltipStrings(widget, recipeSlotsView, mouseX, mouseY);
 	}
 
 	@Override

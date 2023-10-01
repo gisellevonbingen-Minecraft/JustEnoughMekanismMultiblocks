@@ -55,7 +55,7 @@ public class LongSliderWidget extends SliderWidget
 		}
 		else
 		{
-			value = Mth.clamp(value, minValue, maxValue);
+			value = Math.min(Math.max(value, minValue), maxValue);
 			return Mth.inverseLerp(value, minValue, maxValue);
 		}
 

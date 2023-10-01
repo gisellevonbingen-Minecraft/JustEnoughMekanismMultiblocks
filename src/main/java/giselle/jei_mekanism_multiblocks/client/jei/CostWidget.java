@@ -1,20 +1,13 @@
 package giselle.jei_mekanism_multiblocks.client.jei;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector4f;
-
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import mekanism.common.util.text.TextUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -64,17 +57,14 @@ public class CostWidget extends AbstractWidget
 	}
 
 	@Override
-	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
+	public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 		Minecraft minecraft = Minecraft.getInstance();
-		ItemRenderer itemRenderer = minecraft.getItemRenderer();
 		Font font = minecraft.font;
 
 		Rect2i itemRect = this.getItemBounds();
 		ItemStack itemStack = this.getItemStack();
-		Vector4f vector4f = new Vector4f(0.0F, 0.0F, 0.0F, 1.0F);
-		vector4f.transform(pPoseStack.last().pose());
-		itemRenderer.renderAndDecorateItem(null, itemStack, (int) vector4f.x() + itemRect.getX(), (int) vector4f.y() + itemRect.getY(), 0);
+		pGuiGraphics.renderFakeItem(itemStack, itemRect.getX(), itemRect.getY());
 
 		int textX = itemRect.getX() + 18;
 		int textY = itemRect.getY();
@@ -84,39 +74,20 @@ public class CostWidget extends AbstractWidget
 
 		if (this.hasCountExpressionComponent)
 		{
-			GuiHelper.drawScaledText(pPoseStack, this.countExpressionComponent, textX, textY, textWidth, color, shadow);
-			GuiHelper.drawScaledText(pPoseStack, this.countTotalComponent, textX, textY + font.lineHeight, textWidth, color, shadow);
+			GuiHelper.drawScaledText(pGuiGraphics, this.countExpressionComponent, textX, textY, textWidth, color, shadow);
+			GuiHelper.drawScaledText(pGuiGraphics, this.countTotalComponent, textX, textY + font.lineHeight, textWidth, color, shadow);
 		}
 		else
 		{
-			GuiHelper.drawScaledText(pPoseStack, this.countTotalComponent, textX, textY + font.lineHeight / 2, textWidth, color, shadow);
-		}
-
-	}
-
-	@Override
-	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
-	{
-		super.renderToolTip(pPoseStack, pMouseX, pMouseY);
-
-		Minecraft minecraft = Minecraft.getInstance();
-
-		if (minecraft.screen != null && this.visible && this.isHoveredOrFocused())
-		{
-			List<Component> tooltip = new ArrayList<>();
-			tooltip.addAll(Arrays.asList(this.getHeadTooltip()));
-			tooltip.addAll(minecraft.screen.getTooltipFromItem(this.getItemStack()));
-			tooltip.addAll(Arrays.asList(this.getTailTooltip()));
-
-			GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, tooltip);
+			GuiHelper.drawScaledText(pGuiGraphics, this.countTotalComponent, textX, textY + font.lineHeight / 2, textWidth, color, shadow);
 		}
 
 	}
 
 	public Rect2i getItemBounds()
 	{
-		int itemX = this.x + 2;
-		int itemY = this.y + 2;
+		int itemX = this.getX() + 2;
+		int itemY = this.getY() + 2;
 		return new Rect2i(itemX, itemY, 16, 16);
 	}
 
@@ -146,7 +117,7 @@ public class CostWidget extends AbstractWidget
 	}
 
 	@Override
-	public void updateNarration(NarrationElementOutput pNarrationElementOutput)
+	protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput)
 	{
 
 	}

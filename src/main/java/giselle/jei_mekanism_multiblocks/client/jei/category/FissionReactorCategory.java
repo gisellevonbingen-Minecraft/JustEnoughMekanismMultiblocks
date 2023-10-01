@@ -2,6 +2,7 @@ package giselle.jei_mekanism_multiblocks.client.jei.category;
 
 import java.util.function.Consumer;
 
+import giselle.jei_mekanism_multiblocks.client.TooltipHelper;
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
@@ -225,18 +226,19 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 			if (warning)
 			{
-				tempWidget.setTooltip(burnRateTooltip, //
+				tempWidget.setTooltip(TooltipHelper.createMessageOnly(//
+						burnRateTooltip, //
 						Component.translatable("text.jei_mekanism_multiblocks.tooltip.warning").withStyle(ChatFormatting.RED), //
-						Component.translatable("text.jei_mekanism_multiblocks.tooltip.reactor_will_damage").withStyle(ChatFormatting.RED));
+						Component.translatable("text.jei_mekanism_multiblocks.tooltip.reactor_will_damage").withStyle(ChatFormatting.RED)));
 			}
 			else
 			{
-				tempWidget.setTooltip(burnRateTooltip);
+				tempWidget.setTooltip(TooltipHelper.createMessageOnly(burnRateTooltip));
 			}
 
 			long heatedCoolant = this.getHeatedCoolant(stableTemp, conductivity, thermalEnthalpy);
 			ResultWidget heatingRateWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.heating_rate_with", with), VolumeTextHelper.formatMBt(heatedCoolant));
-			heatingRateWidget.setTooltip(burnRateTooltip);
+			heatingRateWidget.setTooltip(TooltipHelper.createMessageOnly(burnRateTooltip));
 			consumer.accept(heatingRateWidget);
 		}
 

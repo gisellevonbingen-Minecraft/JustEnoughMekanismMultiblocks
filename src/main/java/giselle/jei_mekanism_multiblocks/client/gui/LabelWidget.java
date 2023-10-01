@@ -1,8 +1,7 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.sounds.SoundManager;
@@ -13,7 +12,6 @@ public class LabelWidget extends AbstractWidget
 {
 	private boolean shadow;
 	private TextAlignment alignment;
-	private Component[] tooltip;
 
 	public LabelWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage)
 	{
@@ -25,25 +23,14 @@ public class LabelWidget extends AbstractWidget
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.shadow = true;
 		this.alignment = alignment;
-		this.tooltip = new Component[0];
 	}
 
 	@Override
-	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
+	public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 		int color = this.getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24;
 		Component message = this.getMessage();
-		GuiHelper.drawScaledText(pPoseStack, message, this.x, this.y, this.width, color, this.isShadow(), this.getAlignment());
-	}
-
-	@Override
-	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
-	{
-		if (this.visible && this.isHoveredOrFocused())
-		{
-			GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
-		}
-
+		GuiHelper.drawScaledText(pGuiGraphics, message, this.getX(), this.getY(), this.width, color, this.isShadow(), this.getAlignment());
 	}
 
 	@Override
@@ -77,18 +64,8 @@ public class LabelWidget extends AbstractWidget
 		this.alignment = alignment;
 	}
 
-	public Component[] getTooltip()
-	{
-		return this.tooltip.clone();
-	}
-
-	public void setTooltip(Component... tooltip)
-	{
-		this.tooltip = tooltip.clone();
-	}
-
 	@Override
-	public void updateNarration(NarrationElementOutput pNarrationElementOutput)
+	protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput)
 	{
 
 	}

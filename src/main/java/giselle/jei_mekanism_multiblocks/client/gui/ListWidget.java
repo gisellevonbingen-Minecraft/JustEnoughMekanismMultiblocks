@@ -1,7 +1,6 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
@@ -96,7 +95,7 @@ public class ListWidget extends ContainerWidget
 	}
 
 	@Override
-	public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
+	public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 		if (this.scrollBarHorizontalChanged)
 		{
@@ -135,7 +134,7 @@ public class ListWidget extends ContainerWidget
 			this.updateItemsVertical();
 		}
 
-		super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
+		super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
 	}
 
 	protected void updateItemsVertical()
@@ -148,7 +147,7 @@ public class ListWidget extends ContainerWidget
 
 		for (AbstractWidget widget : this.getChildren())
 		{
-			widget.y = itemY;
+			widget.setY(itemY);
 			widget.setHeight(itemHeight);
 			widget.visible = top <= itemY && itemY <= bottom;
 
@@ -168,8 +167,8 @@ public class ListWidget extends ContainerWidget
 
 	protected void updateItemHorizontal(AbstractWidget widget)
 	{
-		widget.x = this.getItemsLeft();
-		widget.setWidth(this.scrollBar.x - this.getItemsRight() - widget.x);
+		widget.setX(this.getItemsLeft());
+		widget.setWidth(this.scrollBar.getX() - this.getItemsRight() - widget.getX());
 	}
 
 	@Override
@@ -197,13 +196,13 @@ public class ListWidget extends ContainerWidget
 		int x = this.getWidth() - scrollBarWidth;
 
 		this.upButton.setWidth(scrollBarWidth);
-		this.upButton.x = x;
+		this.upButton.setX(x);
 
 		this.downButton.setWidth(scrollBarWidth);
-		this.downButton.x = this.upButton.x;
+		this.downButton.setX(this.upButton.getX());
 
 		this.scrollBar.setWidth(scrollBarWidth);
-		this.scrollBar.x = this.downButton.x;
+		this.scrollBar.setX(this.downButton.getX());
 
 		this.itemsHorizontalChanged = true;
 	}
@@ -212,13 +211,13 @@ public class ListWidget extends ContainerWidget
 	{
 		int scrollBarWidth = this.getScrollBarWidth();
 		this.upButton.setHeight(scrollBarWidth);
-		this.upButton.y = 0;
+		this.upButton.setY(0);
 
 		this.downButton.setHeight(scrollBarWidth);
-		this.downButton.y = this.getHeight() - this.downButton.getHeight();
+		this.downButton.setY(this.getHeight() - this.downButton.getHeight());
 
-		this.scrollBar.y = this.upButton.y + this.upButton.getHeight();
-		this.scrollBar.setHeight(this.downButton.y - this.scrollBar.y);
+		this.scrollBar.setY(this.upButton.getY() + this.upButton.getHeight());
+		this.scrollBar.setHeight(this.downButton.getY() - this.scrollBar.getY());
 
 		this.itemsVerticalChanged = true;
 	}

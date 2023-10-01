@@ -6,11 +6,9 @@ import java.util.function.Consumer;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -19,15 +17,14 @@ import net.minecraft.util.Mth;
 public class CheckBoxWidget extends AbstractButton
 {
 	private final List<Consumer<Boolean>> selectedChangedHandlers;
-	private Component[] tooltip;
 	private boolean selected;
 
 	public CheckBoxWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, boolean pSelected)
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.selectedChangedHandlers = new ArrayList<>();
-		this.tooltip = new Component[0];
 		this.selected = pSelected;
+		this.setFGColor(0x404040);
 	}
 
 	public void addSelectedChangedHandler(Consumer<Boolean> handler)
@@ -62,10 +59,8 @@ public class CheckBoxWidget extends AbstractButton
 	}
 
 	@Override
-	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
+	public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
 	{
-		Minecraft minecraft = Minecraft.getInstance();
-		RenderSystem.setShaderTexture(0, GuiHelper.WIDGETS_LOCATION);
 		RenderSystem.enableDepthTest();
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
 		RenderSystem.enableBlend();
@@ -73,36 +68,17 @@ public class CheckBoxWidget extends AbstractButton
 		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
 		int checkerLength = this.height;
-		GuiComponent.blit(pPoseStack, this.x, this.y, checkerLength, checkerLength, 0.0F + (this.isHoveredOrFocused() ? 10.0F : 0.0F), 16.0F + (this.selected ? 10.0F : 0.0F), 10, 10, 256, 256);
-		this.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);
+		pGuiGraphics.blit(GuiHelper.WIDGETS_LOCATION, this.getX(), this.getY(), checkerLength, checkerLength, 0.0F + (this.isHoveredOrFocused() ? 10.0F : 0.0F), 16.0F + (this.selected ? 10.0F : 0.0F), 10, 10, 256, 256);
 
-		GuiHelper.drawScaledText(pPoseStack, this.getMessage(), this.x + checkerLength + 1, this.y, this.width - checkerLength - 1, 14737632 | Mth.ceil(this.alpha * 255.0F) << 24, true);
+		int j = getFGColor();
+		GuiHelper.drawScaledText(pGuiGraphics, this.getMessage(), this.getX() + checkerLength + 1, this.getY(), this.width - checkerLength - 1, j | Mth.ceil(this.alpha * 255.0F) << 24, false);
 	}
 
 	@Override
-	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
-	{
-		if (this.visible && this.isHoveredOrFocused())
-		{
-			GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
-		}
-
-	}
-
-	@Override
-	public void updateNarration(NarrationElementOutput pNarrationElementOutput)
+	protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput)
 	{
 		this.defaultButtonNarrationText(pNarrationElementOutput);
-	}
 
-	public void setTooltip(Component... tooltip)
-	{
-		this.tooltip = tooltip.clone();
-	}
-
-	public Component[] getTooltip()
-	{
-		return this.tooltip.clone();
 	}
 
 }

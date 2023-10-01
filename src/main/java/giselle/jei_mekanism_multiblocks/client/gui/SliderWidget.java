@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import it.unimi.dsi.fastutil.doubles.DoubleConsumer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -22,7 +22,6 @@ public class SliderWidget extends AbstractWidget
 	private final List<DoubleConsumer> ratioChangeHandlers;
 	private double ratio;
 	private boolean horizontal;
-	private Component[] tooltip;
 
 	public SliderWidget()
 	{
@@ -35,7 +34,6 @@ public class SliderWidget extends AbstractWidget
 		this.ratioChangeHandlers = new ArrayList<>();
 		this.ratio = Mth.clamp(pRatio, 0.0D, 1.0D);
 		this.horizontal = true;
-		this.tooltip = new Component[0];
 	}
 
 	public void addRatioChangeHanlder(DoubleConsumer handler)
@@ -50,69 +48,46 @@ public class SliderWidget extends AbstractWidget
 	}
 
 	@Override
-	protected int getYImage(boolean pIsHovered)
+	public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
 	{
-		return 0;
-	}
-
-	@Override
-	public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
-	{
-		Minecraft minecraft = Minecraft.getInstance();
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.enableDepthTest();
-		GuiHelper.blitButton(pPoseStack, this.x, this.y, this.width, this.height, false, false);
+		GuiHelper.blitButton(pGuiGraphics, this.getX(), this.getY(), this.width, this.height, false, false);
 
-		this.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);
+		if (this.active)
+		{
+			int cursorX = 0;
+			int cursorY = 0;
+			int cursorWidth = 0;
+			int cursorHeight = 0;
+
+			if (this.isHorizontal())
+			{
+				cursorX = this.getX() + (int) (this.ratio * (this.width - 8));
+				cursorY = this.getY();
+				cursorWidth = 8;
+				cursorHeight = this.height;
+			}
+			else
+			{
+				cursorX = this.getX();
+				cursorY = this.getY() + (int) (this.ratio * (this.height - 8));
+				cursorWidth = this.width;
+				cursorHeight = 8;
+			}
+
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.enableBlend();
+			RenderSystem.defaultBlendFunc();
+			RenderSystem.enableDepthTest();
+			GuiHelper.blitButton(pGuiGraphics, cursorX, cursorY, cursorWidth, cursorHeight, true, this.isHoveredOrFocused());
+
+		}
+
 		int j = this.getFGColor();
-		GuiHelper.drawScaledText(pPoseStack, this.getMessage(), this.x + 2, this.y + 1, this.width - 4, j, true, TextAlignment.CENTER);
-	}
-
-	@Override
-	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
-	{
-		if (this.visible && this.isHoveredOrFocused())
-		{
-			GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
-		}
-
-	}
-
-	@Override
-	protected void renderBg(PoseStack pPoseStack, Minecraft pMinecraft, int pMouseX, int pMouseY)
-	{
-		if (!this.active)
-		{
-			return;
-		}
-
-		int cursorX = 0;
-		int cursorY = 0;
-		int cursorWidth = 0;
-		int cursorHeight = 0;
-
-		if (this.isHorizontal())
-		{
-			cursorX = this.x + (int) (this.ratio * (this.width - 8));
-			cursorY = this.y;
-			cursorWidth = 8;
-			cursorHeight = this.height;
-		}
-		else
-		{
-			cursorX = this.x;
-			cursorY = this.y + (int) (this.ratio * (this.height - 8));
-			cursorWidth = this.width;
-			cursorHeight = 8;
-		}
-
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.enableBlend();
-		RenderSystem.defaultBlendFunc();
-		RenderSystem.enableDepthTest();
-		GuiHelper.blitButton(pPoseStack, cursorX, cursorY, cursorWidth, cursorHeight, true, this.isHoveredOrFocused());
+		GuiHelper.drawScaledText(pGuiGraphics, this.getMessage(), this.getX() + 2, this.getY() + 1, this.width - 4, j, true, TextAlignment.CENTER);
 	}
 
 	protected void setRatioFromMouse(double pMouseX, double pMouseY)
@@ -121,11 +96,11 @@ public class SliderWidget extends AbstractWidget
 
 		if (this.isHorizontal())
 		{
-			ratio = (pMouseX - (this.x + 4)) / (this.width - 8);
+			ratio = (pMouseX - (this.getX() + 4)) / (this.width - 8);
 		}
 		else
 		{
-			ratio = (pMouseY - (this.y + 4)) / (this.height - 8);
+			ratio = (pMouseY - (this.getY() + 4)) / (this.height - 8);
 		}
 
 		double appliedRatio = this.applyRatioFromMouse(ratio);
@@ -231,18 +206,8 @@ public class SliderWidget extends AbstractWidget
 		super.playDownSound(Minecraft.getInstance().getSoundManager());
 	}
 
-	public void setTooltip(Component... tooltip)
-	{
-		this.tooltip = tooltip.clone();
-	}
-
-	public Component[] getTooltip()
-	{
-		return tooltip.clone();
-	}
-
 	@Override
-	public void updateNarration(NarrationElementOutput pNarrationElementOutput)
+	protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput)
 	{
 		pNarrationElementOutput.add(NarratedElementType.TITLE, this.createNarrationMessage());
 
