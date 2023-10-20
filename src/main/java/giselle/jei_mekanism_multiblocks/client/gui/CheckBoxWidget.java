@@ -21,6 +21,7 @@ public class CheckBoxWidget extends AbstractButton
 	private final List<Consumer<Boolean>> selectedChangedHandlers;
 	private Component[] tooltip;
 	private boolean selected;
+	private boolean shadow;
 
 	public CheckBoxWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, boolean pSelected)
 	{
@@ -28,6 +29,8 @@ public class CheckBoxWidget extends AbstractButton
 		this.selectedChangedHandlers = new ArrayList<>();
 		this.tooltip = new Component[0];
 		this.selected = pSelected;
+		this.setFGColor(0x3F3F3F);
+		this.shadow = false;
 	}
 
 	public void addSelectedChangedHandler(Consumer<Boolean> handler)
@@ -76,7 +79,7 @@ public class CheckBoxWidget extends AbstractButton
 		GuiComponent.blit(pPoseStack, this.x, this.y, checkerLength, checkerLength, 0.0F + (this.isHoveredOrFocused() ? 10.0F : 0.0F), 16.0F + (this.selected ? 10.0F : 0.0F), 10, 10, 256, 256);
 		this.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);
 
-		GuiHelper.drawScaledText(pPoseStack, this.getMessage(), this.x + checkerLength + 1, this.y, this.width - checkerLength - 1, 14737632 | Mth.ceil(this.alpha * 255.0F) << 24, true);
+		GuiHelper.drawScaledText(pPoseStack, this.getMessage(), this.x + checkerLength + 1, this.y, this.width - checkerLength - 1, this.getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24, this.isShadow());
 	}
 
 	@Override
@@ -103,6 +106,16 @@ public class CheckBoxWidget extends AbstractButton
 	public Component[] getTooltip()
 	{
 		return this.tooltip.clone();
+	}
+
+	public boolean isShadow()
+	{
+		return this.shadow;
+	}
+
+	public void setShadow(boolean shadow)
+	{
+		this.shadow = shadow;
 	}
 
 }
