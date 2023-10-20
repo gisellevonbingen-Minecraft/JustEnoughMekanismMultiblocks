@@ -18,6 +18,7 @@ public class CheckBoxWidget extends AbstractButton
 {
 	private final List<Consumer<Boolean>> selectedChangedHandlers;
 	private boolean selected;
+	private boolean shadow;
 
 	public CheckBoxWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, boolean pSelected)
 	{
@@ -25,6 +26,7 @@ public class CheckBoxWidget extends AbstractButton
 		this.selectedChangedHandlers = new ArrayList<>();
 		this.selected = pSelected;
 		this.setFGColor(0x404040);
+		this.shadow = false;
 	}
 
 	public void addSelectedChangedHandler(Consumer<Boolean> handler)
@@ -71,7 +73,7 @@ public class CheckBoxWidget extends AbstractButton
 		pGuiGraphics.blit(GuiHelper.WIDGETS_LOCATION, this.getX(), this.getY(), checkerLength, checkerLength, 0.0F + (this.isHoveredOrFocused() ? 10.0F : 0.0F), 16.0F + (this.selected ? 10.0F : 0.0F), 10, 10, 256, 256);
 
 		int j = getFGColor();
-		GuiHelper.drawScaledText(pGuiGraphics, this.getMessage(), this.getX() + checkerLength + 1, this.getY(), this.width - checkerLength - 1, j | Mth.ceil(this.alpha * 255.0F) << 24, false);
+		GuiHelper.drawScaledText(pGuiGraphics, this.getMessage(), this.getX() + checkerLength + 1, this.getY(), this.width - checkerLength - 1, j | Mth.ceil(this.alpha * 255.0F) << 24, this.isShadow());
 	}
 
 	@Override
@@ -79,6 +81,16 @@ public class CheckBoxWidget extends AbstractButton
 	{
 		this.defaultButtonNarrationText(pNarrationElementOutput);
 
+	}
+
+	public boolean isShadow()
+	{
+		return this.shadow;
+	}
+
+	public void setShadow(boolean shadow)
+	{
+		this.shadow = shadow;
 	}
 
 }

@@ -42,7 +42,9 @@ public abstract class MultiblockWidget extends ContainerWidget
 	{
 		super(0, 0, 0, 0);
 
-		this.addChild(new LabelWidget(00, 00, 100, 10, Component.translatable("text.jei_mekanism_multiblocks.specs"), TextAlignment.LEFT));
+		LabelWidget specsLabel = this.addChild(new LabelWidget(00, 00, 100, 10, Component.translatable("text.jei_mekanism_multiblocks.specs"), TextAlignment.LEFT));
+		specsLabel.setFGColor(0x404040);
+		specsLabel.setShadow(false);
 		this.addChild(this.configsList = new ListWidget(00, 10, 100, 110, 10));
 		this.configsList.setItemsPadding(2);
 		this.configsList.setItemOffset(2);
