@@ -35,7 +35,7 @@ public class TabButtonWidget extends ButtonWidget
 
 		int j = this.getFGColor();
 		ITextComponent message = this.getMessage();
-		GuiHelper.drawScaledText(pMatrixStack, message, this.x + 3, this.y + (this.height - 8) / 2, this.width - 6, j | MathHelper.ceil(this.alpha * 255.0F) << 24, true, TextAlignment.CENTER);
+		GuiHelper.drawScaledText(pMatrixStack, message, this.x + 3, this.y + (this.height - 8) / 2, this.width - 6, j | MathHelper.ceil(this.alpha * 255.0F) << 24, !this.selected, TextAlignment.CENTER);
 	}
 
 	public boolean isSelected()
@@ -46,6 +46,7 @@ public class TabButtonWidget extends ButtonWidget
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
+		this.setFGColor(selected ? 0x3F3F3F : 0xFFFFFF);
 	}
 
 }
