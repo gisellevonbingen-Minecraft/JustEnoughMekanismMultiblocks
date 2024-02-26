@@ -26,6 +26,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -580,7 +581,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 				this.needMoreSuperHeatingElements = false;
 			}
 
-			this.boilRate = (int) Math.floor(HeatUtils.getSteamEnergyEfficiency() * boilingHeat / HeatUtils.getWaterThermalEnthalpy());
+			this.boilRate = Mth.floor(HeatUtils.getSteamEnergyEfficiency() * boilingHeat / HeatUtils.getWaterThermalEnthalpy());
 			this.boilRate = Math.min(this.boilRate, Math.min(this.waterTank, this.steamTank));
 			this.boilHeat = this.boilRate * HeatUtils.getWaterThermalEnthalpy() / HeatUtils.getSteamEnergyEfficiency();
 
