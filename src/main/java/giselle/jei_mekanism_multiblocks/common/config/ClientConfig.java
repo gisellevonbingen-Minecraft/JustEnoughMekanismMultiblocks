@@ -1,11 +1,11 @@
 package giselle.jei_mekanism_multiblocks.common.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
 
 public class ClientConfig
 {
-	private ForgeConfigSpec configSpec;
+	private ModConfigSpec configSpec;
 
 	public final BooleanValue dynamicTankVisible;
 	public final BooleanValue evaporationPlantVisible;
@@ -19,7 +19,7 @@ public class ClientConfig
 
 	public ClientConfig()
 	{
-		ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+		ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
 		builder.push("multiblocks");
 		builder.push("mekanism");
@@ -64,7 +64,7 @@ public class ClientConfig
 		this.configSpec = builder.build();
 	}
 
-	public ForgeConfigSpec getConfigSpec()
+	public ModConfigSpec getConfigSpec()
 	{
 		return this.configSpec;
 	}

@@ -251,7 +251,7 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 
 			consumer.accept(new ItemStack(GeneratorsBlocks.ROTATIONAL_COMPLEX));
 			consumer.accept(new ItemStack(GeneratorsBlocks.TURBINE_ROTOR, rotors));
-			consumer.accept(new ItemStack(GeneratorsItems.TURBINE_BLADE, blades));
+			consumer.accept(new ItemStack(GeneratorsItems.TURBINE_BLADE.get(), blades));
 			consumer.accept(new ItemStack(MekanismBlocks.PRESSURE_DISPERSER, this.getDisperserCount()));
 			consumer.accept(new ItemStack(GeneratorsBlocks.ELECTROMAGNETIC_COIL, this.getNeededCoilCount(blades)));
 			CostWidget maxWaterOutputWidget = consumer.accept(new ItemStack(GeneratorsBlocks.SATURATING_CONDENSER, this.getCondenserCount()));

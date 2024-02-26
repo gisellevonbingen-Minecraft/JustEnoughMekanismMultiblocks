@@ -136,9 +136,9 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 		return IRecipeCategory.super.handleInput(widget, mouseX, mouseY, input);
 	}
 
-	public boolean handleScroll(WIDGET widget, double mouseX, double mouseY, double delta)
+	public boolean handleScroll(WIDGET widget, double mouseX, double mouseY, double scrollX, double scrollY)
 	{
-		return widget.mouseScrolled(mouseX, mouseY, delta);
+		return widget.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
 	}
 
 	public boolean handleDrag(WIDGET widget, double mouseX, double mouseY, int mouseButton, double dragX, double dragY)

@@ -79,23 +79,23 @@ public class ListWidget extends ContainerWidget
 	}
 
 	@Override
-	public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta)
+	public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY)
 	{
 		if (this.active && this.visible)
 		{
 			if (this.isMouseOver(pMouseX, pMouseY))
 			{
-				long scrollDelta = Math.round(pDelta / Math.abs(pDelta));
+				long scrollDelta = Math.round(pScrollY / Math.abs(pScrollY));
 				this.setScrollAmount(this.getScrollAmount() - (int) scrollDelta);
 			}
 
 		}
 
-		return super.mouseScrolled(pMouseX, pMouseY, pDelta);
+		return super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
 	}
 
 	@Override
-	public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
+	public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 		if (this.scrollBarHorizontalChanged)
 		{
@@ -134,7 +134,7 @@ public class ListWidget extends ContainerWidget
 			this.updateItemsVertical();
 		}
 
-		super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
+		super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
 	}
 
 	protected void updateItemsVertical()

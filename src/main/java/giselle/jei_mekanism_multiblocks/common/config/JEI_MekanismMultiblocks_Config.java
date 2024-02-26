@@ -1,7 +1,7 @@
 package giselle.jei_mekanism_multiblocks.common.config;
 
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.config.ModConfig;
 
 public class JEI_MekanismMultiblocks_Config
 {

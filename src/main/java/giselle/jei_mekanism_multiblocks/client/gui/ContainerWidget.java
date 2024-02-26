@@ -198,41 +198,29 @@ public class ContainerWidget extends AbstractWidget
 	}
 
 	@Override
-	public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
+	public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
 	{
-		super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
+		PoseStack pose = pGuiGraphics.pose();
+		pose.pushPose();
+		this.transformClient(pose);
+		int childMouseX = (int) this.toChildX(pMouseX);
+		int childMouseY = (int) this.toChildY(pMouseY);
 
-		if (this.visible)
+		for (List<AbstractWidget> widgets : this.getFunctionableWidgets())
 		{
-			PoseStack pose = pGuiGraphics.pose();
-			pose.pushPose();
-			this.transformClient(pose);
-			int childMouseX = (int) this.toChildX(pMouseX);
-			int childMouseY = (int) this.toChildY(pMouseY);
-
-			for (List<AbstractWidget> widgets : this.getFunctionableWidgets())
+			for (AbstractWidget widget : widgets)
 			{
-				for (AbstractWidget widget : widgets)
-				{
-					this.onRenderWidget(widgets, widget, pGuiGraphics, childMouseX, childMouseY, pPartialTicks);
-				}
-
+				this.onRenderWidget(widgets, widget, pGuiGraphics, childMouseX, childMouseY, pPartialTicks);
 			}
 
-			pose.popPose();
 		}
 
+		pose.popPose();
 	}
 
 	protected void onRenderWidget(List<AbstractWidget> widgets, AbstractWidget widget, GuiGraphics pGuiGraphics, int childMouseX, int childMouseY, float pPartialTicks)
 	{
 		widget.render(pGuiGraphics, childMouseX, childMouseY, pPartialTicks);
-	}
-
-	@Override
-	public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
-	{
-
 	}
 
 	@Override
@@ -294,7 +282,7 @@ public class ContainerWidget extends AbstractWidget
 	}
 
 	@Override
-	public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta)
+	public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY)
 	{
 		if (this.active && this.visible)
 		{
@@ -305,7 +293,7 @@ public class ContainerWidget extends AbstractWidget
 			{
 				for (AbstractWidget widget : widgets)
 				{
-					if (widget.mouseScrolled(childMouseX, childMouseY, pDelta))
+					if (widget.mouseScrolled(childMouseX, childMouseY, pScrollX, pScrollY))
 					{
 						return true;
 					}
@@ -316,7 +304,7 @@ public class ContainerWidget extends AbstractWidget
 
 		}
 
-		return super.mouseScrolled(pMouseX, pMouseY, pDelta);
+		return super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
 	}
 
 	@Override

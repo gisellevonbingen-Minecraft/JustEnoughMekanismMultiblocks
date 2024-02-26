@@ -12,7 +12,7 @@ import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
-import mekanism.api.chemical.ChemicalTags;
+import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.gas.Gas;
 import mekanism.api.math.FloatingLong;
 import mekanism.common.util.ChemicalUtil;
@@ -28,9 +28,11 @@ import mekanism.generators.common.registries.GeneratorsItems;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet.Named;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.FluidType;
 
 public class FusionReactorCategory extends MultiblockCategory<FusionReactorCategory.FusionReactorCategoryWidget>
 {
@@ -50,17 +52,11 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		consumer.accept(GeneratorsBlocks.LASER_FOCUS_MATRIX.getItemStack());
 		consumer.accept(GeneratorsBlocks.REACTOR_GLASS.getItemStack());
 
-		List<Gas> fusionFuelGases = ChemicalTags.GAS.getManager().get().getTag(GeneratorTags.Gases.FUSION_FUEL).stream().toList();
+		List<Gas> fusionFuelGases = MekanismAPI.GAS_REGISTRY.getTag(GeneratorTags.Gases.FUSION_FUEL).stream().flatMap(Named<Gas>::stream).map(Holder<Gas>::value).toList();
 
-		if (fusionFuelGases.size() > 0)
+		for (Gas gas : fusionFuelGases)
 		{
-			Gas fusionFuelGas = fusionFuelGases.get(0);
-			long capacity = MekanismGeneratorsConfig.generators.hohlraumMaxGas.get();
-			consumer.accept(ChemicalUtil.getFilledVariant(GeneratorsItems.HOHLRAUM.getItemStack(), capacity, fusionFuelGas));
-		}
-		else
-		{
-			consumer.accept(GeneratorsItems.HOHLRAUM.getItemStack());
+			consumer.accept(ChemicalUtil.getFilledVariant(GeneratorsItems.HOHLRAUM.getItemStack(), gas));
 		}
 
 	}

@@ -1,7 +1,13 @@
 modLoader="javafml"
-loaderVersion="[${forge_loader_version},)"
+loaderVersion="[${neoforge_loader_version},)"
 license="${mod_license}"
 issueTrackerURL="${mod_issues}"
+
+[[mixins]]
+config="jei_mekanism_multiblocks.mixin.client.json"
+
+[[mixins]]
+config="jei_mekanism_multiblocks.mixin.common.json"
 
 [[mods]]
     modId="${mod_id}"
@@ -14,22 +20,27 @@ issueTrackerURL="${mod_issues}"
 
 [[dependencies.${mod_id}]]
     modId="minecraft"
-    mandatory=true
+    type="required"
     versionRange="[${mc_version},)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
-    modId="forge"
-    mandatory=true
-    versionRange="[${forge_api_version},)"
+    modId="neoforge"
+    type="required"
+    versionRange="${neoforge_api_version_range}"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
     modId="mekanism"
-    mandatory=true
+    type="required"
     versionRange="${mekanism_version_range}"
     ordering="NONE"
     side="BOTH"
-    
+
+[[dependencies.${mod_id}]]
+    modId="jei"
+    type="required"
+    ordering="NONE"
+    side="BOTH"

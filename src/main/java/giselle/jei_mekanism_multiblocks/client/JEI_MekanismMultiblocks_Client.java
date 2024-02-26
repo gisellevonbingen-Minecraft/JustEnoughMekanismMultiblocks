@@ -8,16 +8,16 @@ import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import mezz.jei.api.gui.IRecipeLayoutDrawable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 public class JEI_MekanismMultiblocks_Client
 {
 	public static void init()
 	{
-		IEventBus forge_bus = MinecraftForge.EVENT_BUS;
+		IEventBus forge_bus = NeoForge.EVENT_BUS;
 		forge_bus.register(JEI_MekanismMultiblocks_Client.class);
 	}
 
@@ -32,7 +32,7 @@ public class JEI_MekanismMultiblocks_Client
 	{
 		foreachMouseInput(e, e.getMouseX(), e.getMouseY(), (category, widget, mouseX, mouseY) ->
 		{
-			category.handleScroll(widget, mouseX, mouseY, e.getScrollDelta());
+			category.handleScroll(widget, mouseX, mouseY, e.getScrollDeltaX(), e.getScrollDeltaY());
 		});
 
 	}

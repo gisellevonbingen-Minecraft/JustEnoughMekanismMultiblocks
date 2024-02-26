@@ -183,7 +183,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 	}
 
 	@Override
-	public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
+	public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 		int x = this.getX();
 		int y = this.getY();
@@ -204,7 +204,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		GuiHelper.fillRectagleBlack(pGuiGraphics, x, y + costListY, 1, this.height - costListY);
 		GuiHelper.fillRectagleBlack(pGuiGraphics, x, y + this.height - 1, this.width, 1);
 
-		super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
+		super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
 
 		if (this.needNotifyStateChange)
 		{
