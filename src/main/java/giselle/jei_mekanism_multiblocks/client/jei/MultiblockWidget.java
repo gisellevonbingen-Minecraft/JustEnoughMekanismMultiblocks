@@ -237,6 +237,11 @@ public abstract class MultiblockWidget extends ContainerWidget
 		return this.costsList.getCostUnderMouse(this.toChildX(pMouseX), this.toChildY(pMouseY));
 	}
 
+	public AbstractWidget getResultUnderMouse(double pMouseX, double pMouseY)
+	{
+		return this.resultsList.getChildUnderMouse(this.toChildX(pMouseX), this.toChildY(pMouseY));
+	}
+
 	public void markNeedUpdate()
 	{
 		this.needNotifyStateChange = true;

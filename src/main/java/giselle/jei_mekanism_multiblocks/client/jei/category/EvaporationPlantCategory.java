@@ -2,7 +2,6 @@ package giselle.jei_mekanism_multiblocks.client.jei.category;
 
 import java.util.function.Consumer;
 
-import giselle.jei_mekanism_multiblocks.client.TooltipHelper;
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
@@ -195,7 +194,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			double maxTemp = EvaporationMultiblockData.MAX_MULTIPLIER_TEMP;
 			double maxSpeed = (maxTemp - HeatAPI.AMBIENT_TEMP) * MekanismConfig.general.evaporationTempMultiplier.get() * ((double) dimHeight / this.getDimensionHeightMax());
 			ResultWidget speedWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.max_speed"), Component.literal("x" + TextUtils.format(maxSpeed)));
-			speedWidget.setTooltip(TooltipHelper.createMessageOnly(Component.translatable("text.jei_mekanism_multiblocks.tooltip.when_temp_ge", MekanismUtils.getTemperatureDisplay(maxTemp, TemperatureUnit.KELVIN, false))));
+			speedWidget.setJeiTooltip(Component.translatable("text.jei_mekanism_multiblocks.tooltip.when_temp_ge", MekanismUtils.getTemperatureDisplay(maxTemp, TemperatureUnit.KELVIN, false)));
 			consumer.accept(speedWidget);
 			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(inputCapacity)));
 			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(outputCapacity)));

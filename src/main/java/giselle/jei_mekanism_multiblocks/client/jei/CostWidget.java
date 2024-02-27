@@ -17,8 +17,8 @@ public class CostWidget extends AbstractWidget
 	private final boolean hasCountExpressionComponent;
 	private final Component countExpressionComponent;
 	private final Component countTotalComponent;
-	private Component[] headTooltip;
-	private Component[] tailTooltip;
+	private Component[] jeiHeadTooltip;
+	private Component[] jeiTailTooltip;
 
 	public CostWidget(int pX, int pY, int pWidth, int pHeight, ItemStack itemStack)
 	{
@@ -52,8 +52,8 @@ public class CostWidget extends AbstractWidget
 		this.hasCountExpressionComponent = stacks > 0;
 		this.countExpressionComponent = Component.literal(builder.toString());
 		this.countTotalComponent = Component.literal("=").append(TextUtils.format(count));
-		this.headTooltip = new Component[0];
-		this.tailTooltip = new Component[0];
+		this.jeiHeadTooltip = new Component[0];
+		this.jeiTailTooltip = new Component[0];
 	}
 
 	@Override
@@ -96,24 +96,24 @@ public class CostWidget extends AbstractWidget
 		return this.itemStack;
 	}
 
-	public Component[] getHeadTooltip()
+	public Component[] getJeiHeadTooltip()
 	{
-		return this.headTooltip.clone();
+		return this.jeiHeadTooltip.clone();
 	}
 
-	public void setHeadTooltip(Component... tooltip)
+	public void setJeiHeadTooltip(Component... tooltip)
 	{
-		this.headTooltip = tooltip.clone();
+		this.jeiHeadTooltip = tooltip.clone();
 	}
 
-	public Component[] getTailTooltip()
+	public Component[] getJeiTailTooltip()
 	{
-		return this.tailTooltip.clone();
+		return this.jeiTailTooltip.clone();
 	}
 
-	public void setTailTooltip(Component... tooltip)
+	public void setJeiTailTooltip(Component... tooltip)
 	{
-		this.tailTooltip = tooltip.clone();
+		this.jeiTailTooltip = tooltip.clone();
 	}
 
 	@Override

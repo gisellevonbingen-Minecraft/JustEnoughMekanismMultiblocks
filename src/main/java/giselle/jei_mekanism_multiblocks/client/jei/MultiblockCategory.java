@@ -114,10 +114,18 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 			{
 				Minecraft minecraft = Minecraft.getInstance();
 				List<Component> tooltip = new ArrayList<>();
-				tooltip.addAll(Arrays.asList(cost.getHeadTooltip()));
+				tooltip.addAll(Arrays.asList(cost.getJeiHeadTooltip()));
 				tooltip.addAll(Screen.getTooltipFromItem(minecraft, cost.getItemStack()));
-				tooltip.addAll(Arrays.asList(cost.getTailTooltip()));
+				tooltip.addAll(Arrays.asList(cost.getJeiTailTooltip()));
 				return tooltip;
+			}
+
+		}
+		else if (widget.resultsButton.isSelected())
+		{
+			if (widget.getResultUnderMouse(mouseX, mouseY) instanceof ResultWidget result)
+			{
+				return Arrays.asList(result.getJeiTooltip());
 			}
 
 		}

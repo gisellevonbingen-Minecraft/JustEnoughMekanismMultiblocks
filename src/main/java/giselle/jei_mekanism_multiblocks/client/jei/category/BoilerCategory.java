@@ -243,7 +243,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			if (this.needMoreHeatingElements)
 			{
 				heatingElements.setFGColor(0xFF8000);
-				heatingElements.setHeadTooltip(Component.translatable("text.jei_mekanism_multiblocks.tooltip.value_limited", Component.translatable("text.jei_mekanism_multiblocks.result.boil_rate_with", new FluidStack(Fluids.WATER, 1).getDisplayName())).withStyle(ChatFormatting.RED),
+				heatingElements.setJeiHeadTooltip(Component.translatable("text.jei_mekanism_multiblocks.tooltip.value_limited", Component.translatable("text.jei_mekanism_multiblocks.result.boil_rate_with", new FluidStack(Fluids.WATER, 1).getDisplayName())).withStyle(ChatFormatting.RED),
 						Component.translatable("text.jei_mekanism_multiblocks.tooltip.need_more", MekanismBlocks.SUPERHEATING_ELEMENT.getTextComponent()).withStyle(ChatFormatting.RED));
 			}
 
@@ -277,9 +277,9 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 					{
 						this.needMoreHeatingElements = true;
 						boilRateWidget.getValueLabel().setFGColor(0xFF8000);
-						boilRateWidget.setTooltip(TooltipHelper.createMessageOnly(//
+						boilRateWidget.setJeiTooltip(//
 								Component.translatable("text.jei_mekanism_multiblocks.tooltip.limited").withStyle(ChatFormatting.RED), //
-								Component.translatable("text.jei_mekanism_multiblocks.tooltip.need_more", MekanismBlocks.SUPERHEATING_ELEMENT.getTextComponent()).withStyle(ChatFormatting.RED))//
+								Component.translatable("text.jei_mekanism_multiblocks.tooltip.need_more", MekanismBlocks.SUPERHEATING_ELEMENT.getTextComponent()).withStyle(ChatFormatting.RED)//
 						);
 					}
 

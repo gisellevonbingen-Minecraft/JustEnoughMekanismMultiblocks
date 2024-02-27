@@ -45,7 +45,7 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 	@Override
 	public void setTooltip(@Nullable Tooltip pTooltip)
 	{
-		this.getSlider().setTooltip(pTooltip);
+		this.getSlider().setTooltip(TooltipHelper.clone(pTooltip));
 
 		for (Entry<ButtonWidget, Integer> entry : this.button2DirectionMap.entrySet())
 		{

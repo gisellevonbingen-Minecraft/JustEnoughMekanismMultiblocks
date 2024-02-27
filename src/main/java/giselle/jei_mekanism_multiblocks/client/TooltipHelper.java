@@ -62,6 +62,19 @@ public class TooltipHelper
 		return component;
 	}
 
+	public static Tooltip clone(Tooltip tooltip)
+	{
+		if (tooltip != null && tooltip instanceof ITooltipAccessor accessor)
+		{
+			return Tooltip.create(accessor.jei_mekanism_multiblocks$getMessage(), accessor.jei_mekanism_multiblocks$getNarration());
+		}
+		else
+		{
+			return tooltip;
+		}
+
+	}
+
 	private TooltipHelper()
 	{
 

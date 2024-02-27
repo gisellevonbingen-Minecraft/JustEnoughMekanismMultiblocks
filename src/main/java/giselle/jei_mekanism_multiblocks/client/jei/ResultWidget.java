@@ -3,13 +3,14 @@ package giselle.jei_mekanism_multiblocks.client.jei;
 import giselle.jei_mekanism_multiblocks.client.gui.ContainerWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.TextAlignment;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
 public class ResultWidget extends ContainerWidget
 {
 	private final LabelWidget textLabel;
 	private final LabelWidget valueLabel;
+
+	private Component[] jeiTooltip;
 
 	public ResultWidget(Component text, Component value)
 	{
@@ -29,6 +30,8 @@ public class ResultWidget extends ContainerWidget
 
 		this.updateChildrenHorizontal();
 		this.updateChildrenVertical();
+
+		this.jeiTooltip = new Component[0];
 	}
 
 	@Override
@@ -83,11 +86,14 @@ public class ResultWidget extends ContainerWidget
 		return this.valueLabel;
 	}
 
-	@Override
-	public void setTooltip(Tooltip tooltip)
+	public Component[] getJeiTooltip()
 	{
-		this.getTextLabel().setTooltip(tooltip);
-		this.getValueLabel().setTooltip(tooltip);
+		return jeiTooltip;
+	}
+
+	public void setJeiTooltip(Component... jeiTooltip)
+	{
+		this.jeiTooltip = jeiTooltip.clone();
 	}
 
 }
