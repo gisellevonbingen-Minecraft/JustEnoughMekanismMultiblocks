@@ -23,14 +23,15 @@ public class JEI_MekanismMultiblocks
 
 	public JEI_MekanismMultiblocks()
 	{
-		JEI_MekanismMultiblocks_Config.registerConfigs(ModLoadingContext.get());
+		ModLoadingContext modLoadingContext = ModLoadingContext.get();
+		JEI_MekanismMultiblocks_Config.registerConfigs(modLoadingContext);
 
 		if (FMLEnvironment.dist.isClient())
 		{
 			JEI_MekanismMultiblocks_Client.init();
 		}
 
-		IEventBus fml_bus = ModLoadingContext.get().getActiveContainer().getEventBus();
+		IEventBus fml_bus = modLoadingContext.getActiveContainer().getEventBus();
 		fml_bus.addListener(JEI_MekanismMultiblocks::onCommonSetup);
 	}
 

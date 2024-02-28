@@ -4,10 +4,10 @@ license="${mod_license}"
 issueTrackerURL="${mod_issues}"
 
 [[mixins]]
-config="jei_mekanism_multiblocks.mixin.client.json"
+config="${mod_id}.mixin.client.json"
 
 [[mixins]]
-config="jei_mekanism_multiblocks.mixin.common.json"
+config="${mod_id}.mixin.common.json"
 
 [[mods]]
     modId="${mod_id}"
