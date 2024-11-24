@@ -85,12 +85,12 @@ repositories {
         url "https://dvs1.progwml6.com/files/maven"
     }
     maven {
-        name "ModMaven"
-        url "https://modmaven.dev"
-    }
-    maven {
         name "CurseForge"
         url "https://www.cursemaven.com"
+    }
+    maven {
+        name "ModMaven"
+        url "https://modmaven.dev"
     }
 }
 
@@ -104,6 +104,7 @@ dependencies {
     implementation fg.deobf("mekanism:Mekanism:${mc_version}-${mekanism_version}:additions")
     implementation fg.deobf("mekanism:Mekanism:${mc_version}-${mekanism_version}:generators")
     implementation fg.deobf("mekanism:Mekanism:${mc_version}-${mekanism_version}:tools")
+    implementation fg.deobf("curse.maven:better-fusion-reactor-for-mekanism-602409:${better_fusion_file}")
 
     implementation fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 

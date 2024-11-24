@@ -17,6 +17,8 @@ public class ClientConfig
 	public final BooleanValue fissionReactorVisible;
 	public final BooleanValue fusionReactorVisible;
 
+	public final BooleanValue betterFusionVisible;
+
 	public ClientConfig()
 	{
 		ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -57,6 +59,13 @@ public class ClientConfig
 
 		builder.comment("JEI 'Building [Fusion Reactor]' page configuration").push("fusion_reactor");
 		this.fusionReactorVisible = builder.comment("Set page visibility").define("visible", true);
+		builder.pop();
+
+		builder.pop();
+
+		builder.push("better_fusion_reactor");
+		builder.comment("JEI 'Building [Better Fusion Reactor]' page configuration").push("better_fusion_reactor");
+		this.betterFusionVisible = builder.comment("Set page visibility").define("visible", true);
 		builder.pop();
 
 		builder.pop();
