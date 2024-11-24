@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
+import giselle.jei_mekanism_multiblocks.client.jei.category.BetterFusionReactorCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.BoilerCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.DynamicTankCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.EvaporationPlantCategory;
@@ -70,6 +71,11 @@ public class JeiPlugin implements IModPlugin
 			this.addCategory(config.turbineVisible, () -> new TurbineCategory(guiHelper));
 			this.addCategory(config.fissionReactorVisible, () -> new FissionReactorCategory(guiHelper));
 			this.addCategory(config.fusionReactorVisible, () -> new FusionReactorCategory(guiHelper));
+		}
+
+		if (JEI_MekanismMultiblocks.BetterFusionReactorLoaded)
+		{
+			this.addCategory(config.betterFusionVisible, () -> new BetterFusionReactorCategory(guiHelper));
 		}
 
 		for (MultiblockCategory<?> category : this.getCategories())
