@@ -21,7 +21,6 @@ import mekanism.common.registries.MekanismGases;
 import mekanism.common.registries.MekanismGases.Coolants;
 import mekanism.common.util.HeatUtils;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.fluid.Fluids;
@@ -35,7 +34,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 {
 	public BoilerCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("boiler"), MekanismLang.BOILER.translate(), MekanismBlocks.BOILER_VALVE.getItemStack());
+		super(helper, Mekanism.rl("boiler"), BoilerWidget.class, MekanismLang.BOILER.translate(), MekanismBlocks.BOILER_VALVE.getItemStack());
 	}
 
 	@Override
@@ -47,18 +46,6 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 		consumer.accept(MekanismBlocks.PRESSURE_DISPERSER.getItemStack());
 		consumer.accept(MekanismBlocks.SUPERHEATING_ELEMENT.getItemStack());
 		consumer.accept(MekanismBlocks.STRUCTURAL_GLASS.getItemStack());
-	}
-
-	@Override
-	public void setIngredients(BoilerWidget recipe, IIngredients ingredients)
-	{
-
-	}
-
-	@Override
-	public Class<? extends BoilerWidget> getRecipeClass()
-	{
-		return BoilerWidget.class;
 	}
 
 	public static class BoilerWidget extends MultiblockWidget

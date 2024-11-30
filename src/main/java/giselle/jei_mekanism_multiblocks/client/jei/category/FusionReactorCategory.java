@@ -24,7 +24,6 @@ import mekanism.generators.common.content.fusion.FusionReactorMultiblockData;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mekanism.generators.common.registries.GeneratorsItems;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
@@ -36,7 +35,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 {
 	public FusionReactorCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismGenerators.rl("fusion_reactor"), GeneratorsLang.FUSION_REACTOR.translate(), GeneratorsBlocks.FUSION_REACTOR_CONTROLLER.getItemStack());
+		super(helper, MekanismGenerators.rl("fusion_reactor"), FusionReactorCategoryWidget.class, GeneratorsLang.FUSION_REACTOR.translate(), GeneratorsBlocks.FUSION_REACTOR_CONTROLLER.getItemStack());
 	}
 
 	@Override
@@ -63,18 +62,6 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			consumer.accept(GeneratorsItems.HOHLRAUM.getItemStack());
 		}
 
-	}
-
-	@Override
-	public void setIngredients(FusionReactorCategoryWidget widget, IIngredients ingredients)
-	{
-
-	}
-
-	@Override
-	public Class<? extends FusionReactorCategoryWidget> getRecipeClass()
-	{
-		return FusionReactorCategoryWidget.class;
 	}
 
 	public static class FusionReactorCategoryWidget extends MultiblockWidget

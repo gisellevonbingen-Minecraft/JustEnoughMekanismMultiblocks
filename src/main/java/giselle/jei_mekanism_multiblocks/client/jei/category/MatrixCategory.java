@@ -12,7 +12,6 @@ import mekanism.common.MekanismLang;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.TextUtils;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
@@ -22,7 +21,7 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 {
 	public MatrixCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("matrix"), MekanismLang.MATRIX.translate(), MekanismBlocks.INDUCTION_PORT.getItemStack());
+		super(helper, Mekanism.rl("matrix"), MatrixWidget.class, MekanismLang.MATRIX.translate(), MekanismBlocks.INDUCTION_PORT.getItemStack());
 	}
 
 	@Override
@@ -41,18 +40,6 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 		consumer.accept(MekanismBlocks.ELITE_INDUCTION_PROVIDER.getItemStack());
 		consumer.accept(MekanismBlocks.ULTIMATE_INDUCTION_CELL.getItemStack());
 		consumer.accept(MekanismBlocks.ULTIMATE_INDUCTION_PROVIDER.getItemStack());
-	}
-
-	@Override
-	public void setIngredients(MatrixWidget widget, IIngredients ingredients)
-	{
-
-	}
-
-	@Override
-	public Class<? extends MatrixWidget> getRecipeClass()
-	{
-		return MatrixWidget.class;
 	}
 
 	public static class MatrixWidget extends MultiblockWidget

@@ -13,7 +13,6 @@ import mekanism.common.MekanismLang;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.registries.MekanismBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
@@ -23,7 +22,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 {
 	public DynamicTankCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("dynamic_tank"), MekanismLang.DYNAMIC_TANK.translate(), MekanismBlocks.DYNAMIC_VALVE.getItemStack());
+		super(helper, Mekanism.rl("dynamic_tank"), DynamicTankWidget.class, MekanismLang.DYNAMIC_TANK.translate(), MekanismBlocks.DYNAMIC_VALVE.getItemStack());
 	}
 
 	@Override
@@ -33,18 +32,6 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		consumer.accept(MekanismBlocks.DYNAMIC_TANK.getItemStack());
 		consumer.accept(MekanismBlocks.DYNAMIC_VALVE.getItemStack());
 		consumer.accept(MekanismBlocks.STRUCTURAL_GLASS.getItemStack());
-	}
-
-	@Override
-	public void setIngredients(DynamicTankWidget widget, IIngredients ingredients)
-	{
-
-	}
-
-	@Override
-	public Class<? extends DynamicTankWidget> getRecipeClass()
-	{
-		return DynamicTankWidget.class;
 	}
 
 	public static class DynamicTankWidget extends MultiblockWidget

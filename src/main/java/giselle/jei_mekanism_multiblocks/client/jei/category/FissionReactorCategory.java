@@ -24,7 +24,6 @@ import mekanism.generators.common.config.MekanismGeneratorsConfig;
 import mekanism.generators.common.content.fission.FissionReactorMultiblockData;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.fluid.Fluids;
@@ -40,7 +39,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 {
 	public FissionReactorCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismGenerators.rl("fission_reactor"), GeneratorsLang.FISSION_REACTOR.translate(), GeneratorsBlocks.CONTROL_ROD_ASSEMBLY.getItemStack());
+		super(helper, MekanismGenerators.rl("fission_reactor"), FissionReactorCategoryWidget.class, GeneratorsLang.FISSION_REACTOR.translate(), GeneratorsBlocks.CONTROL_ROD_ASSEMBLY.getItemStack());
 	}
 
 	@Override
@@ -53,18 +52,6 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		consumer.accept(GeneratorsBlocks.FISSION_FUEL_ASSEMBLY.getItemStack());
 		consumer.accept(GeneratorsBlocks.CONTROL_ROD_ASSEMBLY.getItemStack());
 		consumer.accept(GeneratorsBlocks.REACTOR_GLASS.getItemStack());
-	}
-
-	@Override
-	public void setIngredients(FissionReactorCategoryWidget widget, IIngredients ingredients)
-	{
-
-	}
-
-	@Override
-	public Class<? extends FissionReactorCategoryWidget> getRecipeClass()
-	{
-		return FissionReactorCategoryWidget.class;
 	}
 
 	public static class FissionReactorCategoryWidget extends MultiblockWidget

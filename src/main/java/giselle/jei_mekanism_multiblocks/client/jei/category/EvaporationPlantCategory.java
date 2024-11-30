@@ -21,7 +21,6 @@ import mekanism.common.util.UnitDisplayUtils.TemperatureUnit;
 import mekanism.common.util.text.TextUtils;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
@@ -32,7 +31,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 {
 	public EvaporationPlantCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("evaporation_plant"), MekanismLang.EVAPORATION_PLANT.translate(), MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getItemStack());
+		super(helper, Mekanism.rl("evaporation_plant"), EvaporationPlantWidget.class, MekanismLang.EVAPORATION_PLANT.translate(), MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getItemStack());
 	}
 
 	@Override
@@ -49,18 +48,6 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			consumer.accept(GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR.getItemStack());
 		}
 
-	}
-
-	@Override
-	public void setIngredients(EvaporationPlantWidget widget, IIngredients ingredients)
-	{
-
-	}
-
-	@Override
-	public Class<? extends EvaporationPlantWidget> getRecipeClass()
-	{
-		return EvaporationPlantWidget.class;
 	}
 
 	public static class EvaporationPlantWidget extends MultiblockWidget

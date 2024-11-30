@@ -23,7 +23,6 @@ import mekanism.generators.common.content.turbine.TurbineValidator;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mekanism.generators.common.registries.GeneratorsItems;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
@@ -37,7 +36,7 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 {
 	public TurbineCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismGenerators.rl("turbine"), GeneratorsLang.TURBINE.translate(), GeneratorsBlocks.TURBINE_VALVE.getItemStack());
+		super(helper, MekanismGenerators.rl("turbine"), TurbineWidget.class, GeneratorsLang.TURBINE.translate(), GeneratorsBlocks.TURBINE_VALVE.getItemStack());
 	}
 
 	@Override
@@ -54,18 +53,6 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 		consumer.accept(GeneratorsBlocks.ELECTROMAGNETIC_COIL.getItemStack());
 		consumer.accept(GeneratorsBlocks.SATURATING_CONDENSER.getItemStack());
 		consumer.accept(MekanismBlocks.STRUCTURAL_GLASS.getItemStack());
-	}
-
-	@Override
-	public void setIngredients(TurbineWidget widget, IIngredients ingredients)
-	{
-
-	}
-
-	@Override
-	public Class<? extends TurbineWidget> getRecipeClass()
-	{
-		return TurbineWidget.class;
 	}
 
 	public static class TurbineWidget extends MultiblockWidget

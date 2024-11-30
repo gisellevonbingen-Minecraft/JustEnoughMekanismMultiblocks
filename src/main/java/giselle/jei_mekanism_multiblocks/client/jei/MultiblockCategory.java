@@ -23,21 +23,35 @@ import net.minecraft.util.text.TranslationTextComponent;
 public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implements IRecipeCategory<WIDGET>
 {
 	private final ResourceLocation id;
+	private final Class<? extends WIDGET> clazz;
 	private final IDrawable icon;
 	private final IDrawable background;
 	private final ITextComponent title;
 
-	public MultiblockCategory(IGuiHelper helper, ResourceLocation name, ITextComponent multiblockName, ItemStack icon)
+	public MultiblockCategory(IGuiHelper helper, ResourceLocation name, Class<? extends WIDGET> clazz, ITextComponent multiblockName, ItemStack icon)
 	{
-		this(helper, name, multiblockName, helper.createDrawableIngredient(icon));
+		this(helper, name, clazz, multiblockName, helper.createDrawableIngredient(icon));
 	}
 
-	public MultiblockCategory(IGuiHelper helper, ResourceLocation name, ITextComponent multiblockName, IDrawable icon)
+	public MultiblockCategory(IGuiHelper helper, ResourceLocation name, Class<? extends WIDGET> clazz, ITextComponent multiblockName, IDrawable icon)
 	{
 		this.id = JEI_MekanismMultiblocks.rl("multiblock." + name.getNamespace() + "." + name.getPath());
+		this.clazz = clazz;
 		this.icon = icon;
 		this.background = helper.createBlankDrawable(180, 120);
 		this.title = new TranslationTextComponent("text.jei_mekanism_multiblocks.recipe_category.title", multiblockName);
+	}
+
+	@Override
+	public void setIngredients(WIDGET widget, IIngredients ingredients)
+	{
+
+	}
+
+	@Override
+	public Class<? extends WIDGET> getRecipeClass()
+	{
+		return this.clazz;
 	}
 
 	@Override
