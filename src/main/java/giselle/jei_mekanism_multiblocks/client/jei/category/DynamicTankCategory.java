@@ -2,7 +2,6 @@ package giselle.jei_mekanism_multiblocks.client.jei.category;
 
 import java.util.function.Consumer;
 
-import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
@@ -17,6 +16,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 
 public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.DynamicTankWidget>
 {
@@ -36,7 +36,6 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 
 	public static class DynamicTankWidget extends MultiblockWidget
 	{
-		protected CheckBoxWidget useStructuralGlassCheckBox;
 		protected IntSliderWithButtons valvesWidget;
 
 		public DynamicTankWidget()
@@ -49,8 +48,6 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
-			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 2, 0));
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 
@@ -78,11 +75,6 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 			this.markNeedUpdate();
 		}
 
-		protected void onUseStructuralGlassChanged(boolean useStructuralGlass)
-		{
-			this.markNeedUpdate();
-		}
-
 		@Override
 		protected void collectCost(ICostConsumer consumer)
 		{
@@ -94,12 +86,12 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 			sides -= valves;
 
 			int tanks = 0;
-			int structuralGlasses = 0;
+			int glasses = 0;
 
-			if (this.isUseStruturalGlass())
+			if (this.isUseGlass())
 			{
 				tanks = corners;
-				structuralGlasses = sides;
+				glasses = sides;
 			}
 			else
 			{
@@ -108,7 +100,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 
 			consumer.accept(new ItemStack(MekanismBlocks.DYNAMIC_TANK, tanks));
 			consumer.accept(new ItemStack(MekanismBlocks.DYNAMIC_VALVE, valves));
-			consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS, structuralGlasses));
+			consumer.accept(new ItemStack(this.getGlassBlock(), glasses));
 		}
 
 		@Override
@@ -131,16 +123,6 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		public void setValveCount(int valveCount)
 		{
 			this.valvesWidget.getSlider().setValue(valveCount);
-		}
-
-		public boolean isUseStruturalGlass()
-		{
-			return this.useStructuralGlassCheckBox.isSelected();
-		}
-
-		public void setUseStructuralGlass(boolean useStructuralGlass)
-		{
-			this.useStructuralGlassCheckBox.setSelected(useStructuralGlass);
 		}
 
 		@Override
@@ -177,6 +159,12 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		public int getDimensionHeightMax()
 		{
 			return 18;
+		}
+
+		@Override
+		public Block getGlassBlock()
+		{
+			return MekanismBlocks.STRUCTURAL_GLASS.getBlock();
 		}
 
 	}

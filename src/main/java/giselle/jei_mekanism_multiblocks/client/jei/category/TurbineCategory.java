@@ -2,7 +2,6 @@ package giselle.jei_mekanism_multiblocks.client.jei.category;
 
 import java.util.function.Consumer;
 
-import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.gui.Mod2IntSliderWidget;
@@ -31,6 +30,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 
 public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineWidget>
 {
@@ -57,7 +57,6 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 
 	public static class TurbineWidget extends MultiblockWidget
 	{
-		protected CheckBoxWidget useStructuralGlassCheckBox;
 		protected IntSliderWithButtons rotorsWidget;
 		protected IntSliderWithButtons ventsWidget;
 		protected IntSliderWithButtons condensersWidget;
@@ -97,8 +96,6 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
-			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 			consumer.accept(this.rotorsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.rotors", 0, 1, 0));
 			this.rotorsWidget.getSlider().addValueChangeHanlder(this::onRotorsChanged);
 			consumer.accept(this.ventsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.vents", 0, 1, 0));
@@ -202,11 +199,6 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 			this.markNeedUpdate();
 		}
 
-		protected void onUseStructuralGlassChanged(boolean useStructuralGlass)
-		{
-			this.markNeedUpdate();
-		}
-
 		@Override
 		protected void collectCost(ICostConsumer consumer)
 		{
@@ -225,17 +217,17 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 			sides -= valves;
 
 			int casing = 0;
-			int structuralGlasses = 0;
+			int glasses = 0;
 
-			if (this.isUseStruturalGlass())
+			if (this.isUseGlass())
 			{
 				casing = corners;
-				structuralGlasses = sides;
+				glasses = sides;
 			}
 			else
 			{
 				casing = corners + sides;
-				structuralGlasses = 0;
+				glasses = 0;
 			}
 
 			consumer.accept(new ItemStack(GeneratorsBlocks.TURBINE_CASING, casing));
@@ -269,7 +261,7 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 
 			}
 
-			consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS, structuralGlasses));
+			consumer.accept(new ItemStack(this.getGlassBlock(), glasses));
 		}
 
 		@Override
@@ -484,16 +476,6 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 			this.ventsWidget.getSlider().setValue(ventCount);
 		}
 
-		public boolean isUseStruturalGlass()
-		{
-			return this.useStructuralGlassCheckBox.isSelected();
-		}
-
-		public void setUseStructuralGlass(boolean useStructuralGlass)
-		{
-			this.useStructuralGlassCheckBox.setSelected(useStructuralGlass);
-		}
-
 		@Override
 		public int getDimensionWidthMin()
 		{
@@ -528,6 +510,12 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 		public int getDimensionHeightMax()
 		{
 			return 18;
+		}
+
+		@Override
+		public Block getGlassBlock()
+		{
+			return MekanismBlocks.STRUCTURAL_GLASS.getBlock();
 		}
 
 	}
