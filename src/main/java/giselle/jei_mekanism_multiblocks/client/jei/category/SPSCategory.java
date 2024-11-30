@@ -2,7 +2,6 @@ package giselle.jei_mekanism_multiblocks.client.jei.category;
 
 import java.util.function.Consumer;
 
-import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
@@ -18,6 +17,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 
 public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 {
@@ -38,7 +38,6 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 
 	public static class SPSWidget extends MultiblockWidget
 	{
-		protected CheckBoxWidget useStructuralGlassCheckBox;
 		protected IntSliderWithButtons portsWidget;
 
 		public SPSWidget()
@@ -51,8 +50,6 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
-			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 3, this.getSideBlocks()));
 			this.portsWidget.getSlider().addValueChangeHanlder(this::onPortsChanged);
 		}
@@ -68,23 +65,23 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 			sides -= ports;
 
 			int casing = 0;
-			int structuralGlasses = 0;
+			int glasses = 0;
 
-			if (this.isUseStruturalGlass())
+			if (this.isUseGlass())
 			{
 				casing = corners;
-				structuralGlasses = sides;
+				glasses = sides;
 			}
 			else
 			{
 				casing = corners + sides;
-				structuralGlasses = 0;
+				glasses = 0;
 			}
 
 			consumer.accept(new ItemStack(MekanismBlocks.SPS_CASING, casing));
 			consumer.accept(new ItemStack(MekanismBlocks.SPS_PORT, ports));
 			consumer.accept(new ItemStack(MekanismBlocks.SUPERCHARGED_COIL));
-			consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS, structuralGlasses));
+			consumer.accept(new ItemStack(this.getGlassBlock(), glasses));
 		}
 
 		@Override
@@ -99,11 +96,6 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 		}
 
 		protected void onPortsChanged(int ports)
-		{
-			this.markNeedUpdate();
-		}
-
-		protected void onUseStructuralGlassChanged(boolean useStructuralGlass)
 		{
 			this.markNeedUpdate();
 		}
@@ -128,16 +120,6 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 		public void setPortCount(int portCount)
 		{
 			this.portsWidget.getSlider().setValue(portCount);
-		}
-
-		public boolean isUseStruturalGlass()
-		{
-			return this.useStructuralGlassCheckBox.isSelected();
-		}
-
-		public void setUseStructuralGlass(boolean useStructuralGlass)
-		{
-			this.useStructuralGlassCheckBox.setSelected(useStructuralGlass);
 		}
 
 		@Override
@@ -174,6 +156,12 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 		public int getDimensionHeightMax()
 		{
 			return 7;
+		}
+
+		@Override
+		public Block getGlassBlock()
+		{
+			return MekanismBlocks.STRUCTURAL_GLASS.getBlock();
 		}
 
 	}
