@@ -24,6 +24,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 
 public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlantCategory.EvaporationPlantWidget>
 {
@@ -50,7 +51,6 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 
 	public static class EvaporationPlantWidget extends MultiblockWidget
 	{
-		protected CheckBoxWidget useStructuralGlassCheckBox;
 		protected CheckBoxWidget useAdvancedSolarGeneratorCheckBox;
 		protected IntSliderWithButtons valvesWidget;
 
@@ -72,18 +72,15 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
-			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
-
 			if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
 			{
 				consumer.accept(this.useAdvancedSolarGeneratorCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR.getItemStack().getHoverName()), true));
-				this.useAdvancedSolarGeneratorCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
+				this.useAdvancedSolarGeneratorCheckBox.addSelectedChangedHandler(this::onUseAdvancedSolarGeneratorChanged);
 			}
 			else
 			{
 				this.useAdvancedSolarGeneratorCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.empty(), false);
-				this.useAdvancedSolarGeneratorCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
+				this.useAdvancedSolarGeneratorCheckBox.addSelectedChangedHandler(this::onUseAdvancedSolarGeneratorChanged);
 			}
 
 			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 2, 0));
@@ -115,15 +112,17 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			this.markNeedUpdate();
 		}
 
-		protected void onUseStructuralGlassChanged(boolean useStructuralGlass)
+		@Override
+		protected void onUseGlassChanged(boolean useGlass)
 		{
-			this.updateValveSliderLimit();
-			this.markNeedUpdate();
+			super.onUseGlassChanged(useGlass);
 		}
 
 		protected void onUseAdvancedSolarGeneratorChanged(boolean useAdvancedSolarGenerator)
 		{
 			this.markNeedUpdate();
+
+			this.updateValveSliderLimit();
 		}
 
 		@Override
@@ -137,13 +136,13 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			sides -= valves;
 
 			int casing = 0;
-			int structuralGlasses = 0;
+			int glasses = 0;
 			int advancedSolarGenerators = 0;
 
-			if (this.isUseStruturalGlass())
+			if (this.isUseGlass())
 			{
 				casing = corners;
-				structuralGlasses = sides;
+				glasses = sides;
 
 				if (this.isUseAdvancedSolarGenerator())
 				{
@@ -155,7 +154,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 				{
 					// Replace top side to glass
 					casing -= 8;
-					structuralGlasses += 8;
+					glasses += 8;
 				}
 
 			}
@@ -174,7 +173,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			consumer.accept(new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER, 1));
 			consumer.accept(new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE, valves));
 			consumer.accept(new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_BLOCK, casing));
-			consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS, structuralGlasses));
+			consumer.accept(new ItemStack(this.getGlassBlock(), glasses));
 
 			if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
 			{
@@ -210,16 +209,6 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			this.valvesWidget.getSlider().setValue(valveCount);
 		}
 
-		public boolean isUseStruturalGlass()
-		{
-			return this.useStructuralGlassCheckBox.isSelected();
-		}
-
-		public void setUseStructuralGlass(boolean useStructuralGlass)
-		{
-			this.useStructuralGlassCheckBox.setSelected(useStructuralGlass);
-		}
-
 		public boolean isUseAdvancedSolarGenerator()
 		{
 			return JEI_MekanismMultiblocks.MekanismGeneratorsLoaded && this.useAdvancedSolarGeneratorCheckBox.isSelected();
@@ -227,7 +216,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 
 		public void setUseAdvancedSolarGenerator(boolean useAdvancedSolarGenerator)
 		{
-			this.useStructuralGlassCheckBox.setSelected(useAdvancedSolarGenerator);
+			this.useAdvancedSolarGeneratorCheckBox.setSelected(useAdvancedSolarGenerator);
 		}
 
 		@Override
@@ -264,6 +253,12 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 		public int getDimensionHeightMax()
 		{
 			return 18;
+		}
+
+		@Override
+		public Block getGlassBlock()
+		{
+			return MekanismBlocks.STRUCTURAL_GLASS.getBlock();
 		}
 
 	}

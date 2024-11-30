@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import giselle.jei_mekanism_multiblocks.client.IRecipeLogicStateListener;
+import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.ContainerWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
@@ -23,6 +24,8 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 public abstract class MultiblockWidget extends ContainerWidget
 {
@@ -37,6 +40,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 	protected IntSliderWithButtons widthWidget;
 	protected IntSliderWithButtons lengthWidget;
 	protected IntSliderWithButtons heightWidget;
+	protected CheckBoxWidget useGlassCheckBox;
 
 	private boolean needNotifyStateChange;
 
@@ -98,6 +102,14 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	protected void collectOtherConfigs(Consumer<AbstractWidget> consumer)
 	{
+		Block glassBlock = this.getGlassBlock();
+		this.useGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.use_things", new ItemStack(glassBlock).getHoverName()), true);
+		this.useGlassCheckBox.addSelectedChangedHandler(this::onUseGlassChanged);
+
+		if (glassBlock != null && glassBlock != Blocks.AIR)
+		{
+			this.configsList.addChild(this.useGlassCheckBox);
+		}
 
 	}
 
@@ -146,6 +158,11 @@ public abstract class MultiblockWidget extends ContainerWidget
 	}
 
 	protected void onDimensionChanged()
+	{
+		this.markNeedUpdate();
+	}
+
+	protected void onUseGlassChanged(boolean useGlass)
 	{
 		this.markNeedUpdate();
 	}
@@ -349,4 +366,17 @@ public abstract class MultiblockWidget extends ContainerWidget
 	public abstract int getDimensionHeightMin();
 
 	public abstract int getDimensionHeightMax();
+
+	public abstract Block getGlassBlock();
+
+	public boolean isUseGlass()
+	{
+		return this.useGlassCheckBox.isSelected();
+	}
+
+	public void setUseGlass(boolean useGlass)
+	{
+		this.useGlassCheckBox.setSelected(useGlass);
+	}
+
 }
