@@ -11,9 +11,11 @@ import giselle.jei_mekanism_multiblocks.client.jei.category.BetterFusionReactorC
 import giselle.jei_mekanism_multiblocks.client.jei.category.BoilerCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.DynamicTankCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.EvaporationPlantCategory;
+import giselle.jei_mekanism_multiblocks.client.jei.category.ExtraMatrixCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.FissionReactorCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.FusionReactorCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.MatrixCategory;
+import giselle.jei_mekanism_multiblocks.client.jei.category.NaquadahReactorCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.SPSCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.TurbineCategory;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
@@ -76,6 +78,17 @@ public class JeiPlugin implements IModPlugin
 		if (JEI_MekanismMultiblocks.BetterFusionReactorLoaded)
 		{
 			this.addCategory(config.betterFusionVisible, () -> new BetterFusionReactorCategory(guiHelper));
+		}
+
+		if (JEI_MekanismMultiblocks.MekanismExtrasLoaded)
+		{
+			this.addCategory(config.extraMatrixVisible, () -> new ExtraMatrixCategory(guiHelper));
+
+			if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
+			{
+				this.addCategory(config.naquadahReactorVisible, () -> new NaquadahReactorCategory(guiHelper));
+			}
+
 		}
 
 		for (MultiblockCategory<?> category : this.getCategories())

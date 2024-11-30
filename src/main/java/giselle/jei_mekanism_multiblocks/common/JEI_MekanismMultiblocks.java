@@ -24,6 +24,7 @@ public class JEI_MekanismMultiblocks
 
 	public static boolean MekanismGeneratorsLoaded = false;
 	public static boolean BetterFusionReactorLoaded = false;
+	public static boolean MekanismExtrasLoaded = false;
 
 	public JEI_MekanismMultiblocks()
 	{
@@ -42,6 +43,7 @@ public class JEI_MekanismMultiblocks
 		ModList modList = ModList.get();
 		MekanismGeneratorsLoaded = modList.isLoaded("mekanismgenerators");
 		BetterFusionReactorLoaded = modList.isLoaded("bfr");
+		MekanismExtrasLoaded = modList.isLoaded("mekanism_extras");
 	}
 
 	public static ResourceLocation rl(String path)

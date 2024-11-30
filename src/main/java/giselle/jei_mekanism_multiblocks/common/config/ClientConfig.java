@@ -19,6 +19,9 @@ public class ClientConfig
 
 	public final BooleanValue betterFusionVisible;
 
+	public final BooleanValue extraMatrixVisible;
+	public final BooleanValue naquadahReactorVisible;
+
 	public ClientConfig()
 	{
 		ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -66,6 +69,17 @@ public class ClientConfig
 		builder.push("better_fusion_reactor");
 		builder.comment("JEI 'Building [Better Fusion Reactor]' page configuration").push("better_fusion_reactor");
 		this.betterFusionVisible = builder.comment("Set page visibility").define("visible", true);
+		builder.pop();
+
+		builder.pop();
+
+		builder.push("mekanism_extras");
+		builder.comment("JEI 'Building [Reinforced Induction Matrix]' page configuration").push("extra_matrix");
+		this.extraMatrixVisible = builder.comment("Set page visibility").define("visible", true);
+		builder.pop();
+
+		builder.comment("JEI 'Building [Naquadah Reactor]' page configuration").push("naquadah_reacto");
+		this.naquadahReactorVisible = builder.comment("Set page visibility").define("visible", true);
 		builder.pop();
 
 		builder.pop();
