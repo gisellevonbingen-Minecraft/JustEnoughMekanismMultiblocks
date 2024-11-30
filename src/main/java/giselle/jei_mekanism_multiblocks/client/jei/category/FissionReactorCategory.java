@@ -2,7 +2,6 @@ package giselle.jei_mekanism_multiblocks.client.jei.category;
 
 import java.util.function.Consumer;
 
-import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.gui.LongSliderWidget;
@@ -26,6 +25,7 @@ import mekanism.generators.common.content.fission.FissionReactorMultiblockData;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
@@ -69,7 +69,6 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 	public static class FissionReactorCategoryWidget extends MultiblockWidget
 	{
-		protected CheckBoxWidget useReactorGlassCheckBox;
 		protected IntSliderWithButtons portsWidget;
 		protected IntSliderWithButtons logicAdaptersWidget;
 		protected LongSliderWithButtons burnRateWidget;
@@ -84,8 +83,6 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useReactorGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.REACTOR_GLASS.getItemStack().getHoverName()), true));
-			this.useReactorGlassCheckBox.addSelectedChangedHandler(this::onUseReactorGlassChanged);
 			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 4, 0));
 			this.portsWidget.getSlider().addValueChangeHanlder(this::onPortsChanged);
 			consumer.accept(this.logicAdaptersWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.logic_adapters", 0, 0, 0));
@@ -138,11 +135,6 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			this.markNeedUpdate();
 		}
 
-		protected void onUseReactorGlassChanged(boolean useReactorGlass)
-		{
-			this.markNeedUpdate();
-		}
-
 		public void updateBurnRateSliderLimit()
 		{
 			LongSliderWidget burnRateSlider = this.burnRateWidget.getSlider();
@@ -169,17 +161,17 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			sides -= logicAdapter;
 
 			int casings = 0;
-			int reactorGlasses = 0;
+			int glasses = 0;
 
-			if (this.isUseReactorGlass())
+			if (this.isUseGlass())
 			{
 				casings = corners;
-				reactorGlasses = sides;
+				glasses = sides;
 			}
 			else
 			{
 				casings = corners + sides;
-				reactorGlasses = 0;
+				glasses = 0;
 			}
 
 			consumer.accept(new ItemStack(GeneratorsBlocks.FISSION_REACTOR_CASING, casings));
@@ -187,7 +179,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			consumer.accept(new ItemStack(GeneratorsBlocks.FISSION_REACTOR_LOGIC_ADAPTER, logicAdapter));
 			consumer.accept(new ItemStack(GeneratorsBlocks.FISSION_FUEL_ASSEMBLY, this.getFissionFuelAssemblyCount()));
 			consumer.accept(new ItemStack(GeneratorsBlocks.CONTROL_ROD_ASSEMBLY, this.getControlRodAssemblyCount()));
-			consumer.accept(new ItemStack(GeneratorsBlocks.REACTOR_GLASS, reactorGlasses));
+			consumer.accept(new ItemStack(this.getGlassBlock(), glasses));
 		}
 
 		@Override
@@ -382,16 +374,6 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			this.logicAdaptersWidget.getSlider().setValue(logicAdapterCount);
 		}
 
-		public boolean isUseReactorGlass()
-		{
-			return this.useReactorGlassCheckBox.isSelected();
-		}
-
-		public void setUseReactorGlass(boolean useReactorGlass)
-		{
-			this.useReactorGlassCheckBox.setSelected(useReactorGlass);
-		}
-
 		public long getBurnRate()
 		{
 			return this.burnRateWidget.getSlider().getValue();
@@ -436,6 +418,12 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		public int getDimensionHeightMax()
 		{
 			return 18;
+		}
+
+		@Override
+		public Block getGlassBlock()
+		{
+			return GeneratorsBlocks.REACTOR_GLASS.getBlock();
 		}
 
 	}

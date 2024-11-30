@@ -25,6 +25,7 @@ import mekanism.generators.common.registries.GeneratorsBlocks;
 import mekanism.generators.common.registries.GeneratorsItems;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.StringTextComponent;
@@ -78,7 +79,6 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 	public static class FusionReactorCategoryWidget extends MultiblockWidget
 	{
-		protected CheckBoxWidget useReactorGlassCheckBox;
 		protected CheckBoxWidget waterCooledCheckBox;
 		protected IntSliderWithButtons portsWidget;
 		protected IntSliderWithButtons logicAdaptersWidget;
@@ -94,8 +94,6 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useReactorGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.REACTOR_GLASS.getItemStack().getHoverName()), true));
-			this.useReactorGlassCheckBox.addSelectedChangedHandler(this::onUseReactorGlassChanged);
 			consumer.accept(this.waterCooledCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.water_cooled"), false));
 			this.waterCooledCheckBox.addSelectedChangedHandler(this::onWaterCooledChanged);
 			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 0, 0));
@@ -164,11 +162,6 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			this.markNeedUpdate();
 		}
 
-		protected void onUseReactorGlassChanged(boolean useReactorGlass)
-		{
-			this.markNeedUpdate();
-		}
-
 		protected void onInjectionRateChanged(int injectionRate)
 		{
 			this.markNeedUpdate();
@@ -213,17 +206,17 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			sides -= logicAdapter;
 
 			int frames = 0;
-			int reactorGlasses = 0;
+			int glasses = 0;
 
-			if (this.isUseReactorGlass())
+			if (this.isUseGlass())
 			{
 				frames = corners;
-				reactorGlasses = sides;
+				glasses = sides;
 			}
 			else
 			{
 				frames = corners + sides;
-				reactorGlasses = 0;
+				glasses = 0;
 			}
 
 			consumer.accept(new ItemStack(GeneratorsBlocks.FUSION_REACTOR_CONTROLLER));
@@ -231,7 +224,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			consumer.accept(new ItemStack(GeneratorsBlocks.FUSION_REACTOR_PORT, ports));
 			consumer.accept(new ItemStack(GeneratorsBlocks.FUSION_REACTOR_LOGIC_ADAPTER, logicAdapter));
 			consumer.accept(new ItemStack(GeneratorsBlocks.LASER_FOCUS_MATRIX));
-			consumer.accept(new ItemStack(GeneratorsBlocks.REACTOR_GLASS, reactorGlasses));
+			consumer.accept(new ItemStack(this.getGlassBlock(), glasses));
 		}
 
 		@Override
@@ -308,16 +301,6 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			this.logicAdaptersWidget.getSlider().setValue(logicAdapterCount);
 		}
 
-		public boolean isUseReactorGlass()
-		{
-			return this.useReactorGlassCheckBox.isSelected();
-		}
-
-		public void setUseReactorGlass(boolean useReactorGlass)
-		{
-			this.useReactorGlassCheckBox.setSelected(useReactorGlass);
-		}
-
 		public int getInjectionRate()
 		{
 			return this.injectionRateWidget.getSlider().getValue();
@@ -372,6 +355,12 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		public int getDimensionHeightMax()
 		{
 			return 5;
+		}
+
+		@Override
+		public Block getGlassBlock()
+		{
+			return GeneratorsBlocks.REACTOR_GLASS.getBlock();
 		}
 
 	}

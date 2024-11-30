@@ -22,6 +22,7 @@ import mekanism.common.registries.MekanismGases.Coolants;
 import mekanism.common.util.HeatUtils;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
@@ -62,7 +63,6 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 
 	public static class BoilerWidget extends MultiblockWidget
 	{
-		protected CheckBoxWidget useStructuralGlassCheckBox;
 		protected CheckBoxWidget forSodiumCoolingCheckBox;
 		protected IntSliderWithButtons valvesWidget;
 		protected IntSliderWithButtons steamHeightWidget;
@@ -75,8 +75,6 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 		{
 			super.collectOtherConfigs(consumer);
 
-			consumer.accept(this.useStructuralGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", MekanismBlocks.STRUCTURAL_GLASS.getItemStack().getHoverName()), true));
-			this.useStructuralGlassCheckBox.addSelectedChangedHandler(this::onUseStructuralGlassChanged);
 			consumer.accept(this.forSodiumCoolingCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.for_sodium_cooling"), false));
 			this.forSodiumCoolingCheckBox.addSelectedChangedHandler(this::onForSodiumCoolingChanged);
 
@@ -204,11 +202,6 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			this.markNeedUpdate();
 		}
 
-		protected void onUseStructuralGlassChanged(boolean useStructuralGlass)
-		{
-			this.markNeedUpdate();
-		}
-
 		protected void onForSodiumCoolingChanged(boolean forSodiumCooling)
 		{
 			this.updateSlidersLimit();
@@ -232,12 +225,12 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			sides -= valves;
 
 			int casing = 0;
-			int structuralGlasses = 0;
+			int glasses = 0;
 
-			if (this.isUseStruturalGlass())
+			if (this.isUseGlass())
 			{
 				casing = corners;
-				structuralGlasses = sides;
+				glasses = sides;
 			}
 			else
 			{
@@ -246,7 +239,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 
 			consumer.accept(new ItemStack(MekanismBlocks.BOILER_CASING, casing));
 			consumer.accept(new ItemStack(MekanismBlocks.BOILER_VALVE, valves));
-			consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS, structuralGlasses));
+			consumer.accept(new ItemStack(this.getGlassBlock(), glasses));
 
 			consumer.accept(new ItemStack(MekanismBlocks.PRESSURE_DISPERSER, this.getPressureDispenserCount()));
 			CostWidget heatingElements = consumer.accept(new ItemStack(MekanismBlocks.SUPERHEATING_ELEMENT, this.getHeatingElementCount()));
@@ -406,16 +399,6 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			this.valvesWidget.getSlider().setValue(valveCount);
 		}
 
-		public boolean isUseStruturalGlass()
-		{
-			return this.useStructuralGlassCheckBox.isSelected();
-		}
-
-		public void setUseStructuralGlass(boolean useStructuralGlass)
-		{
-			this.useStructuralGlassCheckBox.setSelected(useStructuralGlass);
-		}
-
 		public boolean isForSodiumCooling()
 		{
 			return this.forSodiumCoolingCheckBox.isSelected();
@@ -480,6 +463,12 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 		public int getDimensionHeightMax()
 		{
 			return 18;
+		}
+
+		@Override
+		public Block getGlassBlock()
+		{
+			return MekanismBlocks.STRUCTURAL_GLASS.getBlock();
 		}
 
 	}
