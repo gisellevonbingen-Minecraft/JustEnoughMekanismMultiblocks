@@ -17,6 +17,9 @@ public class ClientConfig
 	public final BooleanValue fissionReactorVisible;
 	public final BooleanValue fusionReactorVisible;
 
+	public final BooleanValue extraMatrixVisible;
+	public final BooleanValue naquadahReactorVisible;
+
 	public ClientConfig()
 	{
 		ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -57,6 +60,17 @@ public class ClientConfig
 
 		builder.comment("JEI 'Building [Fusion Reactor]' page configuration").push("fusion_reactor");
 		this.fusionReactorVisible = builder.comment("Set page visibility").define("visible", true);
+		builder.pop();
+
+		builder.pop();
+
+		builder.push("mekanism_extras");
+		builder.comment("JEI 'Building [Reinforced Induction Matrix]' page configuration").push("extra_matrix");
+		this.extraMatrixVisible = builder.comment("Set page visibility").define("visible", true);
+		builder.pop();
+
+		builder.comment("JEI 'Building [Naquadah Reactor]' page configuration").push("naquadah_reacto");
+		this.naquadahReactorVisible = builder.comment("Set page visibility").define("visible", true);
 		builder.pop();
 
 		builder.pop();
