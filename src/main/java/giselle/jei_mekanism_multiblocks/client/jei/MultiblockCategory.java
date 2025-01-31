@@ -11,6 +11,7 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -19,6 +20,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -118,6 +120,12 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 
 		}
 
+	}
+
+	@Override
+	public void createRecipeExtras(IRecipeExtrasBuilder builder, WIDGET widget, IFocusGroup focuses)
+	{
+		builder.addGuiEventListener(new WidgetInputHandler(widget, new ScreenRectangle(0, 0, widget.getWidth(), widget.getHeight())));
 	}
 
 	@Override

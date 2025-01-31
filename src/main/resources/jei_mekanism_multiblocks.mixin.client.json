@@ -5,7 +5,6 @@
 	"compatibilityLevel": "JAVA_17",
 	"client": [
 		"minecraft.TooltipMixin",
-		"jei.RecipeGuiLayoutsAccessor",
 		"jei.RecipeGuiLogicAccessor",
 		"jei.RecipesGuiMixin"
 	],
