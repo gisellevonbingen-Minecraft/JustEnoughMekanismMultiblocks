@@ -26,6 +26,10 @@ repositories {
         name "CurseForge"
         url "https://www.cursemaven.com"
     }
+    maven {
+        name "TerraformersMC"
+        url "https://maven.terraformersmc.com/"
+    }
 }
 
 runs {
@@ -71,6 +75,7 @@ dependencies {
     // Runtiem Only
     // runtimeOnly "curse.maven:refined-storage-243076:${refined_storage_file}"
     runtimeOnly "curse.maven:jade-324717:${jade_file}"
+    runtimeOnly "dev.emi:emi-neoforge:${emi_version}+${mc_version}"
 }
 
 tasks.withType(ProcessResources).configureEach {
