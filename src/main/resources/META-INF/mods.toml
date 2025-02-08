@@ -27,9 +27,15 @@ issueTrackerURL="${mod_issues}"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
+    modId="jei"
+    mandatory=true
+    versionRange="[0,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
     modId="mekanism"
     mandatory=true
     versionRange="${mekanism_version_range}"
     ordering="NONE"
     side="BOTH"
-    
