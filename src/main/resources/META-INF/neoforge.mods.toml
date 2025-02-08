@@ -33,14 +33,14 @@ config="${mod_id}.mixin.common.json"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
-    modId="mekanism"
+    modId="jei"
     type="required"
-    versionRange="${mekanism_version_range}"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
-    modId="jei"
+    modId="mekanism"
     type="required"
+    versionRange="${mekanism_version_range}"
     ordering="NONE"
     side="BOTH"
