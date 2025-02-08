@@ -92,6 +92,10 @@ repositories {
         name "ModMaven"
         url "https://modmaven.dev"
     }
+    maven {
+        name "TerraformersMC"
+        url "https://maven.terraformersmc.com/"
+    }
 }
 
 dependencies {
@@ -112,6 +116,7 @@ dependencies {
     // Runtiem Only
     runtimeOnly fg.deobf("curse.maven:refined-storage-243076:${refined_storage_file}")
     runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_file}")
+    runtimeOnly fg.deobf("dev.emi:emi-forge:${emi_version}+${mc_version}")
 }
 
 mixin {

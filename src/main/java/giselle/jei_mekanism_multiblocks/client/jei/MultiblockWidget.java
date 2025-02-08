@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import giselle.jei_mekanism_multiblocks.client.IRecipeLogicStateListener;
+import giselle.jei_mekanism_multiblocks.client.JEI_MekanismMultiblocks_Client;
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.ContainerWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
@@ -196,6 +197,37 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	protected void collectResult(Consumer<AbstractWidget> consumer)
 	{
+
+	}
+
+	private double pInputMouseX = 0.0D;
+	private double pInputMouseY = 0.0D;
+
+	public void updateInput(double pMouseX, double pMouseY)
+	{
+		if (JEI_MekanismMultiblocks_Client.PRESSED)
+		{
+			this.pInputMouseX = pMouseX;
+			this.pInputMouseY = pMouseY;
+			this.mouseClicked(pMouseX, pMouseY, 0);
+		}
+
+		if (JEI_MekanismMultiblocks_Client.RELEASED)
+		{
+			this.mouseReleased(pMouseX, pMouseY, 0);
+		}
+
+		if (JEI_MekanismMultiblocks_Client.DRAGGED)
+		{
+			this.mouseDragged(pMouseX, pMouseY, 0, pMouseX - this.pInputMouseX, pMouseY - this.pInputMouseY);
+		}
+
+		double scrolled = JEI_MekanismMultiblocks_Client.SCROLLED;
+
+		if (scrolled != 0.0D)
+		{
+			this.mouseScrolled(pMouseX, pMouseY, scrolled);
+		}
 
 	}
 
