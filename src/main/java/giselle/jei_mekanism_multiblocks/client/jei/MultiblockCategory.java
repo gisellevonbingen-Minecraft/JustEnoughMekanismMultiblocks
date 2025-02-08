@@ -32,7 +32,7 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 	private final IDrawable icon;
 	private final IDrawable background;
 	private final Component title;
-
+	
 	public MultiblockCategory(IGuiHelper helper, ResourceLocation name, Class<? extends WIDGET> clazz, Component multiblockName, ItemStack icon)
 	{
 		this(helper, name, clazz, multiblockName, helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, icon));
