@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.platform.InputConstants.Key;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
@@ -98,39 +96,9 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 	{
 		Minecraft minecraft = Minecraft.getInstance();
 		float partialTicks = minecraft.getDeltaFrameTime();
+		widget.updateInput(mouseX, mouseY);
 		widget.render(pPoseStack, (int) mouseX, (int) mouseY, partialTicks);
 		widget.renderToolTip(pPoseStack, (int) mouseX, (int) mouseY);
-	}
-
-	@Override
-	public boolean handleInput(WIDGET widget, double mouseX, double mouseY, Key input)
-	{
-		if (input.getType() == InputConstants.Type.MOUSE)
-		{
-			// return widget.mouseClicked(mouseX, mouseY, input.getValue());
-		}
-
-		return IRecipeCategory.super.handleInput(widget, mouseX, mouseY, input);
-	}
-
-	public boolean handleMousePress(MultiblockWidget widget, double mouseX, double mouseY, int button)
-	{
-		return widget.mouseClicked(mouseX, mouseY, button);
-	}
-
-	public boolean handleScroll(WIDGET widget, double mouseX, double mouseY, double delta)
-	{
-		return widget.mouseScrolled(mouseX, mouseY, delta);
-	}
-
-	public boolean handleDrag(WIDGET widget, double mouseX, double mouseY, int mouseButton, double dragX, double dragY)
-	{
-		return widget.mouseDragged(mouseX, mouseY, mouseButton, dragX, dragY);
-	}
-
-	public boolean handleReleased(WIDGET widget, double mouseX, double mouseY, int mouseButton)
-	{
-		return widget.mouseReleased(mouseX, mouseY, mouseButton);
 	}
 
 	@Override

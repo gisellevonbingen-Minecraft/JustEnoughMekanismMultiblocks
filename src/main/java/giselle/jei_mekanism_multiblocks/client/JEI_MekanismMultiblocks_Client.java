@@ -1,13 +1,5 @@
 package giselle.jei_mekanism_multiblocks.client;
 
-import java.util.Collections;
-import java.util.List;
-
-import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
-import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
-import mezz.jei.api.gui.IRecipeLayoutDrawable;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.Rect2i;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -15,96 +7,60 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class JEI_MekanismMultiblocks_Client
 {
+	public static boolean PRESSED;
+	public static boolean RELEASED;
+	public static boolean DRAGGED;
+	public static double SCROLLED;
+
 	public static void init()
 	{
 		IEventBus forge_bus = MinecraftForge.EVENT_BUS;
 		forge_bus.register(JEI_MekanismMultiblocks_Client.class);
 	}
 
-	@FunctionalInterface
-	public static interface MouseInputHandler
+	@SubscribeEvent
+	public static void onScreenRenderPre(ScreenEvent.Render.Post e)
 	{
-		void handle(MultiblockCategory<MultiblockWidget> category, MultiblockWidget widget, double mouseX, double mouseY);
+		PRESSED = false;
+		RELEASED = false;
+		DRAGGED = false;
+		SCROLLED = 0.0D;
 	}
 
 	@SubscribeEvent
-	public static void onMousePress(ScreenEvent.MouseButtonPressed.Pre e)
+	public static void onMouseButtonPressed(ScreenEvent.MouseButtonPressed.Pre e)
 	{
-		foreachMouseInput(e, e.getMouseX(), e.getMouseY(), (category, widget, mouseX, mouseY) ->
+		if (e.getButton() == 0)
 		{
-			category.handleMousePress(widget, mouseX, mouseY, e.getButton());
-		});
-
-	}
-
-	@SubscribeEvent
-	public static void onMouseScroll(ScreenEvent.MouseScrolled.Pre e)
-	{
-		foreachMouseInput(e, e.getMouseX(), e.getMouseY(), (category, widget, mouseX, mouseY) ->
-		{
-			category.handleScroll(widget, mouseX, mouseY, e.getScrollDelta());
-		});
-
-	}
-
-	@SubscribeEvent
-	public static void onMouseDrag(ScreenEvent.MouseDragged.Pre e)
-	{
-		foreachMouseInput(e, e.getMouseX(), e.getMouseY(), (category, widget, mouseX, mouseY) ->
-		{
-			category.handleDrag(widget, mouseX, mouseY, e.getMouseButton(), e.getDragX(), e.getDragY());
-		});
-
-	}
-
-	@SubscribeEvent
-	public static void onMouseReleased(ScreenEvent.MouseButtonReleased.Pre e)
-	{
-		foreachMouseInput(e, e.getMouseX(), e.getMouseY(), (category, widget, mouseX, mouseY) ->
-		{
-			category.handleReleased(widget, mouseX, mouseY, e.getButton());
-		});
-
-	}
-
-	public static void foreachMouseInput(ScreenEvent e, double mouseX, double mouseY, MouseInputHandler handler)
-	{
-		Screen screen = e.getScreen();
-
-		if (screen.isMouseOver(mouseX, mouseY))
-		{
-			getRecipeLayouts(screen).forEach(pair ->
-			{
-				IRecipeLayoutDrawable<MultiblockWidget> recipeLayout = pair.getRecipeLayout();
-
-				if (recipeLayout.isMouseOver(mouseX, mouseY))
-				{
-					Rect2i rect = recipeLayout.getRect();
-					double recipeMouseX = mouseX - rect.getX();
-					double recipeMouseY = mouseY - rect.getY();
-					handler.handle(pair.getRecipeCategory(), recipeLayout.getRecipe(), recipeMouseX, recipeMouseY);
-				}
-
-			});
-
+			PRESSED = true;
 		}
 
 	}
 
-	@SuppressWarnings("unchecked")
-	public static List<RecipeLayoutWithCategory<MultiblockCategory<MultiblockWidget>, MultiblockWidget>> getRecipeLayouts(Screen screen)
+	@SubscribeEvent
+	public static void onMouseButtonReleased(ScreenEvent.MouseButtonReleased.Pre e)
 	{
-		if (screen instanceof IRecipeLayoutHolder holder)
+		if (e.getButton() == 0)
 		{
-			return holder.jei_mekanism_multiblocks$getRecipeLayouts().stream()//
-					.filter(recipeLayout -> recipeLayout.getRecipeCategory() instanceof MultiblockCategory<?>)//
-					.map(recipeLayout -> new RecipeLayoutWithCategory<>((IRecipeLayoutDrawable<MultiblockWidget>) recipeLayout, (MultiblockCategory<MultiblockWidget>) recipeLayout.getRecipeCategory())).toList();
-		}
-		else
-		{
-			return Collections.emptyList();
+			RELEASED = true;
 		}
 
+	}
+
+	@SubscribeEvent
+	public static void onMouseDragged(ScreenEvent.MouseDragged.Pre e)
+	{
+		if (e.getMouseButton() == 0)
+		{
+			DRAGGED = true;
+		}
+
+	}
+
+	@SubscribeEvent
+	public static void onMouseScrolled(ScreenEvent.MouseScrolled.Pre e)
+	{
+		SCROLLED = e.getScrollDelta();
 	}
 
 }
