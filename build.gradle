@@ -68,7 +68,7 @@ dependencies {
     implementation "mekanism:Mekanism:${mc_version}-${mekanism_version}:generators"
     runtimeOnly "mekanism:Mekanism:${mc_version}-${mekanism_version}:additions"
     runtimeOnly "mekanism:Mekanism:${mc_version}-${mekanism_version}:tools"
-    implementation "curse.maven:mekanism-extras-1026040:${mekanism_extra_file}"
+    compileOnly "curse.maven:mekanism-extras-1026040:${mekanism_extra_file}"
 
     implementation "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
 
