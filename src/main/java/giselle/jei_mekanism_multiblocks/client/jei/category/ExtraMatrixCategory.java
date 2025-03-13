@@ -22,25 +22,25 @@ public class ExtraMatrixCategory extends MultiblockCategory<ExtraMatrixCategory.
 {
 	public ExtraMatrixCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismExtras.rl("matrix"), MatrixWidget.class, Component.translatable("text.jei_mekanism_multiblocks.building.extra_matrix"), ExtraBlocks.REINFORCED_INDUCTION_PORT.getItemStack());
+		super(helper, MekanismExtras.rl("matrix"), MatrixWidget.class, Component.translatable("text.jei_mekanism_multiblocks.building.extra_matrix"), new ItemStack(ExtraBlocks.REINFORCED_INDUCTION_PORT));
 	}
 
 	@Override
 	protected void getRecipeCatalystItemStacks(Consumer<ItemStack> consumer)
 	{
 		super.getRecipeCatalystItemStacks(consumer);
-		consumer.accept(ExtraBlocks.REINFORCED_INDUCTION_CASING.getItemStack());
-		consumer.accept(ExtraBlocks.REINFORCED_INDUCTION_PORT.getItemStack());
-		consumer.accept(MekanismBlocks.STRUCTURAL_GLASS.getItemStack());
+		consumer.accept(new ItemStack(ExtraBlocks.REINFORCED_INDUCTION_CASING));
+		consumer.accept(new ItemStack(ExtraBlocks.REINFORCED_INDUCTION_PORT));
+		consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS));
 
-		consumer.accept(ExtraBlocks.ABSOLUTE_INDUCTION_CELL.getItemStack());
-		consumer.accept(ExtraBlocks.ABSOLUTE_INDUCTION_PROVIDER.getItemStack());
-		consumer.accept(ExtraBlocks.SUPREME_INDUCTION_CELL.getItemStack());
-		consumer.accept(ExtraBlocks.SUPREME_INDUCTION_PROVIDER.getItemStack());
-		consumer.accept(ExtraBlocks.COSMIC_INDUCTION_CELL.getItemStack());
-		consumer.accept(ExtraBlocks.COSMIC_INDUCTION_PROVIDER.getItemStack());
-		consumer.accept(ExtraBlocks.INFINITE_INDUCTION_CELL.getItemStack());
-		consumer.accept(ExtraBlocks.INFINITE_INDUCTION_PROVIDER.getItemStack());
+		consumer.accept(new ItemStack(ExtraBlocks.ABSOLUTE_INDUCTION_CELL));
+		consumer.accept(new ItemStack(ExtraBlocks.ABSOLUTE_INDUCTION_PROVIDER));
+		consumer.accept(new ItemStack(ExtraBlocks.SUPREME_INDUCTION_CELL));
+		consumer.accept(new ItemStack(ExtraBlocks.SUPREME_INDUCTION_PROVIDER));
+		consumer.accept(new ItemStack(ExtraBlocks.COSMIC_INDUCTION_CELL));
+		consumer.accept(new ItemStack(ExtraBlocks.COSMIC_INDUCTION_PROVIDER));
+		consumer.accept(new ItemStack(ExtraBlocks.INFINITE_INDUCTION_CELL));
+		consumer.accept(new ItemStack(ExtraBlocks.INFINITE_INDUCTION_PROVIDER));
 	}
 
 	public static class MatrixWidget extends MultiblockWidget
@@ -172,7 +172,7 @@ public class ExtraMatrixCategory extends MultiblockCategory<ExtraMatrixCategory.
 		@Override
 		public Block getGlassBlock()
 		{
-			return MekanismBlocks.STRUCTURAL_GLASS.getBlock();
+			return MekanismBlocks.STRUCTURAL_GLASS.get();
 		}
 
 	}

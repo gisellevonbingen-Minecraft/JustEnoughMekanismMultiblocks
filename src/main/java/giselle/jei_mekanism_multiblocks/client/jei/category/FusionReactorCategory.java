@@ -38,25 +38,25 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 {
 	public FusionReactorCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismGenerators.rl("fusion_reactor"), FusionReactorCategoryWidget.class, GeneratorsLang.FUSION_REACTOR.translate(), GeneratorsBlocks.FUSION_REACTOR_CONTROLLER.getItemStack());
+		super(helper, MekanismGenerators.rl("fusion_reactor"), FusionReactorCategoryWidget.class, GeneratorsLang.FUSION_REACTOR.translate(), new ItemStack(GeneratorsBlocks.FUSION_REACTOR_CONTROLLER));
 	}
 
 	@Override
 	protected void getRecipeCatalystItemStacks(Consumer<ItemStack> consumer)
 	{
 		super.getRecipeCatalystItemStacks(consumer);
-		consumer.accept(GeneratorsBlocks.FUSION_REACTOR_CONTROLLER.getItemStack());
-		consumer.accept(GeneratorsBlocks.FUSION_REACTOR_FRAME.getItemStack());
-		consumer.accept(GeneratorsBlocks.FUSION_REACTOR_PORT.getItemStack());
-		consumer.accept(GeneratorsBlocks.FUSION_REACTOR_LOGIC_ADAPTER.getItemStack());
-		consumer.accept(GeneratorsBlocks.LASER_FOCUS_MATRIX.getItemStack());
-		consumer.accept(GeneratorsBlocks.REACTOR_GLASS.getItemStack());
+		consumer.accept(new ItemStack(GeneratorsBlocks.FUSION_REACTOR_CONTROLLER));
+		consumer.accept(new ItemStack(GeneratorsBlocks.FUSION_REACTOR_FRAME));
+		consumer.accept(new ItemStack(GeneratorsBlocks.FUSION_REACTOR_PORT));
+		consumer.accept(new ItemStack(GeneratorsBlocks.FUSION_REACTOR_LOGIC_ADAPTER));
+		consumer.accept(new ItemStack(GeneratorsBlocks.LASER_FOCUS_MATRIX));
+		consumer.accept(new ItemStack(GeneratorsBlocks.REACTOR_GLASS));
 
-		List<Chemical> fusionFuelChemicals = MekanismAPI.CHEMICAL_REGISTRY.getTag(GeneratorTags.Chemicals.FUSION_FUEL).stream().flatMap(Named<Chemical>::stream).map(Holder<Chemical>::value).toList();
+		List<Holder<Chemical>> fusionFuelChemicals = MekanismAPI.CHEMICAL_REGISTRY.getTag(GeneratorTags.Chemicals.FUSION_FUEL).stream().flatMap(Named<Chemical>::stream).toList();
 
-		for (Chemical chemical : fusionFuelChemicals)
+		for (Holder<Chemical> chemical : fusionFuelChemicals)
 		{
-			consumer.accept(ChemicalUtil.getFilledVariant(GeneratorsItems.HOHLRAUM.getItemStack(), chemical));
+			consumer.accept(ChemicalUtil.getFilledVariant(new ItemStack(GeneratorsItems.HOHLRAUM.get()), chemical));
 		}
 
 	}
@@ -344,7 +344,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		@Override
 		public Block getGlassBlock()
 		{
-			return GeneratorsBlocks.REACTOR_GLASS.getBlock();
+			return GeneratorsBlocks.REACTOR_GLASS.get();
 		}
 
 	}

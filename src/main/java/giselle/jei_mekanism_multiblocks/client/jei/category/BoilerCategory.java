@@ -2,6 +2,8 @@ package giselle.jei_mekanism_multiblocks.client.jei.category;
 
 import java.util.function.Consumer;
 
+import org.jetbrains.annotations.Nullable;
+
 import giselle.jei_mekanism_multiblocks.client.TooltipHelper;
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
@@ -11,6 +13,8 @@ import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
+import mekanism.api.datamaps.IMekanismDataMapTypes;
+import mekanism.api.datamaps.chemical.attribute.HeatedCoolant;
 import mekanism.api.heat.HeatAPI;
 import mekanism.api.math.MathUtils;
 import mekanism.common.Mekanism;
@@ -19,7 +23,6 @@ import mekanism.common.config.MekanismConfig;
 import mekanism.common.content.boiler.BoilerMultiblockData;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.registries.MekanismChemicals;
-import mekanism.common.registries.MekanismChemicals.Coolants;
 import mekanism.common.util.HeatUtils;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.ChatFormatting;
@@ -36,18 +39,18 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 {
 	public BoilerCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("boiler"), BoilerWidget.class, MekanismLang.BOILER.translate(), MekanismBlocks.BOILER_VALVE.getItemStack());
+		super(helper, Mekanism.rl("boiler"), BoilerWidget.class, MekanismLang.BOILER.translate(), new ItemStack(MekanismBlocks.BOILER_VALVE));
 	}
 
 	@Override
 	protected void getRecipeCatalystItemStacks(Consumer<ItemStack> consumer)
 	{
 		super.getRecipeCatalystItemStacks(consumer);
-		consumer.accept(MekanismBlocks.BOILER_CASING.getItemStack());
-		consumer.accept(MekanismBlocks.BOILER_VALVE.getItemStack());
-		consumer.accept(MekanismBlocks.PRESSURE_DISPERSER.getItemStack());
-		consumer.accept(MekanismBlocks.SUPERHEATING_ELEMENT.getItemStack());
-		consumer.accept(MekanismBlocks.STRUCTURAL_GLASS.getItemStack());
+		consumer.accept(new ItemStack(MekanismBlocks.BOILER_CASING));
+		consumer.accept(new ItemStack(MekanismBlocks.BOILER_VALVE));
+		consumer.accept(new ItemStack(MekanismBlocks.PRESSURE_DISPERSER));
+		consumer.accept(new ItemStack(MekanismBlocks.SUPERHEATING_ELEMENT));
+		consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS));
 	}
 
 	public static class BoilerWidget extends MultiblockWidget
@@ -303,7 +306,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 
 		public BoilerCoolingSimulation simulateSodiumCooling(int steamHeight, int heatingElementCount)
 		{
-			BoilerCoolingSimulation simulation = this.createSodiumCoolingSimulation(steamHeight, heatingElementCount, 0.4D, Coolants.HEATED_SODIUM_COOLANT.getThermalEnthalpy());
+			BoilerCoolingSimulation simulation = this.createSodiumCoolingSimulation(steamHeight, heatingElementCount, 0.4D, getHeatedCoolant().thermalEnthalpy());
 			simulation.cycleForStableBoil();
 
 			return simulation;
@@ -458,9 +461,14 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 		@Override
 		public Block getGlassBlock()
 		{
-			return MekanismBlocks.STRUCTURAL_GLASS.getBlock();
+			return MekanismBlocks.STRUCTURAL_GLASS.get();
 		}
 
+	}
+
+	public static @Nullable HeatedCoolant getHeatedCoolant()
+	{
+		return MekanismChemicals.SUPERHEATED_SODIUM.getData(IMekanismDataMapTypes.INSTANCE.heatedChemicalCoolant());
 	}
 
 	public static class BoilerCoolingSimulation
@@ -538,7 +546,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			double temp = this.heat / this.heatCapacity;
 
 			this.coolingRate = Math.round(this.heatedCoolantTank * this.coolantCoolingEfficiency);
-			this.coolingRate = MathUtils.clampToLong(this.coolingRate * (1.0D - (temp / HeatUtils.HEATED_COOLANT_TEMP)));
+			this.coolingRate = MathUtils.clampToLong(this.coolingRate * (1.0D - (temp / getHeatedCoolant().temperature())));
 
 			if (this.coolingRate > this.cooledCoolantTank)
 			{

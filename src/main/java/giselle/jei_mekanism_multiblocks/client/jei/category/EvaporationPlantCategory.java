@@ -30,21 +30,21 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 {
 	public EvaporationPlantCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("evaporation_plant"), EvaporationPlantWidget.class, MekanismLang.EVAPORATION_PLANT.translate(), MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getItemStack());
+		super(helper, Mekanism.rl("evaporation_plant"), EvaporationPlantWidget.class, MekanismLang.EVAPORATION_PLANT.translate(), new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER));
 	}
 
 	@Override
 	protected void getRecipeCatalystItemStacks(Consumer<ItemStack> consumer)
 	{
 		super.getRecipeCatalystItemStacks(consumer);
-		consumer.accept(MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getItemStack());
-		consumer.accept(MekanismBlocks.THERMAL_EVAPORATION_VALVE.getItemStack());
-		consumer.accept(MekanismBlocks.THERMAL_EVAPORATION_BLOCK.getItemStack());
-		consumer.accept(MekanismBlocks.STRUCTURAL_GLASS.getItemStack());
+		consumer.accept(new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER));
+		consumer.accept(new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE));
+		consumer.accept(new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_BLOCK));
+		consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS));
 
 		if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
 		{
-			consumer.accept(GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR.getItemStack());
+			consumer.accept(new ItemStack(GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR));
 		}
 
 	}
@@ -74,7 +74,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 
 			if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
 			{
-				consumer.accept(this.useAdvancedSolarGeneratorCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.use_things", GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR.getItemStack().getHoverName()), true));
+				consumer.accept(this.useAdvancedSolarGeneratorCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.use_things", new ItemStack(GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR).getHoverName()), true));
 				this.useAdvancedSolarGeneratorCheckBox.addSelectedChangedHandler(this::onUseAdvancedSolarGeneratorChanged);
 			}
 			else
@@ -258,7 +258,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 		@Override
 		public Block getGlassBlock()
 		{
-			return MekanismBlocks.STRUCTURAL_GLASS.getBlock();
+			return MekanismBlocks.STRUCTURAL_GLASS.get();
 		}
 
 	}

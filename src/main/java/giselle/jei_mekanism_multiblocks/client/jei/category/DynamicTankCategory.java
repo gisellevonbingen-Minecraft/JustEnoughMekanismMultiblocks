@@ -22,16 +22,16 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 {
 	public DynamicTankCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("dynamic_tank"), DynamicTankWidget.class, MekanismLang.DYNAMIC_TANK.translate(), MekanismBlocks.DYNAMIC_VALVE.getItemStack());
+		super(helper, Mekanism.rl("dynamic_tank"), DynamicTankWidget.class, MekanismLang.DYNAMIC_TANK.translate(), new ItemStack(MekanismBlocks.DYNAMIC_VALVE));
 	}
 
 	@Override
 	protected void getRecipeCatalystItemStacks(Consumer<ItemStack> consumer)
 	{
 		super.getRecipeCatalystItemStacks(consumer);
-		consumer.accept(MekanismBlocks.DYNAMIC_TANK.getItemStack());
-		consumer.accept(MekanismBlocks.DYNAMIC_VALVE.getItemStack());
-		consumer.accept(MekanismBlocks.STRUCTURAL_GLASS.getItemStack());
+		consumer.accept(new ItemStack(MekanismBlocks.DYNAMIC_TANK));
+		consumer.accept(new ItemStack(MekanismBlocks.DYNAMIC_VALVE));
+		consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS));
 	}
 
 	public static class DynamicTankWidget extends MultiblockWidget
@@ -164,7 +164,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		@Override
 		public Block getGlassBlock()
 		{
-			return MekanismBlocks.STRUCTURAL_GLASS.getBlock();
+			return MekanismBlocks.STRUCTURAL_GLASS.get();
 		}
 
 	}

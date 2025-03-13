@@ -35,23 +35,23 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 {
 	public TurbineCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismGenerators.rl("turbine"), TurbineWidget.class, GeneratorsLang.TURBINE.translate(), GeneratorsBlocks.TURBINE_VALVE.getItemStack());
+		super(helper, MekanismGenerators.rl("turbine"), TurbineWidget.class, GeneratorsLang.TURBINE.translate(), new ItemStack(GeneratorsBlocks.TURBINE_VALVE));
 	}
 
 	@Override
 	protected void getRecipeCatalystItemStacks(Consumer<ItemStack> consumer)
 	{
 		super.getRecipeCatalystItemStacks(consumer);
-		consumer.accept(GeneratorsBlocks.TURBINE_CASING.getItemStack());
-		consumer.accept(GeneratorsBlocks.TURBINE_VALVE.getItemStack());
-		consumer.accept(GeneratorsBlocks.TURBINE_VENT.getItemStack());
-		consumer.accept(GeneratorsBlocks.ROTATIONAL_COMPLEX.getItemStack());
-		consumer.accept(GeneratorsBlocks.TURBINE_ROTOR.getItemStack());
-		consumer.accept(GeneratorsItems.TURBINE_BLADE.getItemStack());
-		consumer.accept(MekanismBlocks.PRESSURE_DISPERSER.getItemStack());
-		consumer.accept(GeneratorsBlocks.ELECTROMAGNETIC_COIL.getItemStack());
-		consumer.accept(GeneratorsBlocks.SATURATING_CONDENSER.getItemStack());
-		consumer.accept(MekanismBlocks.STRUCTURAL_GLASS.getItemStack());
+		consumer.accept(new ItemStack(GeneratorsBlocks.TURBINE_CASING));
+		consumer.accept(new ItemStack(GeneratorsBlocks.TURBINE_VALVE));
+		consumer.accept(new ItemStack(GeneratorsBlocks.TURBINE_VENT));
+		consumer.accept(new ItemStack(GeneratorsBlocks.ROTATIONAL_COMPLEX));
+		consumer.accept(new ItemStack(GeneratorsBlocks.TURBINE_ROTOR));
+		consumer.accept(new ItemStack(GeneratorsItems.TURBINE_BLADE.get()));
+		consumer.accept(new ItemStack(MekanismBlocks.PRESSURE_DISPERSER));
+		consumer.accept(new ItemStack(GeneratorsBlocks.ELECTROMAGNETIC_COIL));
+		consumer.accept(new ItemStack(GeneratorsBlocks.SATURATING_CONDENSER));
+		consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS));
 	}
 
 	public static class TurbineWidget extends MultiblockWidget
@@ -519,7 +519,7 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 		@Override
 		public Block getGlassBlock()
 		{
-			return MekanismBlocks.STRUCTURAL_GLASS.getBlock();
+			return MekanismBlocks.STRUCTURAL_GLASS.get();
 		}
 
 	}

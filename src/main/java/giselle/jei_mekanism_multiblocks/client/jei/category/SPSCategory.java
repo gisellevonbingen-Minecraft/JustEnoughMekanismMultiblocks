@@ -23,17 +23,17 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 {
 	public SPSCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("sps"), SPSWidget.class, MekanismLang.SPS.translate(), MekanismBlocks.SPS_PORT.getItemStack());
+		super(helper, Mekanism.rl("sps"), SPSWidget.class, MekanismLang.SPS.translate(), new ItemStack(MekanismBlocks.SPS_PORT));
 	}
 
 	@Override
 	protected void getRecipeCatalystItemStacks(Consumer<ItemStack> consumer)
 	{
 		super.getRecipeCatalystItemStacks(consumer);
-		consumer.accept(MekanismBlocks.SPS_CASING.getItemStack());
-		consumer.accept(MekanismBlocks.SPS_PORT.getItemStack());
-		consumer.accept(MekanismBlocks.SUPERCHARGED_COIL.getItemStack());
-		consumer.accept(MekanismBlocks.STRUCTURAL_GLASS.getItemStack());
+		consumer.accept(new ItemStack(MekanismBlocks.SPS_CASING));
+		consumer.accept(new ItemStack(MekanismBlocks.SPS_PORT));
+		consumer.accept(new ItemStack(MekanismBlocks.SUPERCHARGED_COIL));
+		consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS));
 	}
 
 	public static class SPSWidget extends MultiblockWidget
@@ -161,7 +161,7 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 		@Override
 		public Block getGlassBlock()
 		{
-			return MekanismBlocks.STRUCTURAL_GLASS.getBlock();
+			return MekanismBlocks.STRUCTURAL_GLASS.get();
 		}
 
 	}

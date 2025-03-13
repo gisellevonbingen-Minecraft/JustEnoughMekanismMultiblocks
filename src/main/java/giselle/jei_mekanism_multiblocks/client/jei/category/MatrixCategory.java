@@ -21,25 +21,25 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 {
 	public MatrixCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("matrix"), MatrixWidget.class, MekanismLang.MATRIX.translate(), MekanismBlocks.INDUCTION_PORT.getItemStack());
+		super(helper, Mekanism.rl("matrix"), MatrixWidget.class, MekanismLang.MATRIX.translate(), new ItemStack(MekanismBlocks.INDUCTION_PORT));
 	}
 
 	@Override
 	protected void getRecipeCatalystItemStacks(Consumer<ItemStack> consumer)
 	{
 		super.getRecipeCatalystItemStacks(consumer);
-		consumer.accept(MekanismBlocks.INDUCTION_CASING.getItemStack());
-		consumer.accept(MekanismBlocks.INDUCTION_PORT.getItemStack());
-		consumer.accept(MekanismBlocks.STRUCTURAL_GLASS.getItemStack());
+		consumer.accept(new ItemStack(MekanismBlocks.INDUCTION_CASING));
+		consumer.accept(new ItemStack(MekanismBlocks.INDUCTION_PORT));
+		consumer.accept(new ItemStack(MekanismBlocks.STRUCTURAL_GLASS));
 
-		consumer.accept(MekanismBlocks.BASIC_INDUCTION_CELL.getItemStack());
-		consumer.accept(MekanismBlocks.BASIC_INDUCTION_PROVIDER.getItemStack());
-		consumer.accept(MekanismBlocks.ADVANCED_INDUCTION_CELL.getItemStack());
-		consumer.accept(MekanismBlocks.ADVANCED_INDUCTION_PROVIDER.getItemStack());
-		consumer.accept(MekanismBlocks.ELITE_INDUCTION_CELL.getItemStack());
-		consumer.accept(MekanismBlocks.ELITE_INDUCTION_PROVIDER.getItemStack());
-		consumer.accept(MekanismBlocks.ULTIMATE_INDUCTION_CELL.getItemStack());
-		consumer.accept(MekanismBlocks.ULTIMATE_INDUCTION_PROVIDER.getItemStack());
+		consumer.accept(new ItemStack(MekanismBlocks.BASIC_INDUCTION_CELL));
+		consumer.accept(new ItemStack(MekanismBlocks.BASIC_INDUCTION_PROVIDER));
+		consumer.accept(new ItemStack(MekanismBlocks.ADVANCED_INDUCTION_CELL));
+		consumer.accept(new ItemStack(MekanismBlocks.ADVANCED_INDUCTION_PROVIDER));
+		consumer.accept(new ItemStack(MekanismBlocks.ELITE_INDUCTION_CELL));
+		consumer.accept(new ItemStack(MekanismBlocks.ELITE_INDUCTION_PROVIDER));
+		consumer.accept(new ItemStack(MekanismBlocks.ULTIMATE_INDUCTION_CELL));
+		consumer.accept(new ItemStack(MekanismBlocks.ULTIMATE_INDUCTION_PROVIDER));
 	}
 
 	public static class MatrixWidget extends MultiblockWidget
@@ -171,7 +171,7 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 		@Override
 		public Block getGlassBlock()
 		{
-			return MekanismBlocks.STRUCTURAL_GLASS.getBlock();
+			return MekanismBlocks.STRUCTURAL_GLASS.get();
 		}
 
 	}
