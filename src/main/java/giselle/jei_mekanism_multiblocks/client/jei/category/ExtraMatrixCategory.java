@@ -3,7 +3,7 @@ package giselle.jei_mekanism_multiblocks.client.jei.category;
 import java.util.function.Consumer;
 
 import com.jerry.mekextras.MekanismExtras;
-import com.jerry.mekextras.common.registry.ExtraBlocks;
+import com.jerry.mekextras.common.registries.ExtraBlocks;
 
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;

@@ -44,3 +44,10 @@ config="${mod_id}.mixin.common.json"
     versionRange="${mekanism_version_range}"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="mekanism_extras"
+    type="incompatible"
+    versionRange="(,1.21.1-1.2.0)"
+    ordering="NONE"
+    side="BOTH"
