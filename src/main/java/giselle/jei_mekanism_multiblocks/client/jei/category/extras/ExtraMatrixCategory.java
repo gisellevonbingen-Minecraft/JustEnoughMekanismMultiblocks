@@ -1,4 +1,4 @@
-package giselle.jei_mekanism_multiblocks.client.jei.category;
+package giselle.jei_mekanism_multiblocks.client.jei.category.extras;
 
 import java.util.function.Consumer;
 
@@ -10,6 +10,7 @@ import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import giselle.jei_mekanism_multiblocks.client.jei.category.ICostConsumer;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.TextUtils;
 import mezz.jei.api.helpers.IGuiHelper;

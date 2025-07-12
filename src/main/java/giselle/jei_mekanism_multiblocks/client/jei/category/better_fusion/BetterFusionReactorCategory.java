@@ -1,4 +1,4 @@
-package giselle.jei_mekanism_multiblocks.client.jei.category;
+package giselle.jei_mekanism_multiblocks.client.jei.category.better_fusion;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -11,6 +11,7 @@ import giselle.jei_mekanism_multiblocks.client.gui.Mod2IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import giselle.jei_mekanism_multiblocks.client.jei.category.ICostConsumer;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import igentuman.bfr.common.BetterFusionReactor;
 import igentuman.bfr.common.registries.BfrBlocks;
