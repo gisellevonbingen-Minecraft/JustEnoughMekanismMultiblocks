@@ -342,7 +342,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		return this.heightWidget.getSlider().getValue();
 	}
 
-	public void seDimensionHeight(int height)
+	public void setDimensionHeight(int height)
 	{
 		this.heightWidget.getSlider().setValue(height);
 	}

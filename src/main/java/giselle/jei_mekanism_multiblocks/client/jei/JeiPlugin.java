@@ -113,8 +113,8 @@ public class JeiPlugin implements IModPlugin
 		{
 			try
 			{
-				Object recipe = category.getRecipeClass().getDeclaredConstructor().newInstance();
-				registration.addRecipes(Collections.singleton(recipe), category.getUid());
+				Object widget = category.getRecipeClass().getDeclaredConstructor().newInstance();
+				registration.addRecipes(Collections.singleton(widget), category.getUid());
 			}
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
 			{
