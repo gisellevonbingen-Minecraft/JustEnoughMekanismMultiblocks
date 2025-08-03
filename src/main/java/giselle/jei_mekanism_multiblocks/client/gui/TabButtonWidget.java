@@ -19,7 +19,6 @@ public class TabButtonWidget extends ButtonWidget
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void renderButton(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks)
 	{
 		Minecraft minecraft = Minecraft.getInstance();

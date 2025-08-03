@@ -55,7 +55,6 @@ public class SliderWidget extends Widget
 		return 0;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void renderButton(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks)
 	{
@@ -82,7 +81,6 @@ public class SliderWidget extends Widget
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	protected void renderBg(MatrixStack pMatrixStack, Minecraft pMinecraft, int pMouseX, int pMouseY)
 	{
 		if (!this.active)
