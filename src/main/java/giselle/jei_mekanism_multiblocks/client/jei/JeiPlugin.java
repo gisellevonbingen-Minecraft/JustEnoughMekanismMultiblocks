@@ -123,8 +123,8 @@ public class JeiPlugin implements IModPlugin
 			{
 				@SuppressWarnings("unchecked")
 				RecipeType<MultiblockWidget> recipeType = (RecipeType<MultiblockWidget>) category.getRecipeType();
-				MultiblockWidget recipe = recipeType.getRecipeClass().getDeclaredConstructor().newInstance();
-				registration.addRecipes(recipeType, Arrays.asList(recipe));
+				MultiblockWidget widget = recipeType.getRecipeClass().getDeclaredConstructor().newInstance();
+				registration.addRecipes(recipeType, Arrays.asList(widget));
 			}
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
 			{

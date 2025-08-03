@@ -143,7 +143,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			if (preferredSteamHeight > 0)
 			{
 				this.setSteamHeight(preferredSteamHeight);
-				this.SetHeatingElementCount(preferredHeatingElementCount);
+				this.setHeatingElementCount(preferredHeatingElementCount);
 			}
 		}
 
@@ -417,7 +417,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			return this.heatingElementsWidget.getSlider().getValue();
 		}
 
-		public void SetHeatingElementCount(int heatingElementCount)
+		public void setHeatingElementCount(int heatingElementCount)
 		{
 			this.heatingElementsWidget.getSlider().setValue(heatingElementCount);
 		}
