@@ -15,6 +15,7 @@ import giselle.jei_mekanism_multiblocks.client.jei.category.FusionReactorCategor
 import giselle.jei_mekanism_multiblocks.client.jei.category.MatrixCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.SPSCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.TurbineCategory;
+import giselle.jei_mekanism_multiblocks.client.jei.category.better_fusion.BetterFusionReactorCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.extras.ExtraMatrixCategory;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
 import giselle.jei_mekanism_multiblocks.common.config.ClientConfig;
@@ -71,6 +72,11 @@ public class JeiPlugin implements IModPlugin
 			this.addCategory(config.turbineVisible, () -> new TurbineCategory(guiHelper));
 			this.addCategory(config.fissionReactorVisible, () -> new FissionReactorCategory(guiHelper));
 			this.addCategory(config.fusionReactorVisible, () -> new FusionReactorCategory(guiHelper));
+		}
+
+		if (JEI_MekanismMultiblocks.BetterFusionReactorLoaded)
+		{
+			this.addCategory(config.betterFusionVisible, () -> new BetterFusionReactorCategory(guiHelper));
 		}
 
 		if (JEI_MekanismMultiblocks.MekanismExtrasLoaded)
