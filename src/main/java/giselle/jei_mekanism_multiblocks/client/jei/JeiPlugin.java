@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-import giselle.jei_mekanism_multiblocks.client.jei.category.BetterFusionReactorCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.BoilerCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.DynamicTankCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.EvaporationPlantCategory;
@@ -15,6 +14,7 @@ import giselle.jei_mekanism_multiblocks.client.jei.category.FusionReactorCategor
 import giselle.jei_mekanism_multiblocks.client.jei.category.MatrixCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.SPSCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.TurbineCategory;
+import giselle.jei_mekanism_multiblocks.client.jei.category.better_fusion.BetterFusionReactorCategory;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
 import giselle.jei_mekanism_multiblocks.common.config.ClientConfig;
 import giselle.jei_mekanism_multiblocks.common.config.JEI_MekanismMultiblocks_Config;
