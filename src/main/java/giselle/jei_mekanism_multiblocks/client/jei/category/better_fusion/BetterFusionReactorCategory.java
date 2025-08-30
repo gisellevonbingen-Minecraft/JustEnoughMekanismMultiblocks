@@ -26,6 +26,7 @@ import mekanism.generators.common.config.MekanismGeneratorsConfig;
 import mekanism.generators.common.registries.GeneratorsItems;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -93,6 +94,28 @@ public class BetterFusionReactorCategory extends MultiblockCategory<BetterFusion
 
 			this.updatePortsSliderLimit();
 			this.updateInjectionRateInfoMessage();
+		}
+
+		@Override
+		public void load(CompoundTag tag)
+		{
+			super.load(tag);
+
+			this.setWaterCooled(tag.getBoolean("WaterCooled"));
+			this.setPortCount(tag.getInt("PortCount"));
+			this.setLogicAdapterCount(tag.getInt("LogicAdapterCount"));
+			this.setInjectionRate(tag.getInt("InjectionRate"));
+		}
+
+		@Override
+		public void save(CompoundTag tag)
+		{
+			super.save(tag);
+
+			tag.putBoolean("WaterCooled", this.isWaterCooled());
+			tag.putInt("PortCount", this.getPortCount());
+			tag.putInt("LogicAdapterCount", this.getLogicAdapterCount());
+			tag.putInt("InjectionRate", this.getInjectionRate());
 		}
 
 		@Override

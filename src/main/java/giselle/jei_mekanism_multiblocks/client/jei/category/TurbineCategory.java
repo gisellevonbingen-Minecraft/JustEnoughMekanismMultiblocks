@@ -26,6 +26,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
@@ -106,6 +107,28 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 
 			this.updateRotorsSliderLimit();
+		}
+
+		@Override
+		public void load(CompoundTag tag)
+		{
+			super.load(tag);
+
+			this.setRotorCount(tag.getInt("RotorCount"));
+			this.setVentCount(tag.getInt("VentCount"));
+			this.setCondenserCount(tag.getInt("CondenserCount"));
+			this.setValveCount(tag.getInt("ValveCount"));
+		}
+
+		@Override
+		public void save(CompoundTag tag)
+		{
+			super.save(tag);
+
+			tag.putInt("RotorCount", this.getRotorCount());
+			tag.putInt("VentCount", this.getVentCount());
+			tag.putInt("CondenserCount", this.getCondenserCount());
+			tag.putInt("ValveCount", this.getValveCount());
 		}
 
 		@Override

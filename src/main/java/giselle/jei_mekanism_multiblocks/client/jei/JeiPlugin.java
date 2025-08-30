@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
+import giselle.jei_mekanism_multiblocks.client.JEI_MekanismMultiblocks_Client;
+import giselle.jei_mekanism_multiblocks.client.SavedData;
 import giselle.jei_mekanism_multiblocks.client.jei.category.BoilerCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.DynamicTankCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.EvaporationPlantCategory;
@@ -25,6 +27,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 
@@ -118,6 +121,13 @@ public class JeiPlugin implements IModPlugin
 				@SuppressWarnings("unchecked")
 				RecipeType<MultiblockWidget> recipeType = (RecipeType<MultiblockWidget>) category.getRecipeType();
 				MultiblockWidget widget = recipeType.getRecipeClass().getDeclaredConstructor().newInstance();
+				
+				if (SavedData.hasMultiblock(recipeType.getUid()))
+				{
+					widget.load(SavedData.getMultiblock(category.getUid()));
+				}
+				
+				widget.addChangedHandler(w -> this.onWidgetChanged(category, widget));
 				registration.addRecipes(recipeType, Arrays.asList(widget));
 			}
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
@@ -128,6 +138,15 @@ public class JeiPlugin implements IModPlugin
 
 		}
 
+	}
+
+	private void onWidgetChanged(MultiblockCategory<?> category, MultiblockWidget widget)
+	{
+		CompoundTag tag = new CompoundTag();
+		widget.save(tag);
+
+		SavedData.setMultiblockData(category.getUid(), tag);
+		JEI_MekanismMultiblocks_Client.markNeedSave();
 	}
 
 	public List<MultiblockCategory<? extends MultiblockWidget>> getCategories()
