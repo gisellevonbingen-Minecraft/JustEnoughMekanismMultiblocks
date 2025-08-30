@@ -145,7 +145,7 @@ public class JeiPlugin implements IModPlugin
 		JEI_MekanismMultiblocks_Client.markNeedSave();
 	}
 
-	public List<MultiblockCategory<?>> getCategories()
+	public List<MultiblockCategory<? extends MultiblockWidget>> getCategories()
 	{
 		return Collections.unmodifiableList(this.categories);
 	}
