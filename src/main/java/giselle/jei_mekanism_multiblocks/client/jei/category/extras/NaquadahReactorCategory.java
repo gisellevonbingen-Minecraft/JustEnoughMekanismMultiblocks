@@ -22,6 +22,7 @@ import mekanism.api.chemical.gas.Gas;
 import mekanism.common.util.ChemicalUtil;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -84,6 +85,26 @@ public class NaquadahReactorCategory extends MultiblockCategory<NaquadahReactorC
 
 			this.updatePortsSliderLimit();
 		}
+		@Override
+		public void load(CompoundTag tag)
+		{
+			super.load(tag);
+
+			this.setWaterCooled(tag.getBoolean("WaterCooled"));
+			this.setPortCount(tag.getInt("PortCount"));
+			this.setLogicAdapterCount(tag.getInt("LogicAdapterCount"));
+		}
+
+		@Override
+		public void save(CompoundTag tag)
+		{
+			super.save(tag);
+
+			tag.putBoolean("WaterCooled", this.isWaterCooled());
+			tag.putInt("PortCount", this.getPortCount());
+			tag.putInt("LogicAdapterCount", this.getLogicAdapterCount());
+		}
+
 
 		@Override
 		protected void onDimensionChanged()

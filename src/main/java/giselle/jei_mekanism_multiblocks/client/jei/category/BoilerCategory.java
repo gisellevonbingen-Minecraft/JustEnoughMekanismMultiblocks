@@ -25,6 +25,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -75,6 +76,28 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			this.heatingElementsWidget.getSlider().addValueChangeHanlder(this::onHeatingElementsChanged);
 
 			this.updateSlidersLimit();
+		}
+
+		@Override
+		public void load(CompoundTag tag)
+		{
+			super.load(tag);
+
+			this.setForSodiumCooling(tag.getBoolean("ForSodiumCooling"));
+			this.setValveCount(tag.getInt("ValveCount"));
+			this.setSteamHeight(tag.getInt("SteamHeight"));
+			this.setHeatingElementCount(tag.getInt("HeatingElementCount"));
+		}
+
+		@Override
+		public void save(CompoundTag tag)
+		{
+			super.save(tag);
+
+			tag.putBoolean("ForSodiumCooling", this.isForSodiumCooling());
+			tag.putInt("ValveCount", this.getValveCount());
+			tag.putInt("SteamHeight", this.getSteamHeight());
+			tag.putInt("HeatingElementCount", this.getHeatingElementCount());
 		}
 
 		@Override

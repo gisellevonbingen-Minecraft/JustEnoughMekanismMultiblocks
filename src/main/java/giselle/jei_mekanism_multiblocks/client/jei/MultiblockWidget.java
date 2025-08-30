@@ -21,13 +21,15 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 
 public abstract class MultiblockWidget extends ContainerWidget
 {
+	private final List<Consumer<MultiblockWidget>> changedHandlers = new ArrayList<>();
+
 	private boolean initialzed = false;
 
 	protected final ListWidget configsList;
@@ -79,6 +81,11 @@ public abstract class MultiblockWidget extends ContainerWidget
 		this.showRightPanel(true);
 	}
 
+	public void addChangedHandler(Consumer<MultiblockWidget> handler)
+	{
+		this.changedHandlers.add(handler);
+	}
+
 	private void showRightPanel(boolean costs)
 	{
 		boolean results = !costs;
@@ -104,9 +111,57 @@ public abstract class MultiblockWidget extends ContainerWidget
 		this.useGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.use_things", new ItemStack(glassBlock).getHoverName()), true);
 		this.useGlassCheckBox.addSelectedChangedHandler(this::onUseGlassChanged);
 
-		if (glassBlock != null && glassBlock != Blocks.AIR)
+		if (glassBlock != null)
 		{
 			this.configsList.addChild(this.useGlassCheckBox);
+		}
+
+	}
+
+	public void load(CompoundTag tag)
+	{
+		if (this.isUseDimensionWidget(this.widthWidget))
+		{
+			this.setDimensionWidth(tag.getInt("Width"));
+		}
+
+		if (this.isUseDimensionWidget(this.lengthWidget))
+		{
+			this.setDimensionLength(tag.getInt("Length"));
+		}
+
+		if (this.isUseDimensionWidget(this.heightWidget))
+		{
+			this.setDimensionHeight(tag.getInt("Height"));
+		}
+
+		if (this.getGlassBlock() != null)
+		{
+			this.setUseGlass(tag.getBoolean("UseGlass"));
+		}
+
+	}
+
+	public void save(CompoundTag tag)
+	{
+		if (this.isUseDimensionWidget(this.widthWidget))
+		{
+			tag.putInt("Width", this.getDimensionWidth());
+		}
+
+		if (this.isUseDimensionWidget(this.lengthWidget))
+		{
+			tag.putInt("Length", this.getDimensionLength());
+		}
+
+		if (this.isUseDimensionWidget(this.heightWidget))
+		{
+			tag.putInt("Height", this.getDimensionHeight());
+		}
+
+		if (this.getGlassBlock() != null)
+		{
+			tag.putBoolean("UseGlass", this.isUseGlass());
 		}
 
 	}
@@ -260,6 +315,8 @@ public abstract class MultiblockWidget extends ContainerWidget
 			this.needNotifyStateChange = false;
 			this.updateAll();
 			this.notifyStateChange();
+
+			this.changedHandlers.forEach(h -> h.accept(this));
 		}
 
 	}
