@@ -124,7 +124,7 @@ public class JeiPlugin implements IModPlugin
 				
 				if (SavedData.hasMultiblock(recipeType.getUid()))
 				{
-					widget.load(SavedData.getMultiblock(category.getUid()));
+					widget.load(SavedData.getMultiblock(recipeType.getUid()));
 				}
 				
 				widget.addChangedHandler(w -> this.onWidgetChanged(category, widget));
@@ -145,7 +145,7 @@ public class JeiPlugin implements IModPlugin
 		CompoundTag tag = new CompoundTag();
 		widget.save(tag);
 
-		SavedData.setMultiblockData(category.getUid(), tag);
+		SavedData.setMultiblockData(category.getRecipeType().getUid(), tag);
 		JEI_MekanismMultiblocks_Client.markNeedSave();
 	}
 
