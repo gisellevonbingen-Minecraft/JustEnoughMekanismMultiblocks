@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
+import giselle.jei_mekanism_multiblocks.client.JEI_MekanismMultiblocks_Client;
+import giselle.jei_mekanism_multiblocks.client.SavedData;
 import giselle.jei_mekanism_multiblocks.client.jei.category.BoilerCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.DynamicTankCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.EvaporationPlantCategory;
@@ -17,6 +19,7 @@ import giselle.jei_mekanism_multiblocks.client.jei.category.SPSCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.TurbineCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.better_fusion.BetterFusionReactorCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.extras.ExtraMatrixCategory;
+import giselle.jei_mekanism_multiblocks.client.jei.category.extras.NaquadahReactorCategory;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
 import giselle.jei_mekanism_multiblocks.common.config.ClientConfig;
 import giselle.jei_mekanism_multiblocks.common.config.JEI_MekanismMultiblocks_Config;
@@ -26,6 +29,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
 
@@ -82,6 +86,12 @@ public class JeiPlugin implements IModPlugin
 		if (JEI_MekanismMultiblocks.MekanismExtrasLoaded)
 		{
 			this.addCategory(config.extraMatrixVisible, () -> new ExtraMatrixCategory(guiHelper));
+
+			if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
+			{
+				this.addCategory(config.naquadahReactorVisible, () -> new NaquadahReactorCategory(guiHelper));
+			}
+
 		}
 
 		for (MultiblockCategory<?> category : this.getCategories())
@@ -124,6 +134,13 @@ public class JeiPlugin implements IModPlugin
 				@SuppressWarnings("unchecked")
 				RecipeType<MultiblockWidget> recipeType = (RecipeType<MultiblockWidget>) category.getRecipeType();
 				MultiblockWidget widget = recipeType.getRecipeClass().getDeclaredConstructor().newInstance();
+
+				if (SavedData.hasMultiblock(recipeType.getUid()))
+				{
+					widget.load(SavedData.getMultiblock(recipeType.getUid()));
+				}
+
+				widget.addChangedHandler(w -> this.onWidgetChanged(category, widget));
 				registration.addRecipes(recipeType, Arrays.asList(widget));
 			}
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
@@ -134,6 +151,15 @@ public class JeiPlugin implements IModPlugin
 
 		}
 
+	}
+
+	private void onWidgetChanged(MultiblockCategory<?> category, MultiblockWidget widget)
+	{
+		CompoundTag tag = new CompoundTag();
+		widget.save(tag);
+
+		SavedData.setMultiblockData(category.getRecipeType().getUid(), tag);
+		JEI_MekanismMultiblocks_Client.markNeedSave();
 	}
 
 	public List<MultiblockCategory<? extends MultiblockWidget>> getCategories()

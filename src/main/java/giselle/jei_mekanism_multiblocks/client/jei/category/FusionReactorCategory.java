@@ -29,6 +29,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet.Named;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -89,6 +90,28 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 			this.updatePortsSliderLimit();
 			this.updateInjectionRateInfoMessage();
+		}
+
+		@Override
+		public void load(CompoundTag tag)
+		{
+			super.load(tag);
+
+			this.setWaterCooled(tag.getBoolean("WaterCooled"));
+			this.setPortCount(tag.getInt("PortCount"));
+			this.setLogicAdapterCount(tag.getInt("LogicAdapterCount"));
+			this.setInjectionRate(tag.getInt("InjectionRate"));
+		}
+
+		@Override
+		public void save(CompoundTag tag)
+		{
+			super.save(tag);
+
+			tag.putBoolean("WaterCooled", this.isWaterCooled());
+			tag.putInt("PortCount", this.getPortCount());
+			tag.putInt("LogicAdapterCount", this.getLogicAdapterCount());
+			tag.putInt("InjectionRate", this.getInjectionRate());
 		}
 
 		@Override

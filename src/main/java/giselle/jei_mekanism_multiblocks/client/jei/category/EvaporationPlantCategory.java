@@ -22,6 +22,7 @@ import mekanism.common.util.text.TextUtils;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -87,6 +88,24 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 
 			this.updateValveSliderLimit();
+		}
+
+		@Override
+		public void load(CompoundTag tag)
+		{
+			super.load(tag);
+
+			this.setUseAdvancedSolarGenerator(tag.getBoolean("UseAdvancedSolarGenerator"));
+			this.setValveCount(tag.getInt("ValveCount"));
+		}
+
+		@Override
+		public void save(CompoundTag tag)
+		{
+			super.save(tag);
+
+			tag.putBoolean("UseAdvancedSolarGenerator", this.isUseAdvancedSolarGenerator());
+			tag.putInt("ValveCount", this.getValveCount());
 		}
 
 		@Override

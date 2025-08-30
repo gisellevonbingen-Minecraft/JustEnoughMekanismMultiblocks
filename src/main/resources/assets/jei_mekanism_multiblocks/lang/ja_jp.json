@@ -4,6 +4,7 @@
 	"text.jei_mekanism_multiblocks.specs": "仕様",
 	"text.jei_mekanism_multiblocks.costs": "費用",
 	"text.jei_mekanism_multiblocks.results": "結果",
+	"text.jei_mekanism_multiblocks.not_supported": "未サポート",
 	
 	"text.jei_mekanism_multiblocks.specs.width": "幅: %s",
 	"text.jei_mekanism_multiblocks.specs.width_length": "幅、長さ: %s",

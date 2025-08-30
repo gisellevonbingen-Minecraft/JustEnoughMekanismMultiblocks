@@ -6,6 +6,7 @@
 	"text.jei_mekanism_multiblocks.specs": "Specs",
 	"text.jei_mekanism_multiblocks.costs": "Costs",
 	"text.jei_mekanism_multiblocks.results": "Results",
+	"text.jei_mekanism_multiblocks.not_supported": "Not supported",
 	
 	"text.jei_mekanism_multiblocks.specs.width": "Width: %s",
 	"text.jei_mekanism_multiblocks.specs.width_length": "Width, Length: %s",

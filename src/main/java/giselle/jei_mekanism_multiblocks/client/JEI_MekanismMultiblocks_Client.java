@@ -2,11 +2,14 @@ package giselle.jei_mekanism_multiblocks.client;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 public class JEI_MekanismMultiblocks_Client
 {
+	private static int SAVE_TIMER = 0;
+
 	public static boolean PRESSED;
 	public static boolean RELEASED;
 	public static boolean DRAGGED;
@@ -16,6 +19,29 @@ public class JEI_MekanismMultiblocks_Client
 	{
 		IEventBus forge_bus = NeoForge.EVENT_BUS;
 		forge_bus.register(JEI_MekanismMultiblocks_Client.class);
+
+		SavedData.load();
+	}
+
+	public static void markNeedSave()
+	{
+		SAVE_TIMER = 20;
+	}
+
+	@SubscribeEvent
+	public static void onClientTick(ClientTickEvent.Post e)
+	{
+		if (SAVE_TIMER > 0)
+		{
+			SAVE_TIMER--;
+
+			if (SAVE_TIMER == 0)
+			{
+				SavedData.save();
+			}
+
+		}
+
 	}
 
 	@SubscribeEvent
