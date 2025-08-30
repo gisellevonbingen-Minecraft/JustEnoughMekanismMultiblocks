@@ -27,6 +27,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -92,6 +93,28 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 			this.updatePortsSliderLimit();
 			this.updateInjectionRateInfoMessage();
+		}
+
+		@Override
+		public void load(CompoundNBT tag)
+		{
+			super.load(tag);
+
+			this.setWaterCooled(tag.getBoolean("WaterCooled"));
+			this.setPortCount(tag.getInt("PortCount"));
+			this.setLogicAdapterCount(tag.getInt("LogicAdapterCount"));
+			this.setInjectionRate(tag.getInt("InjectionRate"));
+		}
+
+		@Override
+		public void save(CompoundNBT tag)
+		{
+			super.save(tag);
+
+			tag.putBoolean("WaterCooled", this.isWaterCooled());
+			tag.putInt("PortCount", this.getPortCount());
+			tag.putInt("LogicAdapterCount", this.getLogicAdapterCount());
+			tag.putInt("InjectionRate", this.getInjectionRate());
 		}
 
 		@Override

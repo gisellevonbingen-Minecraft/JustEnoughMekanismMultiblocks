@@ -26,6 +26,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.StringTextComponent;
@@ -106,6 +107,28 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 
 			this.updateRotorsSliderLimit();
+		}
+
+		@Override
+		public void load(CompoundNBT tag)
+		{
+			super.load(tag);
+
+			this.setRotorCount(tag.getInt("RotorCount"));
+			this.setVentCount(tag.getInt("VentCount"));
+			this.setCondenserCount(tag.getInt("CondenserCount"));
+			this.setValveCount(tag.getInt("ValveCount"));
+		}
+
+		@Override
+		public void save(CompoundNBT tag)
+		{
+			super.save(tag);
+
+			tag.putInt("RotorCount", this.getRotorCount());
+			tag.putInt("VentCount", this.getVentCount());
+			tag.putInt("CondenserCount", this.getCondenserCount());
+			tag.putInt("ValveCount", this.getValveCount());
 		}
 
 		@Override

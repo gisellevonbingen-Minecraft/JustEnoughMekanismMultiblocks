@@ -28,6 +28,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.ITextComponent;
@@ -80,6 +81,26 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			this.updatePortsSliderLimit();
 			this.updateBurnRateSliderLimit();
 			this.setBurnRate(this.getMaxBurnRate());
+		}
+
+		@Override
+		public void load(CompoundNBT tag)
+		{
+			super.load(tag);
+
+			this.setPortCount(tag.getInt("PortCount"));
+			this.setLogicAdapterCount(tag.getInt("LogicAdapterCount"));
+			this.setBurnRate(tag.getLong("BurnRate"));
+		}
+
+		@Override
+		public void save(CompoundNBT tag)
+		{
+			super.save(tag);
+
+			tag.putInt("PortCount", this.getPortCount());
+			tag.putInt("LogicAdapterCount", this.getLogicAdapterCount());
+			tag.putLong("BurnRate", this.getBurnRate());
 		}
 
 		@Override

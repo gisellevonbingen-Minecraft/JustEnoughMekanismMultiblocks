@@ -15,6 +15,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidget>
@@ -60,6 +61,22 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 			this.portsWidget.getSlider().addValueChangeHanlder(this::onPortsChanged);
 
 			this.updatePortsSliderLimit();
+		}
+
+		@Override
+		public void load(CompoundNBT tag)
+		{
+			super.load(tag);
+
+			this.setPortCount(tag.getInt("PortCount"));
+		}
+
+		@Override
+		public void save(CompoundNBT tag)
+		{
+			super.save(tag);
+
+			tag.putInt("PortCount", this.getPortCount());
 		}
 
 		@Override

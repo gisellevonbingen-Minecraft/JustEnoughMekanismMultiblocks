@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
+import giselle.jei_mekanism_multiblocks.client.JEI_MekanismMultiblocks_Client;
+import giselle.jei_mekanism_multiblocks.client.SavedData;
 import giselle.jei_mekanism_multiblocks.client.jei.category.BoilerCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.DynamicTankCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.EvaporationPlantCategory;
@@ -23,6 +25,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 
@@ -113,7 +116,14 @@ public class JeiPlugin implements IModPlugin
 		{
 			try
 			{
-				Object widget = category.getRecipeClass().getDeclaredConstructor().newInstance();
+				MultiblockWidget widget = category.getRecipeClass().getDeclaredConstructor().newInstance();
+				
+				if (SavedData.hasMultiblock(category.getUid()))
+				{
+					widget.load(SavedData.getMultiblock(category.getUid()));
+				}
+				
+				widget.addChangedHandler(w -> this.onWidgetChanged(category, widget));
 				registration.addRecipes(Collections.singleton(widget), category.getUid());
 			}
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
@@ -124,6 +134,15 @@ public class JeiPlugin implements IModPlugin
 
 		}
 
+	}
+
+	private void onWidgetChanged(MultiblockCategory<?> category, MultiblockWidget widget)
+	{
+		CompoundNBT tag = new CompoundNBT();
+		widget.save(tag);
+
+		SavedData.setMultiblockData(category.getUid(), tag);
+		JEI_MekanismMultiblocks_Client.markNeedSave();
 	}
 
 	public List<MultiblockCategory<?>> getCategories()

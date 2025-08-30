@@ -16,6 +16,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.DynamicTankWidget>
@@ -52,6 +53,22 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 
 			this.updateValvesSliderLimit();
+		}
+
+		@Override
+		public void load(CompoundNBT tag)
+		{
+			super.load(tag);
+
+			this.setValveCount(tag.getInt("ValveCount"));
+		}
+
+		@Override
+		public void save(CompoundNBT tag)
+		{
+			super.save(tag);
+
+			tag.putInt("ValveCount", this.getValveCount());
 		}
 
 		@Override

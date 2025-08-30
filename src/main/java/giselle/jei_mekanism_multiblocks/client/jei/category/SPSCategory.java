@@ -17,6 +17,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
@@ -52,6 +53,22 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 
 			consumer.accept(this.portsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.ports", 0, 3, this.getSideBlocks()));
 			this.portsWidget.getSlider().addValueChangeHanlder(this::onPortsChanged);
+		}
+
+		@Override
+		public void load(CompoundNBT tag)
+		{
+			super.load(tag);
+
+			this.setPortCount(tag.getInt("PortCount"));
+		}
+
+		@Override
+		public void save(CompoundNBT tag)
+		{
+			super.save(tag);
+
+			tag.putInt("PortCount", this.getPortCount());
 		}
 
 		@Override

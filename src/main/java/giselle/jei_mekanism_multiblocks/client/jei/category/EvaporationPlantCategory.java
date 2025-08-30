@@ -24,6 +24,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -88,6 +89,24 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 
 			this.updateValveSliderLimit();
+		}
+
+		@Override
+		public void load(CompoundNBT tag)
+		{
+			super.load(tag);
+
+			this.setUseAdvancedSolarGenerator(tag.getBoolean("UseAdvancedSolarGenerator"));
+			this.setValveCount(tag.getInt("ValveCount"));
+		}
+
+		@Override
+		public void save(CompoundNBT tag)
+		{
+			super.save(tag);
+
+			tag.putBoolean("UseAdvancedSolarGenerator", this.isUseAdvancedSolarGenerator());
+			tag.putInt("ValveCount", this.getValveCount());
 		}
 
 		@Override

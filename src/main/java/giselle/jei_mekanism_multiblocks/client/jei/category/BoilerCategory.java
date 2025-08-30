@@ -25,6 +25,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -74,6 +75,28 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			this.heatingElementsWidget.getSlider().addValueChangeHanlder(this::onHeatingElementsChanged);
 
 			this.updateSlidersLimit();
+		}
+
+		@Override
+		public void load(CompoundNBT tag)
+		{
+			super.load(tag);
+
+			this.setForSodiumCooling(tag.getBoolean("ForSodiumCooling"));
+			this.setValveCount(tag.getInt("ValveCount"));
+			this.setSteamHeight(tag.getInt("SteamHeight"));
+			this.setHeatingElementCount(tag.getInt("HeatingElementCount"));
+		}
+
+		@Override
+		public void save(CompoundNBT tag)
+		{
+			super.save(tag);
+
+			tag.putBoolean("ForSodiumCooling", this.isForSodiumCooling());
+			tag.putInt("ValveCount", this.getValveCount());
+			tag.putInt("SteamHeight", this.getSteamHeight());
+			tag.putInt("HeatingElementCount", this.getHeatingElementCount());
 		}
 
 		@Override
