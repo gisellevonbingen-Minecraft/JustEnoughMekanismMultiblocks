@@ -27,6 +27,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -79,6 +80,26 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			this.updatePortsSliderLimit();
 			this.updateBurnRateSliderLimit();
 			this.setBurnRate(this.getMaxBurnRate());
+		}
+
+		@Override
+		public void load(CompoundTag tag)
+		{
+			super.load(tag);
+
+			this.setPortCount(tag.getInt("PortCount"));
+			this.setLogicAdapterCount(tag.getInt("LogicAdapterCount"));
+			this.setBurnRate(tag.getLong("BurnRate"));
+		}
+
+		@Override
+		public void save(CompoundTag tag)
+		{
+			super.save(tag);
+
+			tag.putInt("PortCount", this.getPortCount());
+			tag.putInt("LogicAdapterCount", this.getLogicAdapterCount());
+			tag.putLong("BurnRate", this.getBurnRate());
 		}
 
 		@Override

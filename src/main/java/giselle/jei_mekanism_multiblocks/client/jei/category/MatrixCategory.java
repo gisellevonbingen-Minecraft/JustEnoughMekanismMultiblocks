@@ -13,6 +13,7 @@ import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.TextUtils;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -60,6 +61,22 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 			this.portsWidget.getSlider().addValueChangeHanlder(this::onPortsChanged);
 
 			this.updatePortsSliderLimit();
+		}
+
+		@Override
+		public void load(CompoundTag tag)
+		{
+			super.load(tag);
+
+			this.setPortCount(tag.getInt("PortCount"));
+		}
+
+		@Override
+		public void save(CompoundTag tag)
+		{
+			super.save(tag);
+
+			tag.putInt("PortCount", this.getPortCount());
 		}
 
 		@Override
