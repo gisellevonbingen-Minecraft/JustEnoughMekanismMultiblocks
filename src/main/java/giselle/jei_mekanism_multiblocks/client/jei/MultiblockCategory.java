@@ -56,6 +56,7 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 			this.addSlots(recipeLayout, cost);
 		}
 
+		recipeLayout.addSlot(RecipeIngredientRole.OUTPUT, 9999, 9999).addItemStack(ItemStack.EMPTY);
 	}
 
 	private void addSlots(IRecipeLayoutBuilder recipeLayout, ItemStack cost)

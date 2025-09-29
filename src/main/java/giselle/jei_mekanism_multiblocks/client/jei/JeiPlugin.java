@@ -125,30 +125,41 @@ public class JeiPlugin implements IModPlugin
 	@Override
 	public void registerRecipes(IRecipeRegistration registration)
 	{
+		if (JEI_MekanismMultiblocks.EMILoaded)
+		{
+			return;
+		}
+
 		IModPlugin.super.registerRecipes(registration);
 
 		for (MultiblockCategory<?> category : this.getCategories())
 		{
-			try
+			@SuppressWarnings("unchecked")
+			RecipeType<MultiblockWidget> recipeType = (RecipeType<MultiblockWidget>) category.getRecipeType();
+			registration.addRecipes(recipeType, Arrays.asList(this.createWidget(category)));
+
+		}
+
+	}
+
+	public <WIDGET extends MultiblockWidget> WIDGET createWidget(MultiblockCategory<WIDGET> category)
+	{
+		try
+		{
+			RecipeType<WIDGET> recipeType = category.getRecipeType();
+			WIDGET widget = recipeType.getRecipeClass().getDeclaredConstructor().newInstance();
+
+			if (SavedData.hasMultiblock(recipeType.getUid()))
 			{
-				@SuppressWarnings("unchecked")
-				RecipeType<MultiblockWidget> recipeType = (RecipeType<MultiblockWidget>) category.getRecipeType();
-				MultiblockWidget widget = recipeType.getRecipeClass().getDeclaredConstructor().newInstance();
-
-				if (SavedData.hasMultiblock(recipeType.getUid()))
-				{
-					widget.load(SavedData.getMultiblock(recipeType.getUid()));
-				}
-
-				widget.addChangedHandler(w -> this.onWidgetChanged(category, widget));
-				registration.addRecipes(recipeType, Arrays.asList(widget));
-			}
-			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
-			{
-				System.err.println("Exception - " + category.getRecipeType());
-				e.printStackTrace();
+				widget.load(SavedData.getMultiblock(recipeType.getUid()));
 			}
 
+			widget.addChangedHandler(w -> this.onWidgetChanged(category, widget));
+			return widget;
+		}
+		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
+		{
+			throw new RuntimeException("Category: " + category.getRecipeType(), e);
 		}
 
 	}

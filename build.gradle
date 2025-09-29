@@ -72,11 +72,11 @@ dependencies {
     compileOnly "curse.maven:mekanism-extras-1026040:${mekanism_extra_file}"
 
     implementation "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
+    implementation "dev.emi:emi-neoforge:${emi_version}+${mc_version}"
 
     // Runtiem Only
     // runtimeOnly "curse.maven:refined-storage-243076:${refined_storage_file}"
     runtimeOnly "curse.maven:jade-324717:${jade_file}"
-    runtimeOnly "dev.emi:emi-neoforge:${emi_version}+${mc_version}"
 }
 
 tasks.withType(ProcessResources).configureEach {
