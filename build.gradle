@@ -111,12 +111,12 @@ dependencies {
     implementation fg.deobf("curse.maven:better-fusion-reactor-for-mekanism-602409:${better_fusion_file}")
     implementation fg.deobf("curse.maven:mekanism-extras-1026040:${mekanism_extra_file}")
 
-    implementation(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
+    implementation fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
+    implementation fg.deobf("dev.emi:emi-forge:${emi_version}+${mc_version}")
 
     // Runtiem Only
     runtimeOnly fg.deobf("curse.maven:refined-storage-243076:${refined_storage_file}")
     runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_file}")
-    runtimeOnly fg.deobf("dev.emi:emi-forge:${emi_version}+${mc_version}")
 }
 
 mixin {

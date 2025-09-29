@@ -6,7 +6,8 @@
 	"client": [
 		"minecraft.TooltipMixin",
 		"jei.RecipeGuiLogicAccessor",
-		"jei.RecipesGuiMixin"
+		"jei.RecipesGuiMixin",
+		"emi.JemiPluginMixin"
 	],
 	"mixins": [],
 	"injectors": {
