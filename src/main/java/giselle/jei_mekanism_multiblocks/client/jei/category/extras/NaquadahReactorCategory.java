@@ -45,7 +45,7 @@ public class NaquadahReactorCategory extends MultiblockCategory<NaquadahReactorC
 		consumer.accept(ExtraGenBlocks.LEAD_COATED_LASER_FOCUS_MATRIX.getItemStack());
 		consumer.accept(ExtraGenBlocks.LEAD_COATED_GLASS.getItemStack());
 
-		List<Gas> fusionFuelGases = ChemicalTags.GAS.getManager().get().getTag(ExtraTag.Gases.SILICON_URANIUM_FUEL).stream().toList();
+		List<Gas> fusionFuelGases = ChemicalTags.GAS.getManager().get().getTag(ExtraTag.Gases.NAQUADAH_URANIUM_FUEL).stream().toList();
 
 		if (fusionFuelGases.size() > 0)
 		{
