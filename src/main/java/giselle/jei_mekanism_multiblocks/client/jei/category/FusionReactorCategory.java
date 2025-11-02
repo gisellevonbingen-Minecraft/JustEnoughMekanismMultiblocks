@@ -53,16 +53,11 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		consumer.accept(GeneratorsBlocks.REACTOR_GLASS.getItemStack());
 
 		List<Gas> fusionFuelGases = ChemicalTags.GAS.getManager().get().getTag(GeneratorTags.Gases.FUSION_FUEL).stream().toList();
+		long capacity = MekanismGeneratorsConfig.generators.hohlraumMaxGas.get();
 
-		if (fusionFuelGases.size() > 0)
+		for (Gas gas : fusionFuelGases)
 		{
-			Gas fusionFuelGas = fusionFuelGases.get(0);
-			long capacity = MekanismGeneratorsConfig.generators.hohlraumMaxGas.get();
-			consumer.accept(ChemicalUtil.getFilledVariant(GeneratorsItems.HOHLRAUM.getItemStack(), capacity, fusionFuelGas));
-		}
-		else
-		{
-			consumer.accept(GeneratorsItems.HOHLRAUM.getItemStack());
+			consumer.accept(ChemicalUtil.getFilledVariant(new ItemStack(GeneratorsItems.HOHLRAUM.get()), capacity, gas));
 		}
 
 	}
