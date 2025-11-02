@@ -85,6 +85,7 @@ public class NaquadahReactorCategory extends MultiblockCategory<NaquadahReactorC
 
 			this.updatePortsSliderLimit();
 		}
+
 		@Override
 		public void load(CompoundTag tag)
 		{
@@ -104,7 +105,6 @@ public class NaquadahReactorCategory extends MultiblockCategory<NaquadahReactorC
 			tag.putInt("PortCount", this.getPortCount());
 			tag.putInt("LogicAdapterCount", this.getLogicAdapterCount());
 		}
-
 
 		@Override
 		protected void onDimensionChanged()
