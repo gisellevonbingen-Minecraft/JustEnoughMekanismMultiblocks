@@ -78,7 +78,7 @@ public class ClientConfig
 		this.extraMatrixVisible = builder.comment("Set page visibility").define("visible", true);
 		builder.pop();
 
-		builder.comment("JEI 'Building [Naquadah Reactor]' page configuration").push("naquadah_reacto");
+		builder.comment("JEI 'Building [Naquadah Reactor]' page configuration").push("naquadah_reactor");
 		this.naquadahReactorVisible = builder.comment("Set page visibility").define("visible", true);
 		builder.pop();
 
