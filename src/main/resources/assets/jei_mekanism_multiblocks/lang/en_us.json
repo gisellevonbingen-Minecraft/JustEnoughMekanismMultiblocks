@@ -51,6 +51,8 @@
 	"text.jei_mekanism_multiblocks.result.energy_per_antimatter": "Energy Per Antimatter",
 	"text.jei_mekanism_multiblocks.result.inner_volume": "Inner Volume",
 	"text.jei_mekanism_multiblocks.result.blocks": "%s Blocks",
+	"text.jei_mekanism_multiblocks.result.supercharging_elements": "Supercharging Elements: %s",
+	"text.jei_mekanism_multiblocks.result.processing_speed": "Processing Speed",
 	
 	"text.jei_mekanism_multiblocks.tooltip.click_normal": "CLICK: %s",
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+CLICK: %s",

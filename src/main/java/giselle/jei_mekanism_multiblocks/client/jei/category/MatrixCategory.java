@@ -2,21 +2,28 @@ package giselle.jei_mekanism_multiblocks.client.jei.category;
 
 import java.util.function.Consumer;
 
+import fr.iglee42.evolvedmekanism.registries.EMBlocks;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
+import giselle.jei_mekanism_multiblocks.common.config.JEI_MekanismMultiblocks_Config;
 import mekanism.common.Mekanism;
 import mekanism.common.MekanismLang;
+import mekanism.common.item.block.ItemBlockInductionCell;
+import mekanism.common.item.block.ItemBlockInductionProvider;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.TextUtils;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidget>
 {
@@ -41,6 +48,22 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 		consumer.accept(new ItemStack(MekanismBlocks.ELITE_INDUCTION_PROVIDER));
 		consumer.accept(new ItemStack(MekanismBlocks.ULTIMATE_INDUCTION_CELL));
 		consumer.accept(new ItemStack(MekanismBlocks.ULTIMATE_INDUCTION_PROVIDER));
+
+		if (JEI_MekanismMultiblocks.EvoledMekanismLoaded && JEI_MekanismMultiblocks_Config.CLIENT.evolvedMatrixVisible.get())
+		{
+			for (DeferredHolder<Item, ? extends Item> itemHolder : EMBlocks.BLOCKS.getSecondaryEntries())
+			{
+				Item item = itemHolder.get();
+
+				if (item instanceof ItemBlockInductionCell || item instanceof ItemBlockInductionProvider)
+				{
+					consumer.accept(new ItemStack(item));
+				}
+
+			}
+
+		}
+
 	}
 
 	public static class MatrixWidget extends MultiblockWidget

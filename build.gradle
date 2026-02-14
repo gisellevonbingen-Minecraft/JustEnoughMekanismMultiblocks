@@ -70,6 +70,8 @@ dependencies {
     runtimeOnly "mekanism:Mekanism:${mc_version}-${mekanism_version}:tools"
     compileOnly "curse.maven:better-fusion-reactor-for-mekanism-602409:${better_fusion_file}"
     compileOnly "curse.maven:mekanism-extras-1026040:${mekanism_extra_file}"
+    compileOnly "curse.maven:iglee-library-541199:${iglee_library_file}"
+    compileOnly "curse.maven:evolved-mekanism-1230085:${evolved_mekanism_file}"
 
     implementation "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
     implementation "dev.emi:emi-neoforge:${emi_version}+${mc_version}"

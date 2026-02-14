@@ -22,6 +22,9 @@ public class ClientConfig
 	public final BooleanValue extraMatrixVisible;
 	public final BooleanValue naquadahReactorVisible;
 
+	public final BooleanValue aptVisible;
+	public final BooleanValue evolvedMatrixVisible;
+
 	public ClientConfig()
 	{
 		ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -80,6 +83,15 @@ public class ClientConfig
 
 		builder.comment("JEI 'Building [Naquadah Reactor]' page configuration").push("naquadah_reactor");
 		this.naquadahReactorVisible = builder.comment("Set page visibility").define("visible", true);
+		builder.pop();
+
+		builder.push("evolvedmekanism");
+		builder.comment("JEI 'Building [Antimatter Protomolecular Transmutator]' page configuration").push("apt");
+		this.aptVisible = builder.comment("Set page visibility").define("visible", true);
+		builder.pop();
+
+		builder.comment("JEI 'Building [Induction Matrix]' page configuration").push("matrix");
+		this.evolvedMatrixVisible = builder.comment("Set catalyst visibility").define("visible", true);
 		builder.pop();
 
 		builder.pop();
