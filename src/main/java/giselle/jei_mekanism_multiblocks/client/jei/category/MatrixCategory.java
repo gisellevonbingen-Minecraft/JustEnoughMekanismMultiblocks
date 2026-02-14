@@ -2,19 +2,26 @@ package giselle.jei_mekanism_multiblocks.client.jei.category;
 
 import java.util.function.Consumer;
 
+import fr.iglee42.evolvedmekanism.registries.EMBlocks;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
+import giselle.jei_mekanism_multiblocks.common.config.JEI_MekanismMultiblocks_Config;
+import mekanism.api.providers.IBlockProvider;
 import mekanism.common.Mekanism;
 import mekanism.common.MekanismLang;
+import mekanism.common.item.block.ItemBlockInductionCell;
+import mekanism.common.item.block.ItemBlockInductionProvider;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.TextUtils;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
@@ -41,6 +48,22 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 		consumer.accept(MekanismBlocks.ELITE_INDUCTION_PROVIDER.getItemStack());
 		consumer.accept(MekanismBlocks.ULTIMATE_INDUCTION_CELL.getItemStack());
 		consumer.accept(MekanismBlocks.ULTIMATE_INDUCTION_PROVIDER.getItemStack());
+
+		if (JEI_MekanismMultiblocks.EvoledMekanismLoaded && JEI_MekanismMultiblocks_Config.CLIENT.evolvedMatrixVisible.get())
+		{
+			for (IBlockProvider block : EMBlocks.BLOCKS.getAllBlocks())
+			{
+				Item item = block.asItem();
+
+				if (item instanceof ItemBlockInductionCell || item instanceof ItemBlockInductionProvider)
+				{
+					consumer.accept(block.getItemStack());
+				}
+
+			}
+
+		}
+
 	}
 
 	public static class MatrixWidget extends MultiblockWidget

@@ -18,6 +18,7 @@ import giselle.jei_mekanism_multiblocks.client.jei.category.MatrixCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.SPSCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.TurbineCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.better_fusion.BetterFusionReactorCategory;
+import giselle.jei_mekanism_multiblocks.client.jei.category.evolved.APTCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.extras.ExtraMatrixCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.extras.NaquadahReactorCategory;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
@@ -92,6 +93,11 @@ public class JeiPlugin implements IModPlugin
 				this.addCategory(config.naquadahReactorVisible, () -> new NaquadahReactorCategory(guiHelper));
 			}
 
+		}
+
+		if (JEI_MekanismMultiblocks.EvoledMekanismLoaded)
+		{
+			this.addCategory(config.aptVisible, () -> new APTCategory(guiHelper));
 		}
 
 		for (MultiblockCategory<?> category : this.getCategories())
