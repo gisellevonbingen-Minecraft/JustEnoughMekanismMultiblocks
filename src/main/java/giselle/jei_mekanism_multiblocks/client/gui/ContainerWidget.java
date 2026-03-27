@@ -33,6 +33,11 @@ public class ContainerWidget extends AbstractWidget
 		this.unmodifiableFunctionWidgets = Collections.unmodifiableList(this.functionWidgets);
 	}
 
+	public boolean contains(AbstractWidget widget)
+	{
+		return this.children.contains(widget);
+	}
+
 	public AbstractWidget getChildUnderMouse(double pMouseX, double pMouseY)
 	{
 		for (AbstractWidget widget : this.getChildren())
