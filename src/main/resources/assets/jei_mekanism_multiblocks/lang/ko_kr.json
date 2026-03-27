@@ -5,6 +5,16 @@
 	"text.jei_mekanism_multiblocks.costs": "비용",
 	"text.jei_mekanism_multiblocks.results": "결과",
 	"text.jei_mekanism_multiblocks.not_supported": "지원되지 않음",
+	"text.jei_mekanism_multiblocks.reset": "재설정",
+	"text.jei_mekanism_multiblocks.clear": "지우기",
+	"text.jei_mekanism_multiblocks.save": "저장",
+	"text.jei_mekanism_multiblocks.import": "가져오기",
+	"text.jei_mekanism_multiblocks.import_from_clipboard": "클립보드에서 가져오기",
+	"text.jei_mekanism_multiblocks.imported_successfully": "가져오기 성공",
+	"text.jei_mekanism_multiblocks.export": "내보내기",
+	"text.jei_mekanism_multiblocks.export_to_clipboard": "클립보드에 내보내기",
+	"text.jei_mekanism_multiblocks.exported_successfully": "내보내기 성공",
+	"text.jei_mekanism_multiblocks.json_syntax_error": "JSON 문법 오류",
 	
 	"text.jei_mekanism_multiblocks.specs.width": "가로: %s",
 	"text.jei_mekanism_multiblocks.specs.width_length": "가로, 세로: %s",
@@ -23,6 +33,8 @@
 	"text.jei_mekanism_multiblocks.specs.steam_height": "증기 높이: %s",
 	"text.jei_mekanism_multiblocks.specs.water_cooled": "수냉",
 	"text.jei_mekanism_multiblocks.specs.for_sodium_cooling": "나트륨 냉각용",
+	"text.jei_mekanism_multiblocks.specs.advanced": "고급",
+	"text.jei_mekanism_multiblocks.specs.layout": "배치",
 	
 	"text.jei_mekanism_multiblocks.result.input_tank": "입력 탱크",
 	"text.jei_mekanism_multiblocks.result.output_tank": "출력 탱크",
@@ -49,6 +61,7 @@
 	"text.jei_mekanism_multiblocks.result.energy_per_antimatter": "반물질당 에너지",
 	"text.jei_mekanism_multiblocks.result.inner_volume": "내부 부피",
 	"text.jei_mekanism_multiblocks.result.blocks": "%s 블록",
+	"text.jei_mekanism_multiblocks.result.boil_efficiency": "가열 효율",
 	
 	"text.jei_mekanism_multiblocks.tooltip.click_normal": "클릭: %s",
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+클릭: %s",
