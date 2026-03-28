@@ -48,6 +48,11 @@ public class GuiHelper
 	public static void fillRectagle(GuiGraphics pGuiGraphics, int x, int y, int width, int height, float r, float g, float b, float a)
 	{
 		int color = Mth.color(r, g, b) | (Mth.floor(255.0F * a) << 0x18);
+		fillRectagle(pGuiGraphics, x, y, width, height, color);
+	}
+
+	public static void fillRectagle(GuiGraphics pGuiGraphics, int x, int y, int width, int height, int color)
+	{
 		pGuiGraphics.fill(x, y, x + width, y + height, color);
 	}
 

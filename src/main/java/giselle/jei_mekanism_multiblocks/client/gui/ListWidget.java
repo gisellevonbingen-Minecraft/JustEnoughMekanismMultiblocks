@@ -1,5 +1,7 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
+import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
+import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -25,6 +27,8 @@ public class ListWidget extends ContainerWidget
 	private ButtonWidget downButton;
 	private IntSliderWidget scrollBar;
 
+	private Object2BooleanMap<AbstractWidget> visibleMap;
+
 	public ListWidget(int pX, int pY, int pWidth, int pHeight, int itemHeight)
 	{
 		super(pX, pY, pWidth, pHeight);
@@ -46,10 +50,22 @@ public class ListWidget extends ContainerWidget
 		this.addFunctionWidget(this.scrollBar = new IntSliderWidget(0, 0, 0, 0, Component.empty(), 0, 0, 0));
 		this.scrollBar.addValueChangeHanlder(this::onScrollChanged);
 
+		this.visibleMap = new Object2BooleanOpenHashMap<>();
+
 		this.scrollBar.setVertical();
 		this.itemsChanged = true;
 		this.updateScrollWidgetsHorizontal();
 		this.updateScrollWidgetsVertical();
+	}
+
+	public void setVisible(AbstractWidget widget, boolean visible)
+	{
+		if (this.contains(widget))
+		{
+			this.visibleMap.put(widget, visible);
+			this.itemsVerticalChanged = true;
+		}
+
 	}
 
 	protected void onScrollChanged(int scroll)
@@ -147,11 +163,18 @@ public class ListWidget extends ContainerWidget
 
 		for (AbstractWidget widget : this.getChildren())
 		{
-			widget.setY(itemY);
-			widget.setHeight(itemHeight);
-			widget.visible = top <= itemY && itemY <= bottom;
+			if (this.visibleMap.getOrDefault(widget, true))
+			{
+				widget.setY(itemY);
+				widget.setHeight(itemHeight);
+				widget.visible = top <= itemY && itemY <= bottom;
+				itemY += itemHeight + itemOffset;
+			}
+			else
+			{
+				widget.visible = false;
+			}
 
-			itemY += itemHeight + itemOffset;
 		}
 
 	}
@@ -188,6 +211,7 @@ public class ListWidget extends ContainerWidget
 
 		this.itemsChanged = true;
 		this.itemsVerticalChanged = true;
+		this.visibleMap.removeBoolean(widget);
 	}
 
 	private void updateScrollWidgetsHorizontal()
