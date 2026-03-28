@@ -121,12 +121,12 @@ public class JeiPlugin implements IModPlugin
 				@SuppressWarnings("unchecked")
 				RecipeType<MultiblockWidget> recipeType = (RecipeType<MultiblockWidget>) category.getRecipeType();
 				MultiblockWidget widget = recipeType.getRecipeClass().getDeclaredConstructor().newInstance();
-				
+
 				if (SavedData.hasMultiblock(recipeType.getUid()))
 				{
 					widget.load(SavedData.getMultiblock(recipeType.getUid()));
 				}
-				
+
 				widget.addChangedHandler(w -> this.onWidgetChanged(category, widget));
 				registration.addRecipes(recipeType, Arrays.asList(widget));
 			}
