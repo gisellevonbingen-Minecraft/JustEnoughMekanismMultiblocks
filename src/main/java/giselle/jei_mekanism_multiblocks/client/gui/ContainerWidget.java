@@ -32,6 +32,11 @@ public class ContainerWidget extends AbstractWidget
 		this.unmodifiableFunctionWidgets = Collections.unmodifiableList(this.functionWidgets);
 	}
 
+	public boolean contains(AbstractWidget widget)
+	{
+		return this.children.contains(widget);
+	}
+
 	public List<AbstractWidget> getChildren()
 	{
 		return this.unmodifiableChildren;

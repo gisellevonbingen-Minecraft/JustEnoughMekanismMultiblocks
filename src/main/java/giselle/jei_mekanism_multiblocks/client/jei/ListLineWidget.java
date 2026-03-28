@@ -10,9 +10,23 @@ import net.minecraft.client.gui.components.AbstractWidget;
 
 public class ListLineWidget extends ListWidget
 {
+	public boolean drawBG = false;
+	public int bgColor = 0x00000000;
+
 	public ListLineWidget(int pX, int pY, int pWidth, int pHeight, int itemHeight)
 	{
 		super(pX, pY, pWidth, pHeight, itemHeight);
+	}
+
+	@Override
+	public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
+	{
+		if (this.drawBG)
+		{
+			GuiHelper.fillRectagle(pPoseStack, this.x, this.y, this.getWidth(), this.getHeight(), this.bgColor);
+		}
+
+		super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
 	}
 
 	@Override
