@@ -57,6 +57,8 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 	public static class FissionReactorCategoryWidget extends MultiblockWidget
 	{
+		public static final double WATER_CONDUCTIVITY = 0.5D;
+
 		protected IntSliderWithButtons portsWidget;
 		protected IntSliderWithButtons logicAdaptersWidget;
 		protected LongSliderWithButtons burnRateWidget;
@@ -201,7 +203,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			long burnRate = this.getBurnRate();
 			long fuelCapacity = this.getFuelCapacity();
 			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.max_burn_rate"), VolumeTextHelper.formatMBt(maxBurnRate)));
-			this.createStableTempWidget(consumer, new FluidStack(Fluids.WATER, 1).getDisplayName(), burnRate, 0.5D, HeatUtils.getWaterThermalEnthalpy() / HeatUtils.getSteamEnergyEfficiency());
+			this.createStableTempWidget(consumer, new FluidStack(Fluids.WATER, 1).getDisplayName(), burnRate, WATER_CONDUCTIVITY, HeatUtils.getWaterThermalEnthalpy() / HeatUtils.getSteamEnergyEfficiency());
 			this.createStableTempWidget(consumer, MekanismGases.SODIUM.getTextComponent(), burnRate, Coolants.SODIUM_COOLANT);
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(coolantCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_FUEL_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
@@ -216,7 +218,8 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 		private void createStableTempWidget(Consumer<AbstractWidget> consumer, Component with, long toBurn, double conductivity, double thermalEnthalpy)
 		{
-			double stableTemp = this.getCoolingStableTemp(toBurn, conductivity, thermalEnthalpy);
+			double boilEfficiency = this.getBoilEfficiency();
+			double stableTemp = this.getCoolingStableTemp(toBurn, conductivity, thermalEnthalpy, boilEfficiency);
 			ResultWidget tempWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.temp_with", with), MekanismUtils.getTemperatureDisplay(stableTemp, TemperatureUnit.KELVIN, false));
 			consumer.accept(tempWidget);
 
@@ -249,7 +252,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 				tempWidget.setTooltip(TooltipHelper.createMessageOnly(burnRateTooltip));
 			}
 
-			long heatedCoolant = this.getHeatedCoolant(stableTemp, conductivity, thermalEnthalpy);
+			long heatedCoolant = this.getHeatedCoolant(stableTemp, conductivity, thermalEnthalpy, boilEfficiency);
 			ResultWidget heatingRateWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.heating_rate_with", with), VolumeTextHelper.formatMBt(heatedCoolant));
 			heatingRateWidget.setTooltip(TooltipHelper.createMessageOnly(burnRateTooltip));
 			consumer.accept(heatingRateWidget);
@@ -258,10 +261,10 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		private void simulateTemp(double coolantConductivity)
 		{
 			long coolantCapacity = this.getCooledCoolantCapacity();
-			long toBurn = this.getFissionFuelAssemblyCount() * MekanismGeneratorsConfig.generators.burnPerAssembly.get();
+			long toBurn = this.getBurnRate();
 			double burnHeat = toBurn * MekanismGeneratorsConfig.generators.energyPerFissionFuel.get().doubleValue();
 			double heatCapacity = this.getHeatCapacity();
-			double boilEfficiency = 1.0D;
+			double boilEfficiency = this.getBoilEfficiency();
 
 			double heat = HeatAPI.AMBIENT_TEMP * heatCapacity;
 			double prevHeat = 0.0D;
@@ -296,9 +299,8 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 		}
 
-		public long getHeatedCoolant(double temp, double coolantConductivity, double thermalEnthalpy)
+		public long getHeatedCoolant(double temp, double coolantConductivity, double thermalEnthalpy, double boilEfficiency)
 		{
-			double boilEfficiency = 1.0D;
 			double boilHeat = boilEfficiency * (temp - HeatUtils.BASE_BOIL_TEMP) * this.getHeatCapacity();
 			double caseCoolantHeat = boilHeat * coolantConductivity;
 			long coolantHeated = MathUtils.clampToLong(caseCoolantHeat / thermalEnthalpy);
@@ -330,12 +332,11 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			return MekanismGeneratorsConfig.generators.fissionCasingHeatCapacity.get() * this.getDimensionCasingBlocks();
 		}
 
-		public double getCoolingStableTemp(long toBurn, double coolantConductivity, double thermalEnthalpy)
+		public double getCoolingStableTemp(long toBurn, double coolantConductivity, double thermalEnthalpy, double boilEfficiency)
 		{
 			long coolantCapacity = this.getCooledCoolantCapacity();
 			double burnHeat = toBurn * MekanismGeneratorsConfig.generators.energyPerFissionFuel.get().doubleValue();
 			double heatCapacity = this.getHeatCapacity();
-			double boilEfficiency = 1.0D;
 
 			double coolantHeated = burnHeat / thermalEnthalpy;
 
