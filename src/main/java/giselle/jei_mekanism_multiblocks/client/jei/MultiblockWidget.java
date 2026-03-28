@@ -168,7 +168,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	}
 
-	private void createSpecDimension()
+	protected void createSpecDimension()
 	{
 		List<IntSliderWithButtons> widgets = new ArrayList<>();
 		widgets.add(this.widthWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.width", this.createDimensionSlider(0, this.getDimensionWidthMin(), this.getDimensionWidthMax())));

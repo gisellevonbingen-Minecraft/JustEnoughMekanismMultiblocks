@@ -31,6 +31,11 @@ public class ContainerWidget extends Widget
 		this.unmodifiableFunctionWidgets = Collections.unmodifiableList(this.functionWidgets);
 	}
 
+	public boolean contains(Widget widget)
+	{
+		return this.children.contains(widget);
+	}
+
 	public List<Widget> getChildren()
 	{
 		return this.unmodifiableChildren;

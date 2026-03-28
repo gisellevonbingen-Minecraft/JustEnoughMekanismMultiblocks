@@ -47,6 +47,11 @@ public class GuiHelper
 	public static void fillRectagle(MatrixStack pMatrixStack, int x, int y, int width, int height, float r, float g, float b, float a)
 	{
 		int color = MathHelper.color(r, g, b) | (MathHelper.floor(255.0F * a) << 0x18);
+		fillRectagle(pMatrixStack, x, y, width, height, color);
+	}
+
+	public static void fillRectagle(MatrixStack pMatrixStack, int x, int y, int width, int height, int color)
+	{
 		AbstractGui.fill(pMatrixStack, x, y, x + width, y + height, color);
 	}
 
