@@ -36,6 +36,23 @@ public class ContainerWidget extends Widget
 		return this.children.contains(widget);
 	}
 
+	public Widget getChildUnderMouse(double pMouseX, double pMouseY)
+	{
+		for (Widget widget : this.getChildren())
+		{
+			double childMouseX = this.toChildX(pMouseX);
+			double childMouseY = this.toChildY(pMouseY);
+
+			if (widget.isMouseOver(childMouseX, childMouseY))
+			{
+				return widget;
+			}
+
+		}
+
+		return null;
+	}
+
 	public List<Widget> getChildren()
 	{
 		return this.unmodifiableChildren;

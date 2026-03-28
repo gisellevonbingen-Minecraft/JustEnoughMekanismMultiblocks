@@ -1,10 +1,22 @@
 {
 	"text.jei_mekanism_multiblocks.recipe_category.title": "Building [%s]",
 	"text.jei_mekanism_multiblocks.building.better_fusion_reactor": "Better Fusion Reactor",
+	"text.jei_mekanism_multiblocks.building.extra_matrix": "Reinforced Induction Matrix",
 	
 	"text.jei_mekanism_multiblocks.specs": "Specs",
 	"text.jei_mekanism_multiblocks.costs": "Costs",
 	"text.jei_mekanism_multiblocks.results": "Results",
+	"text.jei_mekanism_multiblocks.not_supported": "Not supported",
+	"text.jei_mekanism_multiblocks.reset": "Reset",
+	"text.jei_mekanism_multiblocks.clear": "Clear",
+	"text.jei_mekanism_multiblocks.save": "Save",
+	"text.jei_mekanism_multiblocks.import": "Import",
+	"text.jei_mekanism_multiblocks.import_from_clipboard": "Import from clipboard",
+	"text.jei_mekanism_multiblocks.imported_successfully": "Imported successfully",
+	"text.jei_mekanism_multiblocks.export": "Export",
+	"text.jei_mekanism_multiblocks.export_to_clipboard": "Export to clipboard",
+	"text.jei_mekanism_multiblocks.exported_successfully": "Exported successfully",
+	"text.jei_mekanism_multiblocks.json_syntax_error": "JSON Syntax Error",
 	
 	"text.jei_mekanism_multiblocks.specs.width": "Width: %s",
 	"text.jei_mekanism_multiblocks.specs.width_length": "Width, Length: %s",
@@ -23,6 +35,8 @@
 	"text.jei_mekanism_multiblocks.specs.steam_height": "Steam Height: %s",
 	"text.jei_mekanism_multiblocks.specs.water_cooled": "Water-Cooled",
 	"text.jei_mekanism_multiblocks.specs.for_sodium_cooling": "For Sodium Cooling",
+	"text.jei_mekanism_multiblocks.specs.advanced": "Advanced",
+	"text.jei_mekanism_multiblocks.specs.layout": "Layout",
 	
 	"text.jei_mekanism_multiblocks.result.input_tank": "Input Tank",
 	"text.jei_mekanism_multiblocks.result.output_tank": "Output Tank",
@@ -49,6 +63,9 @@
 	"text.jei_mekanism_multiblocks.result.energy_per_antimatter": "Energy Per Antimatter",
 	"text.jei_mekanism_multiblocks.result.inner_volume": "Inner Volume",
 	"text.jei_mekanism_multiblocks.result.blocks": "%s Blocks",
+	"text.jei_mekanism_multiblocks.result.supercharging_elements": "Supercharging Elements: %s",
+	"text.jei_mekanism_multiblocks.result.processing_speed": "Processing Speed",
+	"text.jei_mekanism_multiblocks.result.boil_efficiency": "Boil Efficiency",
 	
 	"text.jei_mekanism_multiblocks.tooltip.click_normal": "CLICK: %s",
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+CLICK: %s",
