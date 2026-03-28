@@ -38,6 +38,23 @@ public class ContainerWidget extends AbstractWidget
 		return this.children.contains(widget);
 	}
 
+	public AbstractWidget getChildUnderMouse(double pMouseX, double pMouseY)
+	{
+		for (AbstractWidget widget : this.getChildren())
+		{
+			double childMouseX = this.toChildX(pMouseX);
+			double childMouseY = this.toChildY(pMouseY);
+
+			if (widget.isMouseOver(childMouseX, childMouseY))
+			{
+				return widget;
+			}
+
+		}
+
+		return null;
+	}
+
 	public List<AbstractWidget> getChildren()
 	{
 		return this.unmodifiableChildren;

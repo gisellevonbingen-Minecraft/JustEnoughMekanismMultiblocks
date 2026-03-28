@@ -11,6 +11,21 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class TooltipHelper
 {
+	private static final Component EMPTY = Component.empty();
+
+	public static Component getMessage(Tooltip pTooltip)
+	{
+		if (pTooltip != null)
+		{
+			return ((ITooltipAccessor) pTooltip).jei_mekanism_multiblocks$getMessage();
+		}
+		else
+		{
+			return EMPTY;
+		}
+
+	}
+
 	public static Tooltip mergeMessage(Tooltip pTooltip, Collection<Component> additions)
 	{
 		List<Component> elements = new ArrayList<>();

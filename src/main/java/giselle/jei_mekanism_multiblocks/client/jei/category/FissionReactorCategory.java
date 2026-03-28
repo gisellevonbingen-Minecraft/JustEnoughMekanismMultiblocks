@@ -3,6 +3,9 @@ package giselle.jei_mekanism_multiblocks.client.jei.category;
 import java.util.function.Consumer;
 
 import giselle.jei_mekanism_multiblocks.client.TooltipHelper;
+import giselle.jei_mekanism_multiblocks.client.gui.ButtonWidget;
+import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
+import giselle.jei_mekanism_multiblocks.client.gui.FissionLayoutScreen;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.gui.LongSliderWidget;
@@ -16,6 +19,7 @@ import mekanism.api.heat.HeatAPI;
 import mekanism.api.math.MathUtils;
 import mekanism.common.registries.MekanismGases;
 import mekanism.common.registries.MekanismGases.Coolants;
+import mekanism.common.util.EnumUtils;
 import mekanism.common.util.HeatUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.UnitDisplayUtils.TemperatureUnit;
@@ -26,8 +30,10 @@ import mekanism.generators.common.content.fission.FissionReactorMultiblockData;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.core.Vec3i;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -59,13 +65,50 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 	{
 		public static final double WATER_CONDUCTIVITY = 0.5D;
 
+		protected Layout currentLayout;
+		protected Layout advancedLayout;
+		protected int fuelRodAssemblies;
+		protected int controlRodAssemblies;
+		protected int surfaceArea;
+		protected double boilEfficiency;
+
+		protected CheckBoxWidget advancedCheckBox;
+		protected ButtonWidget layoutButton;
+
 		protected IntSliderWithButtons portsWidget;
 		protected IntSliderWithButtons logicAdaptersWidget;
 		protected LongSliderWithButtons burnRateWidget;
 
 		public FissionReactorCategoryWidget()
 		{
+			this.currentLayout = this.createEmptyLayout();
+			this.advancedLayout = this.createEmptyLayout();
+			this.advancedLayout.resetPillars();
+		}
 
+		public Layout createEmptyLayout()
+		{
+			return new Layout(//
+					this.getDimensionWidthMin(), this.getDimensionWidthMax(), //
+					this.getDimensionLengthMin(), this.getDimensionLengthMax(), //
+					this.getDimensionHeightMin(), this.getDimensionHeightMax()//
+			);
+		}
+
+		@Override
+		protected void createSpecDimension()
+		{
+			this.advancedCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.advanced"), false);
+			this.advancedCheckBox.addSelectedChangedHandler(this::onAdvancedChanged);
+			this.configsList.addChild(this.advancedCheckBox);
+
+			this.layoutButton = new ButtonWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.layout"));
+			this.layoutButton.addPressHandler(this::onLayoutButtonClick);
+			this.configsList.addChild(this.layoutButton);
+
+			super.createSpecDimension();
+
+			this.updateDimensionVisible();
 		}
 
 		@Override
@@ -88,6 +131,15 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		@Override
 		public void load(CompoundTag tag)
 		{
+			this.setAdvanced(tag.getBoolean("Advanced"));
+
+			if (tag.contains("AdvancedLayout"))
+			{
+				this.advancedLayout.load(tag.getCompound("AdvancedLayout"));
+			}
+
+			this.setAdvancedLayout(this.advancedLayout);
+
 			super.load(tag);
 
 			this.setPortCount(tag.getInt("PortCount"));
@@ -98,6 +150,9 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		@Override
 		public void save(CompoundTag tag)
 		{
+			tag.putBoolean("Advanced", this.isAdvanced());
+			tag.put("AdvancedLayout", this.advancedLayout.save());
+
 			super.save(tag);
 
 			tag.putInt("PortCount", this.getPortCount());
@@ -105,15 +160,112 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			tag.putLong("BurnRate", this.getBurnRate());
 		}
 
+		protected void onAdvancedChanged(boolean advanced)
+		{
+			this.updateDimensionVisible();
+
+			if (this.isAdvanced())
+			{
+				this.currentLayout = this.advancedLayout.clone();
+				this.onLayoutChanged();
+			}
+			else
+			{
+				this.onDimensionChanged();
+			}
+
+		}
+
+		public void updateDimensionVisible()
+		{
+			boolean advanced = this.advancedCheckBox.isSelected();
+			this.configsList.setVisible(this.widthWidget, !advanced);
+			this.configsList.setVisible(this.heightWidget, !advanced);
+			this.configsList.setVisible(this.lengthWidget, !advanced);
+
+			this.configsList.setVisible(this.layoutButton, advanced);
+		}
+
+		protected void onLayoutButtonClick(AbstractButton button)
+		{
+			Minecraft minecraft = Minecraft.getInstance();
+			minecraft.pushGuiLayer(new FissionLayoutScreen(Component.empty(), this));
+		}
+
 		@Override
 		protected void onDimensionChanged()
 		{
 			super.onDimensionChanged();
 
+			if (!this.isAdvanced())
+			{
+				this.currentLayout.setWidth(this.getDimensionWidth());
+				this.currentLayout.setLength(this.getDimensionLength());
+				this.currentLayout.setHeight(this.getDimensionHeight());
+				this.currentLayout.resetPillars();
+				this.onLayoutChanged();
+			}
+
+		}
+
+		protected void onLayoutChanged()
+		{
+			this.fuelRodAssemblies = 0;
+			this.controlRodAssemblies = 0;
+			this.surfaceArea = 0;
+			this.boilEfficiency = 0.0D;
+
+			int pillarMaximum = this.currentLayout.getPillarMax();
+			boolean[][][] set = new boolean[this.currentLayout.getHeight()][this.currentLayout.getLength()][this.currentLayout.getWidth()];
+
+			for (int z = 1; z < this.currentLayout.getLength() - 1; z++)
+			{
+				for (int x = 1; x < this.currentLayout.getWidth() - 1; x++)
+				{
+					int pillar = Math.min(this.currentLayout.pillars[z][x], pillarMaximum);
+					this.fuelRodAssemblies += pillar;
+
+					if (pillar > 0)
+					{
+						this.controlRodAssemblies++;
+
+						for (int y = 0; y < pillar; y++)
+						{
+							for (Direction direction : EnumUtils.DIRECTIONS)
+							{
+								if (set[1 + y + direction.getStepY()][z + direction.getStepZ()][x + direction.getStepX()])
+								{
+									this.surfaceArea -= 2;
+								}
+
+							}
+
+							this.surfaceArea += 6;
+							set[1 + y][z][x] = true;
+						}
+
+					}
+
+				}
+
+			}
+
+			if (this.fuelRodAssemblies == 0)
+			{
+				this.boilEfficiency = 1.0D;
+			}
+			else
+			{
+				double avgSurfaceArea = this.surfaceArea / (double) this.fuelRodAssemblies;
+				this.boilEfficiency = Math.min(1, avgSurfaceArea / MekanismGeneratorsConfig.generators.fissionSurfaceAreaTarget.get());
+			}
+
 			this.updatePortsSliderLimit();
 			this.updateBurnRateSliderLimit();
 
 			this.setBurnRate(this.getMaxBurnRate());
+
+			this.markNeedUpdate();
 		}
 
 		public void updatePortsSliderLimit()
@@ -203,20 +355,25 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			long burnRate = this.getBurnRate();
 			long fuelCapacity = this.getFuelCapacity();
 			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.max_burn_rate"), VolumeTextHelper.formatMBt(maxBurnRate)));
-			this.createStableTempWidget(consumer, new FluidStack(Fluids.WATER, 1).getDisplayName(), burnRate, WATER_CONDUCTIVITY, HeatUtils.getWaterThermalEnthalpy() / HeatUtils.getSteamEnergyEfficiency());
-			this.createStableTempWidget(consumer, MekanismGases.SODIUM.getTextComponent(), burnRate, Coolants.SODIUM_COOLANT);
+			this.createStableTempWidgets(consumer, burnRate);
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(coolantCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_FUEL_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_HEATED_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(heatedCoolantCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_WASTE_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
 		}
 
-		private void createStableTempWidget(Consumer<AbstractWidget> consumer, Component with, long toBurn, Coolant coolant)
+		public void createStableTempWidgets(Consumer<AbstractWidget> consumer, long toBurn)
+		{
+			this.createStableTempWidget(consumer, new FluidStack(Fluids.WATER, 1).getDisplayName(), toBurn, WATER_CONDUCTIVITY, HeatUtils.getWaterThermalEnthalpy() / HeatUtils.getSteamEnergyEfficiency());
+			this.createStableTempWidget(consumer, MekanismGases.SODIUM.getTextComponent(), toBurn, Coolants.SODIUM_COOLANT);
+		}
+
+		public void createStableTempWidget(Consumer<AbstractWidget> consumer, Component with, long toBurn, Coolant coolant)
 		{
 			this.createStableTempWidget(consumer, with, toBurn, coolant.getConductivity(), coolant.getThermalEnthalpy());
 		}
 
-		private void createStableTempWidget(Consumer<AbstractWidget> consumer, Component with, long toBurn, double conductivity, double thermalEnthalpy)
+		public void createStableTempWidget(Consumer<AbstractWidget> consumer, Component with, long toBurn, double conductivity, double thermalEnthalpy)
 		{
 			double boilEfficiency = this.getBoilEfficiency();
 			double stableTemp = this.getCoolingStableTemp(toBurn, conductivity, thermalEnthalpy, boilEfficiency);
@@ -255,6 +412,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			long heatedCoolant = this.getHeatedCoolant(stableTemp, conductivity, thermalEnthalpy, boilEfficiency);
 			ResultWidget heatingRateWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.heating_rate_with", with), VolumeTextHelper.formatMBt(heatedCoolant));
 			heatingRateWidget.setTooltip(TooltipHelper.createMessageOnly(burnRateTooltip));
+
 			consumer.accept(heatingRateWidget);
 		}
 
@@ -349,19 +507,49 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			return boilHeat / (heatCapacity * boilEfficiency) + HeatUtils.BASE_BOIL_TEMP;
 		}
 
+		public Layout getCurrentLayout()
+		{
+			return this.currentLayout.clone();
+		}
+
+		public boolean isAdvanced()
+		{
+			return this.advancedCheckBox.isSelected();
+		}
+
+		public void setAdvanced(boolean advanced)
+		{
+			this.advancedCheckBox.setSelected(advanced);
+		}
+
+		public Layout getAdvancedLayout()
+		{
+			return this.advancedLayout.clone();
+		}
+
+		public void setAdvancedLayout(Layout layout)
+		{
+			this.advancedLayout = layout.clone();
+			this.advancedLayout.setWidth(Mth.clamp(this.advancedLayout.getWidth(), this.getDimensionWidthMin(), this.getDimensionWidthMax()));
+			this.advancedLayout.setLength(Mth.clamp(this.advancedLayout.getLength(), this.getDimensionLengthMin(), this.getDimensionLengthMax()));
+			this.advancedLayout.setHeight(Mth.clamp(this.advancedLayout.getHeight(), this.getDimensionHeightMin(), this.getDimensionHeightMax()));
+
+			if (this.isAdvanced())
+			{
+				this.currentLayout = this.advancedLayout.clone();
+				this.onLayoutChanged();
+			}
+
+		}
+
 		public int getControlRodAssemblyCount()
 		{
-			Vec3i inner = this.getDimensionInner();
-			int rods = 0;
-			rods += ((inner.getX() + 1) / 2) * ((inner.getZ() + 1) / 2);
-			rods += ((inner.getX() + 0) / 2) * ((inner.getZ() + 0) / 2);
-			return rods;
+			return this.controlRodAssemblies;
 		}
 
 		public int getFissionFuelAssemblyCount()
 		{
-			Vec3i inner = this.getDimensionInner();
-			return this.getControlRodAssemblyCount() * (inner.getY() - 1);
+			return this.fuelRodAssemblies;
 		}
 
 		public int getPortCount()
@@ -394,6 +582,22 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			this.burnRateWidget.getSlider().setValue(burnRate);
 		}
 
+		public double getBoilEfficiency()
+		{
+			return this.boilEfficiency;
+		}
+
+		@Override
+		public int getDimensionWidth()
+		{
+			if (this.isAdvanced())
+			{
+				return this.advancedLayout.getWidth();
+			}
+
+			return super.getDimensionWidth();
+		}
+
 		@Override
 		public int getDimensionWidthMin()
 		{
@@ -407,6 +611,17 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		}
 
 		@Override
+		public int getDimensionLength()
+		{
+			if (this.isAdvanced())
+			{
+				return this.advancedLayout.getLength();
+			}
+
+			return super.getDimensionLength();
+		}
+
+		@Override
 		public int getDimensionLengthMin()
 		{
 			return 3;
@@ -416,6 +631,17 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		public int getDimensionLengthMax()
 		{
 			return 18;
+		}
+
+		@Override
+		public int getDimensionHeight()
+		{
+			if (this.isAdvanced())
+			{
+				return this.advancedLayout.getHeight();
+			}
+
+			return super.getDimensionHeight();
 		}
 
 		@Override
@@ -434,6 +660,242 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		public Block getGlassBlock()
 		{
 			return GeneratorsBlocks.REACTOR_GLASS.getBlock();
+		}
+
+		public static class Layout
+		{
+			private final int widthMin;
+			private final int widthMax;
+			private final int lengthMin;
+			private final int lengthMax;
+			private final int heightMin;
+			private final int heightMax;
+
+			private int width;
+			private int length;
+			private int height;
+			private int pillarMax;
+			private int[][] pillars = new int[0][0];
+
+			public Layout(int widthMin, int widthMax, int lengthMin, int lengthMax, int heightMin, int heightMax)
+			{
+				this.widthMin = widthMin;
+				this.widthMax = widthMax;
+				this.lengthMin = lengthMin;
+				this.lengthMax = lengthMax;
+				this.heightMin = heightMin;
+				this.heightMax = heightMax;
+
+				this.setWidth(widthMin);
+				this.setLength(lengthMin);
+				this.setHeight(heightMin);
+				this.pillars = new int[lengthMax][widthMax];
+
+				this.resetPillars();
+			}
+
+			public Layout(Layout other)
+			{
+				this.widthMin = other.widthMin;
+				this.widthMax = other.widthMax;
+				this.lengthMin = other.lengthMin;
+				this.lengthMax = other.lengthMax;
+				this.heightMin = other.heightMin;
+				this.heightMax = other.heightMax;
+
+				this.width = other.width;
+				this.length = other.length;
+				this.height = other.height;
+				this.pillarMax = other.pillarMax;
+				this.pillars = new int[other.pillars.length][];
+
+				for (int z = 0; z < other.pillars.length; z++)
+				{
+					this.pillars[z] = new int[other.pillars[z].length];
+
+					for (int x = 0; x < other.pillars[z].length; x++)
+					{
+						this.pillars[z][x] = other.pillars[z][x];
+					}
+
+				}
+
+			}
+
+			@Override
+			public Layout clone()
+			{
+				return new Layout(this);
+			}
+
+			public boolean canPillar(int x, int z)
+			{
+				return (0 < x && x < this.width - 1) && (0 < z && z < this.length - 1);
+			}
+
+			public int getPillarMax()
+			{
+				return this.pillarMax;
+			}
+
+			public int getPillar(int x, int z)
+			{
+				if (this.canPillar(x, z))
+				{
+					return Mth.clamp(this.pillars[z][x], 0, this.getPillarMax());
+				}
+
+				return 0;
+			}
+
+			public void setPillar(int x, int z, int pillar)
+			{
+				if (this.canPillar(x, z))
+				{
+					this.pillars[z][x] = Mth.clamp(pillar, 0, this.getPillarMax());
+				}
+
+			}
+
+			public void clearPillars()
+			{
+				for (int z = 0; z < this.pillars.length; z++)
+				{
+					for (int x = 0; x < this.pillars[z].length; x++)
+					{
+						this.pillars[z][x] = 0;
+					}
+
+				}
+
+			}
+
+			public void resetPillars()
+			{
+				this.clearPillars();
+
+				int pillarMaximum = this.getHeightMax();
+
+				for (int z = 1; z < this.pillars.length - 1; z++)
+				{
+					boolean b1 = z % 2 == 0;
+
+					for (int x = 1; x < this.pillars[z].length - 1; x++)
+					{
+						this.pillars[z][x] = b1 == (x % 2 == 0) ? pillarMaximum : 0;
+					}
+
+				}
+
+			}
+
+			public void load(CompoundTag tag)
+			{
+				this.width = tag.getInt("width");
+				this.length = tag.getInt("length");
+				this.height = tag.getInt("height");
+				int[] pillars = tag.getIntArray("pillars");
+				int pillarsWidth = Math.min(tag.getInt("pillarsWidth"), this.widthMax);
+				int pillarsLength = Math.min(tag.getInt("pillarsLength"), this.lengthMax);
+				this.clearPillars();
+
+				for (int z = 0; z < pillarsLength; z++)
+				{
+					for (int x = 0; x < pillarsWidth; x++)
+					{
+						this.pillars[z][x] = pillars[z * pillarsWidth + x];
+					}
+
+				}
+
+			}
+
+			public CompoundTag save()
+			{
+				int pillarsWidth = this.widthMax;
+				int pillarsLength = this.lengthMax;
+				int[] pillars = new int[pillarsLength * pillarsWidth];
+
+				for (int z = 0; z < pillarsLength; z++)
+				{
+					for (int x = 0; x < pillarsWidth; x++)
+					{
+						pillars[z * pillarsWidth + x] = this.pillars[z][x];
+					}
+
+				}
+
+				CompoundTag tag = new CompoundTag();
+				tag.putInt("width", this.width);
+				tag.putInt("length", this.length);
+				tag.putInt("height", this.height);
+				tag.putIntArray("pillars", pillars);
+				tag.putInt("pillarsWidth", pillarsWidth);
+				tag.putInt("pillarsLength", pillarsLength);
+				return tag;
+			}
+
+			public int getWidthMin()
+			{
+				return this.widthMin;
+			}
+
+			public int getWidthMax()
+			{
+				return this.widthMax;
+			}
+
+			public int getLengthMin()
+			{
+				return this.lengthMin;
+			}
+
+			public int getLengthMax()
+			{
+				return this.lengthMax;
+			}
+
+			public int getHeightMin()
+			{
+				return this.heightMin;
+			}
+
+			public int getHeightMax()
+			{
+				return this.heightMax;
+			}
+
+			public int getWidth()
+			{
+				return this.width;
+			}
+
+			public void setWidth(int width)
+			{
+				this.width = Mth.clamp(width, this.widthMin, this.widthMax);
+			}
+
+			public int getLength()
+			{
+				return this.length;
+			}
+
+			public void setLength(int length)
+			{
+				this.length = Mth.clamp(length, this.lengthMin, this.lengthMax);
+			}
+
+			public int getHeight()
+			{
+				return this.height;
+			}
+
+			public void setHeight(int height)
+			{
+				this.height = Mth.clamp(height, this.heightMin, this.heightMax);
+				this.pillarMax = this.height - 3;
+			}
+
 		}
 
 	}
