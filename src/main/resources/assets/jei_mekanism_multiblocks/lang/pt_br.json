@@ -2,12 +2,22 @@
 	"text.jei_mekanism_multiblocks.recipe_category.title": "Construindo [%s]",
 	"text.jei_mekanism_multiblocks.building.better_fusion_reactor": "Reator de Fusão Aprimorado",
 	"text.jei_mekanism_multiblocks.building.extra_matrix": "Matriz de Indução Reforçada",
-	
+
 	"text.jei_mekanism_multiblocks.specs": "Especificações",
 	"text.jei_mekanism_multiblocks.costs": "Custos",
 	"text.jei_mekanism_multiblocks.results": "Resultados",
 	"text.jei_mekanism_multiblocks.not_supported": "Não suportado",
-	
+	"text.jei_mekanism_multiblocks.reset": "Redefinir",
+	"text.jei_mekanism_multiblocks.clear": "Limpar",
+	"text.jei_mekanism_multiblocks.save": "Salvar",
+	"text.jei_mekanism_multiblocks.import": "Importar",
+	"text.jei_mekanism_multiblocks.import_from_clipboard": "Importar da área de transferência",
+	"text.jei_mekanism_multiblocks.imported_successfully": "Importado com sucesso",
+	"text.jei_mekanism_multiblocks.export": "Exportar",
+	"text.jei_mekanism_multiblocks.export_to_clipboard": "Exportar para a área de transferência",
+	"text.jei_mekanism_multiblocks.exported_successfully": "Exportado com sucesso",
+	"text.jei_mekanism_multiblocks.json_syntax_error": "Erro de Sintaxe JSON",
+
 	"text.jei_mekanism_multiblocks.specs.width": "Largura: %s",
 	"text.jei_mekanism_multiblocks.specs.width_length": "Largura, Comprimento: %s",
 	"text.jei_mekanism_multiblocks.specs.length": "Comprimento: %s",
@@ -25,7 +35,9 @@
 	"text.jei_mekanism_multiblocks.specs.steam_height": "Altura do Vapor: %s",
 	"text.jei_mekanism_multiblocks.specs.water_cooled": "Refrigerado a Água",
 	"text.jei_mekanism_multiblocks.specs.for_sodium_cooling": "Para Refrigeração com Sódio",
-	
+	"text.jei_mekanism_multiblocks.specs.advanced": "Avançado",
+	"text.jei_mekanism_multiblocks.specs.layout": "Layout",
+
 	"text.jei_mekanism_multiblocks.result.input_tank": "Tanque de Entrada",
 	"text.jei_mekanism_multiblocks.result.output_tank": "Tanque de Saída",
 	"text.jei_mekanism_multiblocks.result.fluid_tank": "Tanque de Fluido",
@@ -51,7 +63,10 @@
 	"text.jei_mekanism_multiblocks.result.energy_per_antimatter": "Energia por Antimatéria",
 	"text.jei_mekanism_multiblocks.result.inner_volume": "Volume Interno",
 	"text.jei_mekanism_multiblocks.result.blocks": "%s Blocos",
-	
+	"text.jei_mekanism_multiblocks.result.supercharging_elements": "Elementos de Superalimentação: %s",
+	"text.jei_mekanism_multiblocks.result.processing_speed": "Velocidade de Processamento",
+	"text.jei_mekanism_multiblocks.result.boil_efficiency": "Eficiência de Ebulição",
+
 	"text.jei_mekanism_multiblocks.tooltip.click_normal": "CLIQUE: %s",
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+CLIQUE: %s",
 	"text.jei_mekanism_multiblocks.tooltip.warning": "※ Aviso",
