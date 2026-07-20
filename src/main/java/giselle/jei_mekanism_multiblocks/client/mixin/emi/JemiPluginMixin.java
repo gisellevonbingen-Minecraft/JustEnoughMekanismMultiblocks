@@ -18,6 +18,7 @@ import giselle.jei_mekanism_multiblocks.client.emi.EMIMultiblockRecipe;
 import giselle.jei_mekanism_multiblocks.client.jei.JeiPlugin;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
+import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 
 @Mixin(value = JemiPlugin.class, remap = false)
@@ -43,7 +44,17 @@ public abstract class JemiPluginMixin
 
 		for (MultiblockCategory<? extends MultiblockWidget> jeiCategory : JeiPlugin.instance().getCategories())
 		{
-			registry.addRecipe(this.createRecipe(jeiCategory, reverse.get(jeiCategory)));
+			EmiRecipeCategory emiCategory = reverse.get(jeiCategory);
+
+			if (emiCategory == null)
+			{
+				JEI_MekanismMultiblocks.LOGGER.error(
+						"Skipping EMI recipe for unregistered JEI category: {}",
+						jeiCategory.getClass().getName());
+				continue;
+			}
+
+			registry.addRecipe(this.createRecipe(jeiCategory, emiCategory));
 		}
 
 	}
