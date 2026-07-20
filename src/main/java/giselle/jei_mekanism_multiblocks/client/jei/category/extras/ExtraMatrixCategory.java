@@ -3,7 +3,7 @@ package giselle.jei_mekanism_multiblocks.client.jei.category.extras;
 import java.util.function.Consumer;
 
 import com.jerry.mekanism_extras.MekanismExtras;
-import com.jerry.mekanism_extras.common.registry.ExtraBlock;
+import com.jerry.mekanism_extras.common.registries.ExtraBlocks;
 
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
@@ -24,25 +24,25 @@ public class ExtraMatrixCategory extends MultiblockCategory<ExtraMatrixCategory.
 {
 	public ExtraMatrixCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismExtras.rl("matrix"), MatrixWidget.class, Component.translatable("text.jei_mekanism_multiblocks.building.extra_matrix"), ExtraBlock.REINFORCED_INDUCTION_PORT.getItemStack());
+		super(helper, MekanismExtras.rl("matrix"), MatrixWidget.class, Component.translatable("text.jei_mekanism_multiblocks.building.extra_matrix"), ExtraBlocks.REINFORCED_INDUCTION_PORT.getItemStack());
 	}
 
 	@Override
 	protected void getRecipeCatalystItemStacks(Consumer<ItemStack> consumer)
 	{
 		super.getRecipeCatalystItemStacks(consumer);
-		consumer.accept(ExtraBlock.REINFORCED_INDUCTION_CASING.getItemStack());
-		consumer.accept(ExtraBlock.REINFORCED_INDUCTION_PORT.getItemStack());
+		consumer.accept(ExtraBlocks.REINFORCED_INDUCTION_CASING.getItemStack());
+		consumer.accept(ExtraBlocks.REINFORCED_INDUCTION_PORT.getItemStack());
 		consumer.accept(MekanismBlocks.STRUCTURAL_GLASS.getItemStack());
 
-		consumer.accept(ExtraBlock.ABSOLUTE_INDUCTION_CELL.getItemStack());
-		consumer.accept(ExtraBlock.ABSOLUTE_INDUCTION_PROVIDER.getItemStack());
-		consumer.accept(ExtraBlock.SUPREME_INDUCTION_CELL.getItemStack());
-		consumer.accept(ExtraBlock.SUPREME_INDUCTION_PROVIDER.getItemStack());
-		consumer.accept(ExtraBlock.COSMIC_INDUCTION_CELL.getItemStack());
-		consumer.accept(ExtraBlock.COSMIC_INDUCTION_PROVIDER.getItemStack());
-		consumer.accept(ExtraBlock.INFINITE_INDUCTION_CELL.getItemStack());
-		consumer.accept(ExtraBlock.INFINITE_INDUCTION_PROVIDER.getItemStack());
+		consumer.accept(ExtraBlocks.ABSOLUTE_INDUCTION_CELL.getItemStack());
+		consumer.accept(ExtraBlocks.ABSOLUTE_INDUCTION_PROVIDER.getItemStack());
+		consumer.accept(ExtraBlocks.SUPREME_INDUCTION_CELL.getItemStack());
+		consumer.accept(ExtraBlocks.SUPREME_INDUCTION_PROVIDER.getItemStack());
+		consumer.accept(ExtraBlocks.COSMIC_INDUCTION_CELL.getItemStack());
+		consumer.accept(ExtraBlocks.COSMIC_INDUCTION_PROVIDER.getItemStack());
+		consumer.accept(ExtraBlocks.INFINITE_INDUCTION_CELL.getItemStack());
+		consumer.accept(ExtraBlocks.INFINITE_INDUCTION_PROVIDER.getItemStack());
 	}
 
 	public static class MatrixWidget extends MultiblockWidget
@@ -106,8 +106,8 @@ public class ExtraMatrixCategory extends MultiblockCategory<ExtraMatrixCategory.
 				glasses = 0;
 			}
 
-			consumer.accept(new ItemStack(ExtraBlock.REINFORCED_INDUCTION_CASING, casing));
-			consumer.accept(new ItemStack(ExtraBlock.REINFORCED_INDUCTION_PORT, ports));
+			consumer.accept(new ItemStack(ExtraBlocks.REINFORCED_INDUCTION_CASING, casing));
+			consumer.accept(new ItemStack(ExtraBlocks.REINFORCED_INDUCTION_PORT, ports));
 			consumer.accept(new ItemStack(this.getGlassBlock(), glasses));
 		}
 
