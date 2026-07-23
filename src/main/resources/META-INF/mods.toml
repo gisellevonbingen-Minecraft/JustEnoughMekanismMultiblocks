@@ -39,3 +39,10 @@ issueTrackerURL="${mod_issues}"
     versionRange="${mekanism_version_range}"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="mekanism_extras"
+    mandatory=false
+    versionRange="${mekanism_extra_version_range}"
+    ordering="NONE"
+    side="CLIENT"

@@ -5,10 +5,10 @@ import java.util.function.Consumer;
 
 import com.jerry.generator_extras.common.ExtraGenLang;
 import com.jerry.generator_extras.common.config.GenLoadConfig;
-import com.jerry.generator_extras.common.genregistry.ExtraGenBlocks;
-import com.jerry.generator_extras.common.genregistry.ExtraGenItem;
+import com.jerry.generator_extras.common.genregistries.ExtraGenBlocks;
+import com.jerry.generator_extras.common.genregistries.ExtraGenItem;
 import com.jerry.mekanism_extras.MekanismExtras;
-import com.jerry.mekanism_extras.common.ExtraTag;
+import com.jerry.mekanism_extras.common.ExtraTags;
 
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
@@ -45,7 +45,7 @@ public class NaquadahReactorCategory extends MultiblockCategory<NaquadahReactorC
 		consumer.accept(ExtraGenBlocks.LEAD_COATED_LASER_FOCUS_MATRIX.getItemStack());
 		consumer.accept(ExtraGenBlocks.LEAD_COATED_GLASS.getItemStack());
 
-		List<Gas> fusionFuelGases = ChemicalTags.GAS.getManager().get().getTag(ExtraTag.Gases.NAQUADAH_URANIUM_FUEL).stream().toList();
+		List<Gas> fusionFuelGases = ChemicalTags.GAS.getManager().get().getTag(ExtraTags.Gases.NAQUADAH_URANIUM_FUEL).stream().toList();
 		long capacity = GenLoadConfig.generatorConfig.hohlraumMaxGas.get();
 
 		for (Gas gas : fusionFuelGases)
