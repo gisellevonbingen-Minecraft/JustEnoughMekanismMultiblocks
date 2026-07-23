@@ -113,7 +113,8 @@ dependencies {
     implementation fg.deobf("curse.maven:evolved-mekanism-1230085:${evolved_mekanism_file}")
 
     implementation fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
-    implementation fg.deobf("dev.emi:emi-forge:${emi_version}+${mc_version}")
+    //implementation fg.deobf("dev.emi:emi-forge:${emi_version}+${mc_version}")
+    implementation fg.deobf("curse.maven:emi-580555:${emi_file}")
 
     // Runtiem Only
     runtimeOnly fg.deobf("curse.maven:refined-storage-243076:${refined_storage_file}")
