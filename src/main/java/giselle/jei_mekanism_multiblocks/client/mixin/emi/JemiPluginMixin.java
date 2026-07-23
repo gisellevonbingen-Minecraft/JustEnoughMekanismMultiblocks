@@ -48,9 +48,7 @@ public abstract class JemiPluginMixin
 
 			if (emiCategory == null)
 			{
-				JEI_MekanismMultiblocks.LOGGER.error(
-						"Skipping EMI recipe for unregistered JEI category: {}",
-						jeiCategory.getClass().getName());
+				JEI_MekanismMultiblocks.LOGGER.error("Skipping EMI recipe for unregistered JEI category: {}", jeiCategory.getClass().getName());
 				continue;
 			}
 
