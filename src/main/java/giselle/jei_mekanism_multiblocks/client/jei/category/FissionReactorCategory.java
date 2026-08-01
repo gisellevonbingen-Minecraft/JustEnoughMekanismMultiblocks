@@ -377,7 +377,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		{
 			double boilEfficiency = this.getBoilEfficiency();
 			double stableTemp = this.getCoolingStableTemp(toBurn, conductivity, thermalEnthalpy, boilEfficiency);
-			ResultWidget tempWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.temp_with", with), MekanismUtils.getTemperatureDisplay(stableTemp, TemperatureUnit.KELVIN, false));
+			ResultWidget tempWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.temp_with", with), MekanismUtils.getTemperatureDisplay(stableTemp, TemperatureUnit.KELVIN, true));
 			consumer.accept(tempWidget);
 
 			boolean warning = false;
