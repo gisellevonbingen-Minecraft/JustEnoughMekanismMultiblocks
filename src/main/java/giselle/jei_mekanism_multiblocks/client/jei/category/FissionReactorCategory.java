@@ -85,6 +85,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			this.currentLayout = this.createEmptyLayout();
 			this.advancedLayout = this.createEmptyLayout();
 			this.advancedLayout.resetPillars();
+			this.onLayoutChanged();
 		}
 
 		public Layout createEmptyLayout()
