@@ -213,7 +213,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			double maxTemp = EvaporationMultiblockData.MAX_MULTIPLIER_TEMP;
 			double maxSpeed = (maxTemp - HeatAPI.AMBIENT_TEMP) * MekanismConfig.general.evaporationTempMultiplier.get() * ((double) dimHeight / this.getDimensionHeightMax());
 			ResultWidget speedWidget = new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.max_speed"), new TextComponent("x" + TextUtils.format(maxSpeed)));
-			speedWidget.setTooltip(new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.when_temp_ge", MekanismUtils.getTemperatureDisplay(maxTemp, TemperatureUnit.KELVIN, false)));
+			speedWidget.setTooltip(new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.when_temp_ge", MekanismUtils.getTemperatureDisplay(maxTemp, TemperatureUnit.KELVIN, true)));
 			consumer.accept(speedWidget);
 			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(inputCapacity)));
 			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(outputCapacity)));
