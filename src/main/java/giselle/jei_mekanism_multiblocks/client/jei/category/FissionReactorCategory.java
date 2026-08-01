@@ -498,6 +498,11 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 		public double getCoolingStableTemp(long toBurn, double coolantConductivity, double thermalEnthalpy, double boilEfficiency)
 		{
+			if (toBurn == 0)
+			{
+				return HeatAPI.AMBIENT_TEMP;
+			}
+
 			long coolantCapacity = this.getCooledCoolantCapacity();
 			long burnHeat = MathUtils.multiplyClamped(toBurn, MekanismGeneratorsConfig.generators.energyPerFissionFuel.get());
 			double heatCapacity = this.getHeatCapacity();
