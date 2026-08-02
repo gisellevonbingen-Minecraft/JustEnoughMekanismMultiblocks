@@ -422,39 +422,83 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			consumer.accept(heatingRateWidget);
 		}
 
-		private void simulateTemp(double coolantConductivity)
+		private void simulateTemp(double coolantConductivity, double thermalEnthalpy)
 		{
 			long coolantCapacity = this.getCooledCoolantCapacity();
 			long toBurn = this.getBurnRate();
 			long burnHeat = MathUtils.multiplyClamped(toBurn, MekanismGeneratorsConfig.generators.energyPerFissionFuel.get());
 			double heatCapacity = this.getHeatCapacity();
 			double boilEfficiency = this.getBoilEfficiency();
+			double baseBoilHeat = HeatUtils.BASE_BOIL_TEMP * heatCapacity;
 
-			double heat = HeatAPI.AMBIENT_TEMP * heatCapacity;
-			double prevHeat = 0.0D;
+			double heat = baseBoilHeat;
+			double prevHeat = heat;
+			double reactorDamage = 0.0D;
+			boolean active = true;
+			boolean stabled = false;
 
-			for (int i = 0; i < 100; i++)
+			for (int i = 0;; i++)
 			{
-				double temp = heat / heatCapacity;
+				double heatToHandle = 0.0D;
 
-				heat += burnHeat;
+				if (active)
+				{
+					heatToHandle += burnHeat;
+				}
 
-				double boilHeat = boilEfficiency * (temp - HeatUtils.BASE_BOIL_TEMP) * heatCapacity;
+				double boilHeat = boilEfficiency * (heat - baseBoilHeat);
 				double caseCoolantHeat = boilHeat * coolantConductivity;
-				long coolantHeated = (int) (HeatUtils.getSteamEnergyEfficiency() * caseCoolantHeat / HeatUtils.getWaterThermalEnthalpy());
+				long coolantHeated = MathUtils.clampToLong(caseCoolantHeat / thermalEnthalpy);
 				coolantHeated = Math.max(0, Math.min(coolantHeated, coolantCapacity));
 
 				if (coolantHeated > 0)
 				{
-					caseCoolantHeat = coolantHeated * HeatUtils.getWaterThermalEnthalpy() / HeatUtils.getSteamEnergyEfficiency();
-					heat -= caseCoolantHeat;
+					caseCoolantHeat = coolantHeated * thermalEnthalpy;
+					heatToHandle -= caseCoolantHeat;
 				}
 
-				System.out.println("Temp: " + (heat / heatCapacity));
+				heat += heatToHandle;
+				double temp = heat / heatCapacity;
 
-				if (prevHeat == heat)
+				if (temp >= FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE)
 				{
-					System.out.println("Stabled");
+					double damageRate = Math.min(temp, FissionReactorMultiblockData.MAX_DAMAGE_TEMPERATURE) / (FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE * 10);
+					reactorDamage += damageRate;
+				}
+				else
+				{
+					double repairRate = (FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE - temp) / (FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE * 100);
+					reactorDamage = Math.max(0, reactorDamage - repairRate);
+				}
+
+				System.out.println(i + ": Temp: " + temp + "K, " + reactorDamage + "%, " + active);
+
+				if (active)
+				{
+					if (reactorDamage >= FissionReactorMultiblockData.MAX_DAMAGE)
+					{
+						System.out.println("Overload");
+						active = false;
+					}
+					else if (heat == prevHeat)
+					{
+						if (!stabled)
+						{
+							System.out.println("Stabled");
+							stabled = true;
+						}
+
+						if (temp < FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE)
+						{
+							break;
+						}
+
+					}
+
+				}
+				else if (reactorDamage <= 0.0D)
+				{
+					System.out.println("Cooldowned");
 					break;
 				}
 
