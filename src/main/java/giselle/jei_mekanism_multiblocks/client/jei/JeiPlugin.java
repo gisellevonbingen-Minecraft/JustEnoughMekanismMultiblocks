@@ -117,12 +117,12 @@ public class JeiPlugin implements IModPlugin
 			try
 			{
 				MultiblockWidget widget = category.getRecipeClass().getDeclaredConstructor().newInstance();
-				
+
 				if (SavedData.hasMultiblock(category.getUid()))
 				{
 					widget.load(SavedData.getMultiblock(category.getUid()));
 				}
-				
+
 				widget.addChangedHandler(w -> this.onWidgetChanged(category, widget));
 				registration.addRecipes(Collections.singleton(widget), category.getUid());
 			}

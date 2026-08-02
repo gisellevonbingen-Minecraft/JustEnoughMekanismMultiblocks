@@ -206,7 +206,7 @@ public class FissionLayoutScreen extends Screen
 					if (pillar > 0)
 					{
 						ITextComponent text = PILLAR_COMPONENT_CACHE.computeIfAbsent(pillar, s -> new StringTextComponent(String.valueOf(s)));
-						int textWidth = this.pillarTextWidthCache.computeIfAbsent(text, s -> this.font.width((ITextComponent) s));
+						int textWidth = this.pillarTextWidthCache.computeIfAbsent(text, s -> this.font.width(s));
 						int textHeight = this.font.lineHeight;
 						this.font.draw(pMatrixStack, text, coordX + (CELL_WIDTH - textWidth) / 2, coordZ + (CELL_HEIGHT - textHeight), 0xFFFFFFFF);
 					}
@@ -245,10 +245,10 @@ public class FissionLayoutScreen extends Screen
 		}
 
 		Widget widget = this.resultsList.getChildUnderMouse(mouseX, mouseY);
-		
+
 		if (widget instanceof ResultWidget)
 		{
-			ITextComponent[] tooltip = ((ResultWidget)widget).getValueLabel().getTooltip();
+			ITextComponent[] tooltip = ((ResultWidget) widget).getValueLabel().getTooltip();
 			this.renderComponentTooltip(pMatrixStack, Arrays.asList(tooltip), mouseX, mouseY);
 		}
 

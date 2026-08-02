@@ -21,7 +21,7 @@ public class SavedData
 	{
 		return MULTIBLOCKS.contains(name.toString(), NBT.TAG_COMPOUND);
 	}
-	
+
 	public static CompoundNBT getMultiblock(ResourceLocation name)
 	{
 		return MULTIBLOCKS.getCompound(name.toString());
