@@ -233,7 +233,7 @@ public class FissionLayoutScreen extends Screen
 			this.resultsList.clearChildren();
 			this.resultsList.addChild(new ResultWidget(COMPONENT_BOIL_EFFICIENCY, new StringTextComponent(String.valueOf(Math.round(this.simulation.getBoilEfficiency() * 1000.0D) / 1000.0D))));
 			this.resultsList.addChild(new ResultWidget(COMPONENT_MAX_BURN_RATE, VolumeTextHelper.formatMBt(this.burnRateSlider.getSlider().getMaxValue())));
-			this.simulation.createStableTempWidgets(this.resultsList::addChild, this.burnRate);
+			this.simulation.createStableTempWidgets(this.resultsList::addChild);
 
 			long coolantCapacity = this.simulation.getCoolantCapacity();
 			long heatedCoolantCapacity = this.simulation.getHeatedCoolantCapacity();
