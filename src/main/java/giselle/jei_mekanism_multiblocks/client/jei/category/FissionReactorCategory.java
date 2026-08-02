@@ -352,31 +352,30 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			long coolantCapacity = this.getCooledCoolantCapacity();
 			long heatedCoolantCapacity = this.getHeatedCoolantCapacity();
 			long maxBurnRate = this.getMaxBurnRate();
-			long burnRate = this.getBurnRate();
 			long fuelCapacity = this.getFuelCapacity();
 			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.max_burn_rate"), VolumeTextHelper.formatMBt(maxBurnRate)));
-			this.createStableTempWidgets(consumer, burnRate);
+			this.createStableTempWidgets(consumer);
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(coolantCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_FUEL_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_HEATED_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(heatedCoolantCapacity)));
 			consumer.accept(new ResultWidget(GeneratorsLang.FISSION_WASTE_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
 		}
 
-		public void createStableTempWidgets(Consumer<AbstractWidget> consumer, long toBurn)
+		public void createStableTempWidgets(Consumer<AbstractWidget> consumer)
 		{
-			this.createStableTempWidget(consumer, new FluidStack(Fluids.WATER, 1).getDisplayName(), toBurn, WATER_CONDUCTIVITY, HeatUtils.getWaterThermalEnthalpy() / HeatUtils.getSteamEnergyEfficiency());
-			this.createStableTempWidget(consumer, MekanismGases.SODIUM.getTextComponent(), toBurn, Coolants.SODIUM_COOLANT);
+			this.createStableTempWidget(consumer, new FluidStack(Fluids.WATER, 1).getDisplayName(), WATER_CONDUCTIVITY, HeatUtils.getWaterThermalEnthalpy() / HeatUtils.getSteamEnergyEfficiency());
+			this.createStableTempWidget(consumer, MekanismGases.SODIUM.getTextComponent(), Coolants.SODIUM_COOLANT);
 		}
 
-		public void createStableTempWidget(Consumer<AbstractWidget> consumer, Component with, long toBurn, Coolant coolant)
+		public void createStableTempWidget(Consumer<AbstractWidget> consumer, Component with, Coolant coolant)
 		{
-			this.createStableTempWidget(consumer, with, toBurn, coolant.getConductivity(), coolant.getThermalEnthalpy());
+			this.createStableTempWidget(consumer, with, coolant.getConductivity(), coolant.getThermalEnthalpy());
 		}
 
-		public void createStableTempWidget(Consumer<AbstractWidget> consumer, Component with, long toBurn, double conductivity, double thermalEnthalpy)
+		public void createStableTempWidget(Consumer<AbstractWidget> consumer, Component with, double conductivity, double thermalEnthalpy)
 		{
 			double boilEfficiency = this.getBoilEfficiency();
-			double stableTemp = this.getCoolingStableTemp(toBurn, conductivity, thermalEnthalpy, boilEfficiency);
+			double stableTemp = this.getCoolingStableTemp(conductivity, thermalEnthalpy, boilEfficiency);
 			ResultWidget tempWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.temp_with", with), MekanismUtils.getTemperatureDisplay(stableTemp, TemperatureUnit.KELVIN, true));
 			consumer.accept(tempWidget);
 
@@ -395,6 +394,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 				tempWidget.getValueLabel().setFGColor(0xFF0000 + g * 256);
 			}
 
+			long toBurn = this.getBurnRate();
 			Component burnRateTooltip = Component.translatable("text.jei_mekanism_multiblocks.tooltip.when_burn_rate", VolumeTextHelper.formatMBt(toBurn));
 
 			if (warning)
@@ -490,9 +490,11 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			return MekanismGeneratorsConfig.generators.fissionCasingHeatCapacity.get() * this.getDimensionCasingBlocks();
 		}
 
-		public double getCoolingStableTemp(long toBurn, double coolantConductivity, double thermalEnthalpy, double boilEfficiency)
+		public double getCoolingStableTemp(double coolantConductivity, double thermalEnthalpy, double boilEfficiency)
 		{
-			if (toBurn == 0)
+			long toBurn = this.getBurnRate();
+
+			if (toBurn <= 0L)
 			{
 				return HeatAPI.AMBIENT_TEMP;
 			}
