@@ -71,7 +71,7 @@
 	"text.jei_mekanism_multiblocks.tooltip.value_limited": "'%s'이(가) 제한되었습니다.",
 	"text.jei_mekanism_multiblocks.tooltip.when_burn_rate": "'연소 속도'가 %s 일 때.",
 	"text.jei_mekanism_multiblocks.tooltip.when_temp_ge": "'온도'가 %s 이상일 때.",
-	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "원자로가 데미지를 입습니다.",
+	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "원자로가 피해를 입습니다.",
 	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "물이 없어집니다.",
 	"text.jei_mekanism_multiblocks.tooltip.need_more": "'%s'이(가) 더 필요합니다.",
 	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "유체당 생산량: %s.",
