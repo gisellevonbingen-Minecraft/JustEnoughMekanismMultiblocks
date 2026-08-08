@@ -415,7 +415,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			consumer.accept(heatingRateWidget);
 		}
 
-		private void simulateTemp(double coolantConductivity)
+		private void simulateTemp(double conductivity)
 		{
 			long coolantCapacity = this.getCooledCoolantCapacity();
 			long toBurn = this.getBurnRate();
@@ -433,7 +433,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 				heat += burnHeat;
 
 				double boilHeat = boilEfficiency * (temp - HeatUtils.BASE_BOIL_TEMP) * heatCapacity;
-				double caseCoolantHeat = boilHeat * coolantConductivity;
+				double caseCoolantHeat = boilHeat * conductivity;
 				long coolantHeated = (int) (HeatUtils.getSteamEnergyEfficiency() * caseCoolantHeat / HeatUtils.getWaterThermalEnthalpy());
 				coolantHeated = Math.max(0, Math.min(coolantHeated, coolantCapacity));
 
@@ -456,10 +456,10 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 		}
 
-		public long getHeatedCoolant(double temp, double coolantConductivity, double thermalEnthalpy)
+		public long getHeatedCoolant(double temp, double conductivity, double thermalEnthalpy)
 		{
 			double boilHeat = this.getBoilEfficiency() * (temp - HeatUtils.BASE_BOIL_TEMP) * this.getHeatCapacity();
-			double caseCoolantHeat = boilHeat * coolantConductivity;
+			double caseCoolantHeat = boilHeat * conductivity;
 			long coolantHeated = MathUtils.clampToLong(caseCoolantHeat / thermalEnthalpy);
 			return Math.max(0, Math.min(coolantHeated, this.getCooledCoolantCapacity()));
 		}
@@ -489,7 +489,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			return MekanismGeneratorsConfig.generators.fissionCasingHeatCapacity.get() * this.getDimensionCasingBlocks();
 		}
 
-		public double getCoolingStableTemp(double coolantConductivity, double thermalEnthalpy)
+		public double getCoolingStableTemp(double conductivity, double thermalEnthalpy)
 		{
 			long toBurn = this.getBurnRate();
 
@@ -509,7 +509,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 				return Double.POSITIVE_INFINITY;
 			}
 
-			double boilHeat = burnHeat / coolantConductivity;
+			double boilHeat = burnHeat / conductivity;
 			return boilHeat / (heatCapacity * this.getBoilEfficiency()) + HeatUtils.BASE_BOIL_TEMP;
 		}
 
