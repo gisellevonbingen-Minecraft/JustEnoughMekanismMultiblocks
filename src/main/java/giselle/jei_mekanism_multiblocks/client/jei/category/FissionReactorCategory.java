@@ -413,7 +413,6 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			long heatedCoolant = this.getHeatedCoolant(stableTemp, conductivity, thermalEnthalpy);
 			ResultWidget heatingRateWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.heating_rate_with", with), VolumeTextHelper.formatMBt(heatedCoolant));
 			heatingRateWidget.setTooltip(TooltipHelper.createMessageOnly(burnRateTooltip));
-
 			consumer.accept(heatingRateWidget);
 		}
 
