@@ -25,6 +25,7 @@ import mekanism.common.util.EnumUtils;
 import mekanism.common.util.HeatUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.UnitDisplayUtils.TemperatureUnit;
+import mekanism.common.util.text.TextUtils;
 import mekanism.generators.common.GeneratorsLang;
 import mekanism.generators.common.MekanismGenerators;
 import mekanism.generators.common.config.MekanismGeneratorsConfig;
@@ -406,11 +407,13 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 			if (warning)
 			{
+				int maxDamageTicks = this.getMaxDamageTicks(HeatUtils.BASE_BOIL_TEMP, conductivity, thermalEnthalpy);
 				tempWidget.getValueLabel().setMessage(Component.translatable("※ %s", tempWidget.getValueLabel().getMessage()));
 				tempWidget.setJeiTooltip(//
 						burnRateTooltip, //
 						Component.translatable("text.jei_mekanism_multiblocks.tooltip.warning").withStyle(ChatFormatting.RED), //
-						Component.translatable("text.jei_mekanism_multiblocks.tooltip.reactor_will_damage").withStyle(ChatFormatting.RED));
+						Component.translatable("text.jei_mekanism_multiblocks.tooltip.reactor_will_damage").withStyle(ChatFormatting.RED), //
+						Component.translatable("text.jei_mekanism_multiblocks.tooltip.max_damage_ticks", TextUtils.format(maxDamageTicks)).withStyle(ChatFormatting.RED));
 			}
 			else
 			{
@@ -423,89 +426,59 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			consumer.accept(heatingRateWidget);
 		}
 
-		private void simulateTemp(double conductivity, double thermalEnthalpy)
+		private int getMaxDamageTicks(double startTemp, double conductivity, double thermalEnthalpy)
 		{
-			long coolantCapacity = this.getCooledCoolantCapacity();
-			long toBurn = this.getBurnRate();
-			long burnHeat = MathUtils.multiplyClamped(toBurn, MekanismGeneratorsConfig.generators.energyPerFissionFuel.get());
+			long burnHeat = MathUtils.multiplyClamped(this.getBurnRate(), MekanismGeneratorsConfig.generators.energyPerFissionFuel.get());
 			double heatCapacity = this.getHeatCapacity();
-			double boilEfficiency = this.getBoilEfficiency();
-			double baseBoilHeat = HeatUtils.BASE_BOIL_TEMP * heatCapacity;
 
-			double heat = baseBoilHeat;
+			double heat = startTemp * heatCapacity;
 			double prevHeat = heat;
-			double reactorDamage = 0.0D;
-			boolean active = true;
-			boolean stabled = false;
+			double damage = 0.0D;
+			int ticks = 0;
 
-			for (int i = 0;; i++)
+			while (true)
 			{
+				double temp = heat / heatCapacity;
 				double heatToHandle = 0.0D;
+				heatToHandle += burnHeat;
 
-				if (active)
+				long heatedCoolant = this.getHeatedCoolant(temp, conductivity, thermalEnthalpy);
+
+				if (heatedCoolant > 0)
 				{
-					heatToHandle += burnHeat;
-				}
-
-				double boilHeat = boilEfficiency * (heat - baseBoilHeat);
-				double caseCoolantHeat = boilHeat * conductivity;
-				long coolantHeated = MathUtils.clampToLong(caseCoolantHeat / thermalEnthalpy);
-				coolantHeated = Math.max(0, Math.min(coolantHeated, coolantCapacity));
-
-				if (coolantHeated > 0)
-				{
-					caseCoolantHeat = coolantHeated * thermalEnthalpy;
+					double caseCoolantHeat = heatedCoolant * thermalEnthalpy;
 					heatToHandle -= caseCoolantHeat;
 				}
 
 				heat += heatToHandle;
-				double temp = heat / heatCapacity;
+				temp = heat / heatCapacity;
 
-				if (temp >= FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE)
+				if (damage >= FissionReactorMultiblockData.MAX_DAMAGE)
 				{
-					double damageRate = Math.min(temp, FissionReactorMultiblockData.MAX_DAMAGE_TEMPERATURE) / (FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE * 10);
-					reactorDamage += damageRate;
+					break;
 				}
-				else
+				else if (temp >= FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE)
 				{
-					double repairRate = (FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE - temp) / (FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE * 100);
-					reactorDamage = Math.max(0, reactorDamage - repairRate);
-				}
+					double damageRate = Math.min(temp, FissionReactorMultiblockData.MAX_DAMAGE_TEMPERATURE) / (FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE * 10.0D);
+					damage += damageRate;
 
-				System.out.println(i + ": Temp: " + temp + "K, " + reactorDamage + "%, " + active);
-
-				if (active)
-				{
-					if (reactorDamage >= FissionReactorMultiblockData.MAX_DAMAGE)
+					if (heat <= prevHeat)
 					{
-						System.out.println("Overload");
-						active = false;
-					}
-					else if (heat == prevHeat)
-					{
-						if (!stabled)
-						{
-							System.out.println("Stabled");
-							stabled = true;
-						}
-
-						if (temp < FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE)
-						{
-							break;
-						}
-
+						ticks += Math.ceil((FissionReactorMultiblockData.MAX_DAMAGE - damage) / damageRate);
+						break;
 					}
 
 				}
-				else if (reactorDamage <= 0.0D)
+				else if (heat <= prevHeat)
 				{
-					System.out.println("Cooldowned");
 					break;
 				}
 
 				prevHeat = heat;
+				ticks++;
 			}
 
+			return ticks;
 		}
 
 		public long getHeatedCoolant(double temp, double conductivity, double thermalEnthalpy)

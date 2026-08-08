@@ -72,6 +72,7 @@
 	"text.jei_mekanism_multiblocks.tooltip.when_burn_rate": "'연소 속도'가 %s 일 때.",
 	"text.jei_mekanism_multiblocks.tooltip.when_temp_ge": "'온도'가 %s 이상일 때.",
 	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "원자로가 피해를 입습니다.",
+	"text.jei_mekanism_multiblocks.tooltip.max_damage_ticks": "피해 0%% 부터 100%% 까지 시간: %s 틱.",
 	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "물이 없어집니다.",
 	"text.jei_mekanism_multiblocks.tooltip.need_more": "'%s'이(가) 더 필요합니다.",
 	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "유체당 생산량: %s.",
