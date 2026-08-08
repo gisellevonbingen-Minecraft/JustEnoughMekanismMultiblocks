@@ -22,6 +22,7 @@ import mekanism.common.util.EnumUtils;
 import mekanism.common.util.HeatUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.UnitDisplayUtils.TemperatureUnit;
+import mekanism.common.util.text.TextUtils;
 import mekanism.generators.common.GeneratorsLang;
 import mekanism.generators.common.MekanismGenerators;
 import mekanism.generators.common.config.MekanismGeneratorsConfig;
@@ -398,11 +399,13 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 			if (warning)
 			{
+				int maxDamageTicks = this.getMaxDamageTicks(HeatUtils.BASE_BOIL_TEMP, conductivity, thermalEnthalpy);
 				tempWidget.getValueLabel().setMessage(Component.translatable("※ %s", tempWidget.getValueLabel().getMessage()));
 				tempWidget.setTooltip(//
 						burnRateTooltip, //
 						Component.translatable("text.jei_mekanism_multiblocks.tooltip.warning").withStyle(ChatFormatting.RED), //
-						Component.translatable("text.jei_mekanism_multiblocks.tooltip.reactor_will_damage").withStyle(ChatFormatting.RED));
+						Component.translatable("text.jei_mekanism_multiblocks.tooltip.reactor_will_damage").withStyle(ChatFormatting.RED), //
+						Component.translatable("text.jei_mekanism_multiblocks.tooltip.max_damage_ticks", TextUtils.format(maxDamageTicks)).withStyle(ChatFormatting.RED));
 			}
 			else
 			{
@@ -415,45 +418,59 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			consumer.accept(heatingRateWidget);
 		}
 
-		private void simulateTemp(double conductivity)
+		private int getMaxDamageTicks(double startTemp, double conductivity, double thermalEnthalpy)
 		{
-			long coolantCapacity = this.getCooledCoolantCapacity();
-			long toBurn = this.getBurnRate();
-			double burnHeat = toBurn * MekanismGeneratorsConfig.generators.energyPerFissionFuel.get().doubleValue();
+			double burnHeat = this.getBurnRate() * MekanismGeneratorsConfig.generators.energyPerFissionFuel.get().doubleValue();
 			double heatCapacity = this.getHeatCapacity();
-			double boilEfficiency = this.getBoilEfficiency();
 
-			double heat = HeatAPI.AMBIENT_TEMP * heatCapacity;
-			double prevHeat = 0.0D;
+			double heat = startTemp * heatCapacity;
+			double prevHeat = heat;
+			double damage = 0.0D;
+			int ticks = 0;
 
-			for (int i = 0; i < 100; i++)
+			while (true)
 			{
 				double temp = heat / heatCapacity;
+				double heatToHandle = 0.0D;
+				heatToHandle += burnHeat;
 
-				heat += burnHeat;
+				long heatedCoolant = this.getHeatedCoolant(temp, conductivity, thermalEnthalpy);
 
-				double boilHeat = boilEfficiency * (temp - HeatUtils.BASE_BOIL_TEMP) * heatCapacity;
-				double caseCoolantHeat = boilHeat * conductivity;
-				long coolantHeated = (int) (HeatUtils.getSteamEnergyEfficiency() * caseCoolantHeat / HeatUtils.getWaterThermalEnthalpy());
-				coolantHeated = Math.max(0, Math.min(coolantHeated, coolantCapacity));
-
-				if (coolantHeated > 0)
+				if (heatedCoolant > 0)
 				{
-					caseCoolantHeat = coolantHeated * HeatUtils.getWaterThermalEnthalpy() / HeatUtils.getSteamEnergyEfficiency();
-					heat -= caseCoolantHeat;
+					double caseCoolantHeat = heatedCoolant * thermalEnthalpy;
+					heatToHandle -= caseCoolantHeat;
 				}
 
-				System.out.println("Temp: " + (heat / heatCapacity));
+				heat += heatToHandle;
+				temp = heat / heatCapacity;
 
-				if (prevHeat == heat)
+				if (damage >= FissionReactorMultiblockData.MAX_DAMAGE)
 				{
-					System.out.println("Stabled");
+					break;
+				}
+				else if (temp >= FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE)
+				{
+					double damageRate = Math.min(temp, FissionReactorMultiblockData.MAX_DAMAGE_TEMPERATURE) / (FissionReactorMultiblockData.MIN_DAMAGE_TEMPERATURE * 10.0D);
+					damage += damageRate;
+
+					if (heat <= prevHeat)
+					{
+						ticks += Math.ceil((FissionReactorMultiblockData.MAX_DAMAGE - damage) / damageRate);
+						break;
+					}
+
+				}
+				else if (heat <= prevHeat)
+				{
 					break;
 				}
 
 				prevHeat = heat;
+				ticks++;
 			}
 
+			return ticks;
 		}
 
 		public long getHeatedCoolant(double temp, double conductivity, double thermalEnthalpy)

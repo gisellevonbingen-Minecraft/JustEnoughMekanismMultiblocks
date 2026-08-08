@@ -76,6 +76,7 @@
 	"text.jei_mekanism_multiblocks.tooltip.when_burn_rate": "When 'Burn Rate' is %s.",
 	"text.jei_mekanism_multiblocks.tooltip.when_temp_ge": "When 'Temp' >= %s.",
 	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "Reactor will be damaged.",
+	"text.jei_mekanism_multiblocks.tooltip.max_damage_ticks": "Time from 0%% to 100%% damage: %s ticks.",
 	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "Water will be losing.",
 	"text.jei_mekanism_multiblocks.tooltip.need_more": "Need more '%s'.",
 	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "Production per flow: %s.",
