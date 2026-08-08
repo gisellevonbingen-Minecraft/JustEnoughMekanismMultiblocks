@@ -17,6 +17,7 @@ import giselle.jei_mekanism_multiblocks.client.gui.TabButtonWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.TextAlignment;
 import giselle.jei_mekanism_multiblocks.client.jei.category.ICostConsumer;
 import mekanism.common.config.MekanismConfig;
+import mekanism.common.util.UnitDisplayUtils.EnergyUnit;
 import mekanism.common.util.UnitDisplayUtils.TemperatureUnit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -46,6 +47,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 	protected CheckBoxWidget useGlassCheckBox;
 
 	private TemperatureUnit lastTempUnit;
+	private EnergyUnit lastEnergyUnit;
 	private boolean needNotifyStateChange;
 
 	public MultiblockWidget()
@@ -313,7 +315,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 		super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTicks);
 
-		this.checkTempUnitChanged();
+		this.checkUnitChanged();
 
 		if (this.needNotifyStateChange)
 		{
@@ -326,13 +328,21 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	}
 
-	private void checkTempUnitChanged()
+	private void checkUnitChanged()
 	{
 		TemperatureUnit tempUnit = MekanismConfig.common.tempUnit.get();
 
-		if (this.lastTempUnit == null || lastTempUnit != tempUnit)
+		if (this.lastTempUnit == null || this.lastTempUnit != tempUnit)
 		{
 			this.lastTempUnit = tempUnit;
+			this.markNeedUpdate();
+		}
+
+		EnergyUnit energyUnit = EnergyUnit.getConfigured();
+
+		if (this.lastEnergyUnit == null || this.lastEnergyUnit != energyUnit)
+		{
+			this.lastEnergyUnit = energyUnit;
 			this.markNeedUpdate();
 		}
 
