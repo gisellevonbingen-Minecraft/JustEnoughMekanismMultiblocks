@@ -400,6 +400,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 			if (warning)
 			{
+				tempWidget.getValueLabel().setMessage(new TranslationTextComponent("※ %s", tempWidget.getValueLabel().getMessage()));
 				tempWidget.setTooltip(burnRateTooltip, //
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.warning").withStyle(TextFormatting.RED), //
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.reactor_will_damage").withStyle(TextFormatting.RED));
