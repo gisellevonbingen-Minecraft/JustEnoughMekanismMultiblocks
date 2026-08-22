@@ -62,6 +62,7 @@
 	"text.jei_mekanism_multiblocks.result.inner_volume": "내부 부피",
 	"text.jei_mekanism_multiblocks.result.blocks": "%s 블록",
 	"text.jei_mekanism_multiblocks.result.boil_efficiency": "가열 효율",
+	"text.jei_mekanism_multiblocks.result.required_heater_usage": "필요 히터 사용량",
 	
 	"text.jei_mekanism_multiblocks.tooltip.click_normal": "클릭: %s",
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+클릭: %s",
@@ -76,5 +77,7 @@
 	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "물이 없어집니다.",
 	"text.jei_mekanism_multiblocks.tooltip.need_more": "'%s'이(가) 더 필요합니다.",
 	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "유체당 생산량: %s.",
-	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "핵융합로의 '융합 속도'를 %s (으)로 설정해야 합니다."
+	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "핵융합로의 '융합 속도'를 %s (으)로 설정해야 합니다."	,
+	"text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_1": "'%1$s'는 '%2$s'의",
+	"text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_2": "바로 옆에 설치되어야 합니다."
 }

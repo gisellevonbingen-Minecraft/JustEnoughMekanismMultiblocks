@@ -11,6 +11,7 @@ import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.api.heat.HeatAPI;
+import mekanism.api.math.FloatingLong;
 import mekanism.common.Mekanism;
 import mekanism.common.MekanismLang;
 import mekanism.common.config.MekanismConfig;
@@ -18,6 +19,7 @@ import mekanism.common.content.evaporation.EvaporationMultiblockData;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.UnitDisplayUtils.TemperatureUnit;
+import mekanism.common.util.text.EnergyDisplay;
 import mekanism.common.util.text.TextUtils;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -217,6 +219,24 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			consumer.accept(speedWidget);
 			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(inputCapacity)));
 			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(outputCapacity)));
+
+			double needHeat = this.getMaxMultiplierHeat();
+			FloatingLong heaterEnergy = ResistiveHeaterCategory.getHeatTransferableEnergy(needHeat).ceil();
+			ResultWidget keepEnergyWidget = new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.required_heater_usage"), new TranslatableComponent("%s/t", EnergyDisplay.of(heaterEnergy).getTextComponent()));
+			keepEnergyWidget.setTooltip(//
+					new TranslatableComponent("%s %s/t", TextUtils.format(heaterEnergy.longValue()), new TranslatableComponent(MekanismLang.ENERGY_JOULES.getTranslationKey())), //
+					new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_1", new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName(), new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName()), //
+					new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_2", new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName(), new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName()));
+			consumer.accept(keepEnergyWidget);
+		}
+
+		public double getMaxMultiplierHeat()
+		{
+			int activeSolars = this.useAdvancedSolarGeneratorCheckBox.isSelected() ? 4 : 0;
+			double heatCapacity = this.getDimensionHeight() * MekanismConfig.general.evaporationHeatCapacity.get();
+			double gain = activeSolars * MekanismConfig.general.evaporationSolarMultiplier.get() * heatCapacity;
+			double loss = MekanismConfig.general.evaporationHeatDissipation.get() * Math.sqrt(Math.abs(EvaporationMultiblockData.MAX_MULTIPLIER_TEMP - HeatAPI.AMBIENT_TEMP)) * heatCapacity;
+			return loss - gain;
 		}
 
 		public int getValveCount()
