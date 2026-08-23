@@ -225,9 +225,9 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 
 		private void createRequiredHeaterEnergyWidget(Consumer<Widget> consumer)
 		{
+			FloatingLong plainRequiredEnergy = this.getRequiredHeaterEnergy(HeatAPI.AMBIENT_TEMP);
 			FloatingLong coldestRequiredEnergy = this.getRequiredHeaterEnergy(HeatAPI.getAmbientTemp(Integer.MIN_VALUE));
 			FloatingLong hotestRequiredEnergy = this.getRequiredHeaterEnergy(HeatAPI.getAmbientTemp(Integer.MAX_VALUE));
-			FloatingLong plainRequiredEnergy = this.getRequiredHeaterEnergy(HeatAPI.AMBIENT_TEMP);
 			ResultWidget requiredEnergyWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.required_heater_usage"), new TranslationTextComponent("%s/t", EnergyDisplay.of(plainRequiredEnergy).getTextComponent()));
 			requiredEnergyWidget.setTooltip(//
 					new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.plain", new TranslationTextComponent("%s %s/t", TextUtils.format(plainRequiredEnergy.longValue()), new TranslationTextComponent(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
