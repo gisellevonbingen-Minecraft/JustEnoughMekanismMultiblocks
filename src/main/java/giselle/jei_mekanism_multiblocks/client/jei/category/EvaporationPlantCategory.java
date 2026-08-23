@@ -233,7 +233,6 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 					new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.plain", new TranslatableComponent("%s %s/t", TextUtils.format(plainRequiredEnergy.longValue()), new TranslatableComponent(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
 					new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.coldest", new TranslatableComponent("%s %s/t", TextUtils.format(coldestRequiredEnergy.longValue()), new TranslatableComponent(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
 					new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.hottest", new TranslatableComponent("%s %s/t", TextUtils.format(hotestRequiredEnergy.longValue()), new TranslatableComponent(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
-					TextComponent.EMPTY, //
 					new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_1", new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName(), new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName()), //
 					new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_2", new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName(), new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName()));
 			consumer.accept(requiredEnergyWidget);
