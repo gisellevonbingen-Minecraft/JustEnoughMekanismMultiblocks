@@ -229,12 +229,14 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			FloatingLong coldestRequiredEnergy = this.getRequiredHeaterEnergy(HeatAPI.getAmbientTemp(Integer.MIN_VALUE));
 			FloatingLong hotestRequiredEnergy = this.getRequiredHeaterEnergy(HeatAPI.getAmbientTemp(Integer.MAX_VALUE));
 			ResultWidget requiredEnergyWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.required_heater_usage"), Component.translatable("%s/t", EnergyDisplay.of(plainRequiredEnergy).getTextComponent()));
+			Component heaterName = new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName();
+			Component valveName = new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName();
 			requiredEnergyWidget.setTooltip(TooltipHelper.createMessageOnly(//
 					Component.translatable("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.plain", Component.translatable("%s %s/t", TextUtils.format(plainRequiredEnergy.longValue()), Component.translatable(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
 					Component.translatable("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.coldest", Component.translatable("%s %s/t", TextUtils.format(coldestRequiredEnergy.longValue()), Component.translatable(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
 					Component.translatable("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.hottest", Component.translatable("%s %s/t", TextUtils.format(hotestRequiredEnergy.longValue()), Component.translatable(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
-					Component.translatable("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_1", new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName(), new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName()), //
-					Component.translatable("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_2", new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName(), new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName())));
+					Component.translatable("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_1", heaterName, valveName), //
+					Component.translatable("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_2", heaterName, valveName)));
 			consumer.accept(requiredEnergyWidget);
 		}
 
