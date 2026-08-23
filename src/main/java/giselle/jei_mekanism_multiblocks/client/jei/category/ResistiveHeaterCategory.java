@@ -11,25 +11,24 @@ public class ResistiveHeaterCategory
 	public static final double INVERSE_CONDUCTION_COEFFICIENT = 5.0D;
 	public static final double INVERSE_INSULATION_COEFFICIENT = 100.0D;
 
-	public static double getStableTemp(double heat)
+	public static double getStableTemp(double ambientTemp, double heat, double inverseConduction)
 	{
 		double tempTarget = heat / HEAT_CAPACITY;
-		double inverseConduction = HeatAPI.DEFAULT_INVERSE_CONDUCTION + INVERSE_CONDUCTION_COEFFICIENT;
-
-		return (tempTarget * inverseConduction) + HeatAPI.AMBIENT_TEMP;
+		double totalInvConduction = inverseConduction + INVERSE_CONDUCTION_COEFFICIENT;
+		return (tempTarget * totalInvConduction) + ambientTemp;
 	}
 
-	public static double getEnvironmentLossHeat(double temp)
+	public static double getEnvironmentLossHeat(double ambientTemp, double heaterTemp)
 	{
-		double invConduction = HeatAPI.AIR_INVERSE_COEFFICIENT + INVERSE_INSULATION_COEFFICIENT + INVERSE_CONDUCTION_COEFFICIENT;
-		double tempToTransfer = (temp - HeatAPI.AMBIENT_TEMP) / invConduction;
+		double totalInvConduction = HeatAPI.AIR_INVERSE_COEFFICIENT + INVERSE_INSULATION_COEFFICIENT + INVERSE_CONDUCTION_COEFFICIENT;
+		double tempToTransfer = (heaterTemp - ambientTemp) / totalInvConduction;
 		return Direction.values().length * tempToTransfer * HEAT_CAPACITY;
 	}
 
-	public static FloatingLong getHeatTransferableEnergy(double heat)
+	public static FloatingLong getHeatTransferableEnergy(double ambientTemp, double heat, double inverseConduction)
 	{
-		double stableTemp = ResistiveHeaterCategory.getStableTemp(heat);
-		double envLossHeat = ResistiveHeaterCategory.getEnvironmentLossHeat(stableTemp);
+		double stableTemp = ResistiveHeaterCategory.getStableTemp(ambientTemp, heat, inverseConduction);
+		double envLossHeat = ResistiveHeaterCategory.getEnvironmentLossHeat(ambientTemp, stableTemp);
 		return FloatingLong.create(ResistiveHeaterCategory.getEnergyForHeat(heat + envLossHeat));
 	}
 

@@ -82,6 +82,9 @@
 	"text.jei_mekanism_multiblocks.tooltip.need_more": "Need more '%s'.",
 	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "Production per flow: %s.",
 	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "Need set reactor's 'Injection Rate' to %s.",
+	"text.jei_mekanism_multiblocks.tooltip.required_heater_usage.plain": "On Plain Biome: %s",
+	"text.jei_mekanism_multiblocks.tooltip.required_heater_usage.coldest": "On Coldest Biome: %s",
+	"text.jei_mekanism_multiblocks.tooltip.required_heater_usage.hottest": "On Hottest Biome: %s",
 	"text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_1": "'%1$s' must be placed",
 	"text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_2": "right next to '%2$s'."
 }
