@@ -25,6 +25,7 @@ import mekanism.generators.common.registries.GeneratorsBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -229,12 +230,14 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			FloatingLong coldestRequiredEnergy = this.getRequiredHeaterEnergy(HeatAPI.getAmbientTemp(Integer.MIN_VALUE));
 			FloatingLong hotestRequiredEnergy = this.getRequiredHeaterEnergy(HeatAPI.getAmbientTemp(Integer.MAX_VALUE));
 			ResultWidget requiredEnergyWidget = new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.required_heater_usage"), new TranslatableComponent("%s/t", EnergyDisplay.of(plainRequiredEnergy).getTextComponent()));
+			Component heaterName = new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName();
+			Component valveName = new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName();
 			requiredEnergyWidget.setTooltip(//
 					new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.plain", new TranslatableComponent("%s %s/t", TextUtils.format(plainRequiredEnergy.longValue()), new TranslatableComponent(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
 					new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.coldest", new TranslatableComponent("%s %s/t", TextUtils.format(coldestRequiredEnergy.longValue()), new TranslatableComponent(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
 					new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.hottest", new TranslatableComponent("%s %s/t", TextUtils.format(hotestRequiredEnergy.longValue()), new TranslatableComponent(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
-					new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_1", new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName(), new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName()), //
-					new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_2", new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName(), new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName()));
+					new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_1", heaterName, valveName), //
+					new TranslatableComponent("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_2", heaterName, valveName));
 			consumer.accept(requiredEnergyWidget);
 		}
 
