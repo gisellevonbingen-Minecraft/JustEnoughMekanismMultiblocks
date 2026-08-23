@@ -220,22 +220,37 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(inputCapacity)));
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(outputCapacity)));
 
-			double needHeat = this.getMaxMultiplierHeat();
-			FloatingLong heaterEnergy = ResistiveHeaterCategory.getHeatTransferableEnergy(needHeat).ceil();
-			ResultWidget keepEnergyWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.required_heater_usage"), new TranslationTextComponent("%s/t", EnergyDisplay.of(heaterEnergy).getTextComponent()));
-			keepEnergyWidget.setTooltip(//
-					new TranslationTextComponent("%s %s/t", TextUtils.format(heaterEnergy.longValue()), new TranslationTextComponent(MekanismLang.ENERGY_JOULES.getTranslationKey())), //
-					new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_1", new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName(), new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName()), //
-					new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_2", new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName(), new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName()));
-			consumer.accept(keepEnergyWidget);
+			this.createRequiredHeaterEnergyWidget(consumer);
 		}
 
-		public double getMaxMultiplierHeat()
+		private void createRequiredHeaterEnergyWidget(Consumer<Widget> consumer)
+		{
+			FloatingLong coldestRequiredEnergy = this.getRequiredHeaterEnergy(HeatAPI.getAmbientTemp(Integer.MIN_VALUE));
+			FloatingLong hotestRequiredEnergy = this.getRequiredHeaterEnergy(HeatAPI.getAmbientTemp(Integer.MAX_VALUE));
+			FloatingLong plainRequiredEnergy = this.getRequiredHeaterEnergy(HeatAPI.AMBIENT_TEMP);
+			ResultWidget requiredEnergyWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.required_heater_usage"), new TranslationTextComponent("%s/t", EnergyDisplay.of(plainRequiredEnergy).getTextComponent()));
+			requiredEnergyWidget.setTooltip(//
+					new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.plain", new TranslationTextComponent("%s %s/t", TextUtils.format(plainRequiredEnergy.longValue()), new TranslationTextComponent(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
+					new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.coldest", new TranslationTextComponent("%s %s/t", TextUtils.format(coldestRequiredEnergy.longValue()), new TranslationTextComponent(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
+					new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.hottest", new TranslationTextComponent("%s %s/t", TextUtils.format(hotestRequiredEnergy.longValue()), new TranslationTextComponent(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
+					StringTextComponent.EMPTY, //
+					new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_1", new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName(), new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName()), //
+					new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_2", new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName(), new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName()));
+			consumer.accept(requiredEnergyWidget);
+		}
+
+		public FloatingLong getRequiredHeaterEnergy(double ambientTemp)
+		{
+			double heat = this.getMaxMultiplierHeat(ambientTemp);
+			return ResistiveHeaterCategory.getHeatTransferableEnergy(ambientTemp, heat, HeatAPI.DEFAULT_INVERSE_CONDUCTION).ceil();
+		}
+
+		public double getMaxMultiplierHeat(double ambientTemp)
 		{
 			int activeSolars = this.useAdvancedSolarGeneratorCheckBox.isSelected() ? 4 : 0;
 			double heatCapacity = this.getDimensionHeight() * MekanismConfig.general.evaporationHeatCapacity.get();
 			double gain = activeSolars * MekanismConfig.general.evaporationSolarMultiplier.get() * heatCapacity;
-			double loss = MekanismConfig.general.evaporationHeatDissipation.get() * Math.sqrt(Math.abs(EvaporationMultiblockData.MAX_MULTIPLIER_TEMP - HeatAPI.AMBIENT_TEMP)) * heatCapacity;
+			double loss = MekanismConfig.general.evaporationHeatDissipation.get() * Math.sqrt(Math.abs(EvaporationMultiblockData.MAX_MULTIPLIER_TEMP - ambientTemp)) * heatCapacity;
 			return loss - gain;
 		}
 
