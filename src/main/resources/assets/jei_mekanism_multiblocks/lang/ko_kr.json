@@ -79,8 +79,8 @@
 	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "유체당 생산량: %s.",
 	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "핵융합로의 '융합 속도'를 %s (으)로 설정해야 합니다."	,
 	"text.jei_mekanism_multiblocks.tooltip.required_heater_usage.plain": "평원 생물 군계에서: %s",
-	"text.jei_mekanism_multiblocks.tooltip.required_heater_usage.coldest": "가장 뜨거운 생물 군계에서: %s",
-	"text.jei_mekanism_multiblocks.tooltip.required_heater_usage.hottest": "가장 차가운 생물 군계에서: %s",
+	"text.jei_mekanism_multiblocks.tooltip.required_heater_usage.coldest": "가장 차가운 생물 군계에서: %s",
+	"text.jei_mekanism_multiblocks.tooltip.required_heater_usage.hottest": "가장 뜨거운 생물 군계에서: %s",
 	"text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_1": "'%1$s'는 '%2$s'의",
 	"text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_2": "바로 옆에 설치되어야 합니다."
 }
