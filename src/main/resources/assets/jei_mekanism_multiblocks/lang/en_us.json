@@ -61,6 +61,8 @@
 	"text.jei_mekanism_multiblocks.result.steam_production": "Steam Production",
 	"text.jei_mekanism_multiblocks.result.passive_generation": "Passive Generation",
 	"text.jei_mekanism_multiblocks.result.energy_per_antimatter": "Energy Per Antimatter",
+	"text.jei_mekanism_multiblocks.result.energy_per_polonium": "Energy Per Polonium",
+	"text.jei_mekanism_multiblocks.result.antimatter_per_polonium": "Antimatter Per Polonium",
 	"text.jei_mekanism_multiblocks.result.inner_volume": "Inner Volume",
 	"text.jei_mekanism_multiblocks.result.blocks": "%s Blocks",
 	"text.jei_mekanism_multiblocks.result.supercharging_elements": "Supercharging Elements: %s",
