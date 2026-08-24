@@ -59,6 +59,8 @@
 	"text.jei_mekanism_multiblocks.result.steam_production": "증기 생산량",
 	"text.jei_mekanism_multiblocks.result.passive_generation": "지속 발전량",
 	"text.jei_mekanism_multiblocks.result.energy_per_antimatter": "반물질당 에너지",
+	"text.jei_mekanism_multiblocks.result.energy_per_polonium": "폴로늄당 에너지",
+	"text.jei_mekanism_multiblocks.result.antimatter_per_polonium": "반물질당 폴로늄",
 	"text.jei_mekanism_multiblocks.result.inner_volume": "내부 부피",
 	"text.jei_mekanism_multiblocks.result.blocks": "%s 블록",
 	"text.jei_mekanism_multiblocks.result.boil_efficiency": "가열 효율",
