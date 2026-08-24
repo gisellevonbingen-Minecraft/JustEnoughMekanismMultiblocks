@@ -106,9 +106,13 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 		{
 			super.collectResult(consumer);
 
-			FloatingLong energyPerAntimatter = MekanismConfig.general.spsEnergyPerInput.get().multiply(MekanismConfig.general.spsInputPerAntimatter.get());
+			int inputPerAnimatter = MekanismConfig.general.spsInputPerAntimatter.get();
+			FloatingLong energyPerPolonium = MekanismConfig.general.spsEnergyPerInput.get();
+			FloatingLong energyPerAntimatter = energyPerPolonium.multiply(inputPerAnimatter);
 			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.energy_per_antimatter"), new TranslatableComponent("%s/%s", EnergyDisplay.of(energyPerAntimatter).getTextComponent(), "mB")));
-			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(MekanismConfig.general.spsInputPerAntimatter.get() * 2L)));
+			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.energy_per_polonium"), new TranslatableComponent("%s/%s", EnergyDisplay.of(energyPerPolonium).getTextComponent(), "mB")));
+			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.antimatter_per_polonium"), VolumeTextHelper.formatMB(inputPerAnimatter)));
+			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(inputPerAnimatter * 2L)));
 			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(1_000)));
 		}
 
