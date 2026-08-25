@@ -68,6 +68,10 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 	public static class FusionReactorCategoryWidget extends MultiblockWidget
 	{
+		private static final double burnTemperature = 100_000_000.0D;
+		private static final double plasmaHeatCapacity = 100.0D;
+		private static final double noBurningFactor = 10.0D;
+
 		protected CheckBoxWidget waterCooledCheckBox;
 		protected IntSliderWithButtons portsWidget;
 		protected IntSliderWithButtons logicAdaptersWidget;
@@ -269,13 +273,15 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 			double fusionThermocoupleEfficiency = MekanismGeneratorsConfig.generators.fusionThermocoupleEfficiency.get();
 			FloatingLong passiveGeneration = FloatingLong.create(fusionThermocoupleEfficiency * casingThermalConductivity * casingTemp);
-			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.passive_generation"), EnergyDisplay.of(passiveGeneration).getTextComponent()));
+			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.passive_generation"), new TranslatableComponent("%s/t", EnergyDisplay.of(passiveGeneration).getTextComponent())));
 
 			if (steamProduction > 0L)
 			{
 				consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.steam_production"), VolumeTextHelper.formatMBt(steamProduction)));
 			}
 
+			FloatingLong requiredLaserEnergy = FloatingLong.create(burnTemperature).multiply(plasmaHeatCapacity).divide(noBurningFactor);
+			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.required_laser_energy"), EnergyDisplay.of(requiredLaserEnergy).getTextComponent()));
 			consumer.accept(new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.fuel_tank"), VolumeTextHelper.formatMB(fuelTank)));
 
 			if (this.isWaterCooled())
