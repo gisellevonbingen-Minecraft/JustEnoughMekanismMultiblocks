@@ -69,6 +69,7 @@
 	"text.jei_mekanism_multiblocks.result.processing_speed": "Processing Speed",
 	"text.jei_mekanism_multiblocks.result.boil_efficiency": "Boil Efficiency",
 	"text.jei_mekanism_multiblocks.result.required_heater_usage": "Required Heater Usage",
+	"text.jei_mekanism_multiblocks.result.required_laser_energy": "Required Laser Energy",
 	
 	"text.jei_mekanism_multiblocks.tooltip.click_normal": "CLICK: %s",
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+CLICK: %s",
