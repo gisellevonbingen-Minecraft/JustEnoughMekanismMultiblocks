@@ -65,6 +65,7 @@
 	"text.jei_mekanism_multiblocks.result.blocks": "%s 블록",
 	"text.jei_mekanism_multiblocks.result.boil_efficiency": "가열 효율",
 	"text.jei_mekanism_multiblocks.result.required_heater_usage": "필요 히터 사용량",
+	"text.jei_mekanism_multiblocks.result.required_laser_energy": "필요 레이저 에너지",
 	
 	"text.jei_mekanism_multiblocks.tooltip.click_normal": "클릭: %s",
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+클릭: %s",
