@@ -15,6 +15,7 @@ import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.EnergyDisplay;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -22,9 +23,11 @@ import net.minecraft.world.level.block.Block;
 
 public class APTCategory extends MultiblockCategory<APTCategory.APTWidget>
 {
+	public static final RecipeType<APTCategory.APTWidget> RECIPE_TYPE = createRecipeType(EvolvedMekanism.rl("apt"), APTWidget.class);
+
 	public APTCategory(IGuiHelper helper)
 	{
-		super(helper, EvolvedMekanism.rl("apt"), APTWidget.class, EvolvedMekanismLang.APT.translate(), new ItemStack(EMBlocks.APT_PORT));
+		super(helper, RECIPE_TYPE, EvolvedMekanismLang.APT.translate(), new ItemStack(EMBlocks.APT_PORT));
 	}
 
 	@Override
@@ -39,7 +42,6 @@ public class APTCategory extends MultiblockCategory<APTCategory.APTWidget>
 
 	public static class APTWidget extends MultiblockWidget
 	{
-
 		protected IntSliderWithButtons portsWidget;
 		protected IntSliderWithButtons superchargingElementsWidget;
 

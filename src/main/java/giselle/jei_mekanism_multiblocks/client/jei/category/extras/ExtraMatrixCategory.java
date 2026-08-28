@@ -14,6 +14,7 @@ import giselle.jei_mekanism_multiblocks.client.jei.category.ICostConsumer;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.TextUtils;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -22,9 +23,11 @@ import net.minecraft.world.level.block.Block;
 
 public class ExtraMatrixCategory extends MultiblockCategory<ExtraMatrixCategory.MatrixWidget>
 {
+	public static final RecipeType<ExtraMatrixCategory.MatrixWidget> RECIPE_TYPE = createRecipeType(MekanismExtras.rl("matrix"), MatrixWidget.class);
+
 	public ExtraMatrixCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismExtras.rl("matrix"), MatrixWidget.class, Component.translatable("text.jei_mekanism_multiblocks.building.extra_matrix"), new ItemStack(ExtraBlocks.REINFORCED_INDUCTION_PORT));
+		super(helper, RECIPE_TYPE, Component.translatable("text.jei_mekanism_multiblocks.building.extra_matrix"), new ItemStack(ExtraBlocks.REINFORCED_INDUCTION_PORT));
 	}
 
 	@Override

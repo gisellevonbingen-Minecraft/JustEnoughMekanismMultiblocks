@@ -23,6 +23,7 @@ import mekanism.generators.common.content.turbine.TurbineValidator;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mekanism.generators.common.registries.GeneratorsItems;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.Vec3i;
@@ -34,9 +35,11 @@ import net.minecraft.world.level.block.Block;
 
 public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineWidget>
 {
+	public static final RecipeType<TurbineCategory.TurbineWidget> RECIPE_TYPE = createRecipeType(MekanismGenerators.rl("turbine"), TurbineWidget.class);
+
 	public TurbineCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismGenerators.rl("turbine"), TurbineWidget.class, GeneratorsLang.TURBINE.translate(), new ItemStack(GeneratorsBlocks.TURBINE_VALVE));
+		super(helper, RECIPE_TYPE, GeneratorsLang.TURBINE.translate(), new ItemStack(GeneratorsBlocks.TURBINE_VALVE));
 	}
 
 	@Override

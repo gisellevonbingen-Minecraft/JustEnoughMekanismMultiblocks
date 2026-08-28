@@ -21,6 +21,7 @@ import mekanism.api.chemical.Chemical;
 import mekanism.common.util.ChemicalUtil;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet.Named;
@@ -31,9 +32,11 @@ import net.minecraft.world.level.block.Block;
 
 public class NaquadahReactorCategory extends MultiblockCategory<NaquadahReactorCategory.NaquadahReactor>
 {
+	public static final RecipeType<NaquadahReactorCategory.NaquadahReactor> RECIPE_TYPE = createRecipeType(MekanismExtras.rl("naquadah_reactor"), NaquadahReactor.class);
+
 	public NaquadahReactorCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismExtras.rl("naquadah_reactor"), NaquadahReactor.class, GenExtraLang.NAQUADAH_REACTOR.translate(), new ItemStack(GenExtraBlocks.NAQUADAH_REACTOR_CONTROLLER));
+		super(helper, RECIPE_TYPE, GenExtraLang.NAQUADAH_REACTOR.translate(), new ItemStack(GenExtraBlocks.NAQUADAH_REACTOR_CONTROLLER));
 	}
 
 	@Override

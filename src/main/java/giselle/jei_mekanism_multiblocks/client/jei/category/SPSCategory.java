@@ -14,6 +14,7 @@ import mekanism.common.config.MekanismConfig;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.EnergyDisplay;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -22,9 +23,11 @@ import net.minecraft.world.level.block.Block;
 
 public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 {
+	public static final RecipeType<SPSCategory.SPSWidget> RECIPE_TYPE = createRecipeType(Mekanism.rl("sps"), SPSWidget.class);
+
 	public SPSCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("sps"), SPSWidget.class, MekanismLang.SPS.translate(), new ItemStack(MekanismBlocks.SPS_PORT));
+		super(helper, RECIPE_TYPE, MekanismLang.SPS.translate(), new ItemStack(MekanismBlocks.SPS_PORT));
 	}
 
 	@Override
