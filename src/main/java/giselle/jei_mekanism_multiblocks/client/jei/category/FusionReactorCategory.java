@@ -25,6 +25,7 @@ import mekanism.generators.common.content.fusion.FusionReactorMultiblockData;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mekanism.generators.common.registries.GeneratorsItems;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -34,9 +35,11 @@ import net.minecraftforge.fluids.FluidType;
 
 public class FusionReactorCategory extends MultiblockCategory<FusionReactorCategory.FusionReactorCategoryWidget>
 {
+	public static final RecipeType<FusionReactorCategory.FusionReactorCategoryWidget> RECIPE_TYPE = createRecipeType(MekanismGenerators.rl("fusion_reactor"), FusionReactorCategoryWidget.class);
+
 	public FusionReactorCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismGenerators.rl("fusion_reactor"), FusionReactorCategoryWidget.class, GeneratorsLang.FUSION_REACTOR.translate(), GeneratorsBlocks.FUSION_REACTOR_CONTROLLER.getItemStack());
+		super(helper, RECIPE_TYPE, GeneratorsLang.FUSION_REACTOR.translate(), GeneratorsBlocks.FUSION_REACTOR_CONTROLLER.getItemStack());
 	}
 
 	@Override

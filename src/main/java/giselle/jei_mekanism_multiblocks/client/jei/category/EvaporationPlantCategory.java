@@ -23,6 +23,7 @@ import mekanism.common.util.text.EnergyDisplay;
 import mekanism.common.util.text.TextUtils;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -31,9 +32,11 @@ import net.minecraft.world.level.block.Block;
 
 public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlantCategory.EvaporationPlantWidget>
 {
+	public static final RecipeType<EvaporationPlantCategory.EvaporationPlantWidget> RECIPE_TYPE = createRecipeType(Mekanism.rl("evaporation_plant"), EvaporationPlantWidget.class);
+
 	public EvaporationPlantCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("evaporation_plant"), EvaporationPlantWidget.class, MekanismLang.EVAPORATION_PLANT.translate(), MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getItemStack());
+		super(helper, RECIPE_TYPE, MekanismLang.EVAPORATION_PLANT.translate(), MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getItemStack());
 	}
 
 	@Override
