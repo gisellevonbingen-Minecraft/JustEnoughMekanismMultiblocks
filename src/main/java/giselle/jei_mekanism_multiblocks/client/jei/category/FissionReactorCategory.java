@@ -352,7 +352,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		{
 			super.collectResult(consumer);
 
-			long coolantCapacity = this.getCoolantCapacity();
+			long coolantCapacity = this.getCooledCoolantCapacity();
 			long heatedCoolantCapacity = this.getHeatedCoolantCapacity();
 			long maxBurnRate = this.getMaxBurnRate();
 			long fuelCapacity = this.getFuelCapacity();
@@ -479,10 +479,10 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			double boilHeat = this.getBoilEfficiency() * (temp - HeatUtils.BASE_BOIL_TEMP) * this.getHeatCapacity();
 			double caseCoolantHeat = boilHeat * conductivity;
 			long coolantHeated = MathUtils.clampToLong(caseCoolantHeat / thermalEnthalpy);
-			return Math.max(0, Math.min(coolantHeated, this.getCoolantCapacity()));
+			return Math.max(0, Math.min(coolantHeated, this.getCooledCoolantCapacity()));
 		}
 
-		public long getCoolantCapacity()
+		public long getCooledCoolantCapacity()
 		{
 			return this.getDimensionVolume() * 100_000L;
 		}
@@ -516,7 +516,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 				return HeatAPI.AMBIENT_TEMP;
 			}
 
-			long coolantCapacity = this.getCoolantCapacity();
+			long coolantCapacity = this.getCooledCoolantCapacity();
 			double burnHeat = toBurn * MekanismGeneratorsConfig.generators.energyPerFissionFuel.get().doubleValue();
 			double heatCapacity = this.getHeatCapacity();
 
