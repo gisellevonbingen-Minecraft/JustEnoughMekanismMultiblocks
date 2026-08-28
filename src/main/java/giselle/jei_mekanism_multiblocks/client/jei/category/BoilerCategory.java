@@ -22,6 +22,7 @@ import mekanism.common.registries.MekanismGases;
 import mekanism.common.registries.MekanismGases.Coolants;
 import mekanism.common.util.HeatUtils;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.Vec3i;
@@ -34,9 +35,11 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidget>
 {
+	public static final RecipeType<BoilerCategory.BoilerWidget> RECIPE_TYPE = createRecipeType(Mekanism.rl("boiler"), BoilerWidget.class);
+
 	public BoilerCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("boiler"), BoilerWidget.class, MekanismLang.BOILER.translate(), MekanismBlocks.BOILER_VALVE.getItemStack());
+		super(helper, RECIPE_TYPE, MekanismLang.BOILER.translate(), MekanismBlocks.BOILER_VALVE.getItemStack());
 	}
 
 	@Override

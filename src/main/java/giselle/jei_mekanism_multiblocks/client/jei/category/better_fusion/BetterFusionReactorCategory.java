@@ -27,6 +27,7 @@ import mekanism.generators.common.content.fusion.FusionReactorMultiblockData;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mekanism.generators.common.registries.GeneratorsItems;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.nbt.CompoundTag;
@@ -37,9 +38,11 @@ import net.minecraftforge.fluids.FluidType;
 
 public class BetterFusionReactorCategory extends MultiblockCategory<BetterFusionReactorCategory.FusionReactorCategoryWidget>
 {
+	public static final RecipeType<BetterFusionReactorCategory.FusionReactorCategoryWidget> RECIPE_TYPE = createRecipeType(BetterFusionReactor.rl("fusion_reactor"), FusionReactorCategoryWidget.class);
+
 	public BetterFusionReactorCategory(IGuiHelper helper)
 	{
-		super(helper, BetterFusionReactor.rl("fusion_reactor"), FusionReactorCategoryWidget.class, Component.translatable("text.jei_mekanism_multiblocks.building.better_fusion_reactor"), BfrBlocks.FUSION_REACTOR_CONTROLLER.getItemStack());
+		super(helper, RECIPE_TYPE, Component.translatable("text.jei_mekanism_multiblocks.building.better_fusion_reactor"), BfrBlocks.FUSION_REACTOR_CONTROLLER.getItemStack());
 	}
 
 	@Override
