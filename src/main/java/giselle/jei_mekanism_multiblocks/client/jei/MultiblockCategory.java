@@ -27,19 +27,36 @@ import net.minecraft.world.item.ItemStack;
 
 public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implements IRecipeCategory<WIDGET>
 {
+	public static <W extends MultiblockWidget> RecipeType<W> createRecipeType(ResourceLocation name, Class<? extends W> clazz)
+	{
+		return RecipeType.create(JEI_MekanismMultiblocks.MODID, "multiblock." + name.getNamespace() + "." + name.getPath(), clazz);
+	}
+
 	private final RecipeType<WIDGET> type;
 	private final IDrawable icon;
 	private final IDrawable background;
 	private final Component title;
 
+	@Deprecated
 	public MultiblockCategory(IGuiHelper helper, ResourceLocation name, Class<? extends WIDGET> clazz, Component multiblockName, ItemStack icon)
 	{
-		this(helper, name, clazz, multiblockName, helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, icon));
+		this(helper, createRecipeType(name, clazz), multiblockName, icon);
 	}
 
+	@Deprecated
 	public MultiblockCategory(IGuiHelper helper, ResourceLocation name, Class<? extends WIDGET> clazz, Component multiblockName, IDrawable icon)
 	{
-		this.type = RecipeType.create(JEI_MekanismMultiblocks.MODID, "multiblock." + name.getNamespace() + "." + name.getPath(), clazz);
+		this(helper, createRecipeType(name, clazz), multiblockName, icon);
+	}
+
+	public MultiblockCategory(IGuiHelper helper, RecipeType<WIDGET> type, Component multiblockName, ItemStack icon)
+	{
+		this(helper, type, multiblockName, helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, icon));
+	}
+
+	public MultiblockCategory(IGuiHelper helper, RecipeType<WIDGET> type, Component multiblockName, IDrawable icon)
+	{
+		this.type = type;
 		this.icon = icon;
 		this.background = helper.createBlankDrawable(180, 120);
 		this.title = new TranslatableComponent("text.jei_mekanism_multiblocks.recipe_category.title", multiblockName);

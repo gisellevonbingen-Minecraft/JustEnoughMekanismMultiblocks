@@ -13,6 +13,7 @@ import mekanism.common.MekanismLang;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.registries.MekanismBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -21,9 +22,11 @@ import net.minecraft.world.level.block.Block;
 
 public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.DynamicTankWidget>
 {
+	public static final RecipeType<DynamicTankCategory.DynamicTankWidget> RECIPE_TYPE = createRecipeType(Mekanism.rl("dynamic_tank"), DynamicTankWidget.class);
+
 	public DynamicTankCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("dynamic_tank"), DynamicTankWidget.class, MekanismLang.DYNAMIC_TANK.translate(), MekanismBlocks.DYNAMIC_VALVE.getItemStack());
+		super(helper, RECIPE_TYPE, MekanismLang.DYNAMIC_TANK.translate(), MekanismBlocks.DYNAMIC_VALVE.getItemStack());
 	}
 
 	@Override
