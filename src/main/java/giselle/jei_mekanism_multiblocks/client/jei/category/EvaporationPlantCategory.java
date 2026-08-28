@@ -33,9 +33,11 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlantCategory.EvaporationPlantWidget>
 {
+	public static final RecipeType<EvaporationPlantCategory.EvaporationPlantWidget> RECIPE_TYPE = createRecipeType(Mekanism.rl("evaporation_plant"), EvaporationPlantWidget.class);
+
 	public EvaporationPlantCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("evaporation_plant"), EvaporationPlantWidget.class, MekanismLang.EVAPORATION_PLANT.translate(), MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getItemStack());
+		super(helper, RECIPE_TYPE, MekanismLang.EVAPORATION_PLANT.translate(), MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getItemStack());
 	}
 
 	@Override

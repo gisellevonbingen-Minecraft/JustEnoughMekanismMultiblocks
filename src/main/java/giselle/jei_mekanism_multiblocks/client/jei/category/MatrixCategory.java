@@ -20,9 +20,11 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidget>
 {
+	public static final RecipeType<MatrixCategory.MatrixWidget> RECIPE_TYPE = createRecipeType(Mekanism.rl("matrix"), MatrixWidget.class);
+
 	public MatrixCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("matrix"), MatrixWidget.class, MekanismLang.MATRIX.translate(), MekanismBlocks.INDUCTION_PORT.getItemStack());
+		super(helper, RECIPE_TYPE, MekanismLang.MATRIX.translate(), MekanismBlocks.INDUCTION_PORT.getItemStack());
 	}
 
 	@Override

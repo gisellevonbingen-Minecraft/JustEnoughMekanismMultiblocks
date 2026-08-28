@@ -22,9 +22,11 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 {
+	public static final RecipeType<SPSCategory.SPSWidget> RECIPE_TYPE = createRecipeType(Mekanism.rl("sps"), SPSWidget.class);
+
 	public SPSCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("sps"), SPSWidget.class, MekanismLang.SPS.translate(), MekanismBlocks.SPS_PORT.getItemStack());
+		super(helper, RECIPE_TYPE, MekanismLang.SPS.translate(), MekanismBlocks.SPS_PORT.getItemStack());
 	}
 
 	@Override

@@ -22,21 +22,38 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implements IRecipeCategory<WIDGET>
 {
+	public static <W extends MultiblockWidget> RecipeType<W> createRecipeType(ResourceLocation name, Class<? extends W> clazz)
+	{
+		return RecipeType.create(JEI_MekanismMultiblocks.MODID, "multiblock." + name.getNamespace() + "." + name.getPath(), clazz);
+	}
+
 	private final ResourceLocation id;
 	private final Class<? extends WIDGET> clazz;
 	private final IDrawable icon;
 	private final IDrawable background;
 	private final ITextComponent title;
 
+	@Deprecated
 	public MultiblockCategory(IGuiHelper helper, ResourceLocation name, Class<? extends WIDGET> clazz, ITextComponent multiblockName, ItemStack icon)
 	{
-		this(helper, name, clazz, multiblockName, helper.createDrawableIngredient(icon));
+		this(helper, createRecipeType(name, clazz), multiblockName, icon);
 	}
 
+	@Deprecated
 	public MultiblockCategory(IGuiHelper helper, ResourceLocation name, Class<? extends WIDGET> clazz, ITextComponent multiblockName, IDrawable icon)
 	{
-		this.id = JEI_MekanismMultiblocks.rl("multiblock." + name.getNamespace() + "." + name.getPath());
-		this.clazz = clazz;
+		this(helper, createRecipeType(name, clazz), multiblockName, icon);
+	}
+
+	public MultiblockCategory(IGuiHelper helper, RecipeType<? extends WIDGET> recipeType, ITextComponent multiblockName, ItemStack icon)
+	{
+		this(helper, recipeType, multiblockName, helper.createDrawableIngredient(icon));
+	}
+
+	public MultiblockCategory(IGuiHelper helper, RecipeType<? extends WIDGET> recipeType, ITextComponent multiblockName, IDrawable icon)
+	{
+		this.id = recipeType.getUid();
+		this.clazz = recipeType.getRecipeClass();
 		this.icon = icon;
 		this.background = helper.createBlankDrawable(180, 120);
 		this.title = new TranslationTextComponent("text.jei_mekanism_multiblocks.recipe_category.title", multiblockName);
@@ -165,6 +182,35 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 	public String getTitle()
 	{
 		return this.title.getString();
+	}
+
+	public static class RecipeType<RECIPE>
+	{
+		public static <RECIPE> RecipeType<RECIPE> create(String nameSpace, String path, Class<? extends RECIPE> recipeClass)
+		{
+			ResourceLocation uid = new ResourceLocation(nameSpace, path);
+			return new RecipeType<>(uid, recipeClass);
+		}
+
+		private ResourceLocation uid;
+		private Class<? extends RECIPE> recipeClass;
+
+		public RecipeType(ResourceLocation uid, Class<? extends RECIPE> recipeClass)
+		{
+			this.uid = uid;
+			this.recipeClass = recipeClass;
+		}
+
+		public ResourceLocation getUid()
+		{
+			return this.uid;
+		}
+
+		public Class<? extends RECIPE> getRecipeClass()
+		{
+			return this.recipeClass;
+		}
+
 	}
 
 }

@@ -46,9 +46,11 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class FissionReactorCategory extends MultiblockCategory<FissionReactorCategory.FissionReactorCategoryWidget>
 {
+	public static final RecipeType<FissionReactorCategory.FissionReactorCategoryWidget> RECIPE_TYPE = createRecipeType(MekanismGenerators.rl("fission_reactor"), FissionReactorCategoryWidget.class);
+
 	public FissionReactorCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismGenerators.rl("fission_reactor"), FissionReactorCategoryWidget.class, GeneratorsLang.FISSION_REACTOR.translate(), GeneratorsBlocks.CONTROL_ROD_ASSEMBLY.getItemStack());
+		super(helper, RECIPE_TYPE, GeneratorsLang.FISSION_REACTOR.translate(), GeneratorsBlocks.CONTROL_ROD_ASSEMBLY.getItemStack());
 	}
 
 	@Override

@@ -21,9 +21,11 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.DynamicTankWidget>
 {
+	public static final RecipeType<DynamicTankCategory.DynamicTankWidget> RECIPE_TYPE = createRecipeType(Mekanism.rl("dynamic_tank"), DynamicTankWidget.class);
+
 	public DynamicTankCategory(IGuiHelper helper)
 	{
-		super(helper, Mekanism.rl("dynamic_tank"), DynamicTankWidget.class, MekanismLang.DYNAMIC_TANK.translate(), MekanismBlocks.DYNAMIC_VALVE.getItemStack());
+		super(helper, RECIPE_TYPE, MekanismLang.DYNAMIC_TANK.translate(), MekanismBlocks.DYNAMIC_VALVE.getItemStack());
 	}
 
 	@Override

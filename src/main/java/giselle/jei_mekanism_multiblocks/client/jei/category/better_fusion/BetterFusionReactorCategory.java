@@ -34,9 +34,11 @@ import net.minecraftforge.fluids.FluidAttributes;
 
 public class BetterFusionReactorCategory extends MultiblockCategory<BetterFusionReactorCategory.FusionReactorCategoryWidget>
 {
+	public static final RecipeType<BetterFusionReactorCategory.FusionReactorCategoryWidget> RECIPE_TYPE = createRecipeType(BetterFusionReactor.rl("fusion_reactor"), FusionReactorCategoryWidget.class);
+
 	public BetterFusionReactorCategory(IGuiHelper helper)
 	{
-		super(helper, BetterFusionReactor.rl("fusion_reactor"), FusionReactorCategoryWidget.class, new TranslationTextComponent("text.jei_mekanism_multiblocks.building.better_fusion_reactor"), BfrBlocks.FUSION_REACTOR_CONTROLLER.getItemStack());
+		super(helper, RECIPE_TYPE, new TranslationTextComponent("text.jei_mekanism_multiblocks.building.better_fusion_reactor"), BfrBlocks.FUSION_REACTOR_CONTROLLER.getItemStack());
 	}
 
 	@Override

@@ -35,9 +35,11 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineWidget>
 {
+	public static final RecipeType<TurbineCategory.TurbineWidget> RECIPE_TYPE = createRecipeType(MekanismGenerators.rl("turbine"), TurbineWidget.class);
+
 	public TurbineCategory(IGuiHelper helper)
 	{
-		super(helper, MekanismGenerators.rl("turbine"), TurbineWidget.class, GeneratorsLang.TURBINE.translate(), GeneratorsBlocks.TURBINE_VALVE.getItemStack());
+		super(helper, RECIPE_TYPE, GeneratorsLang.TURBINE.translate(), GeneratorsBlocks.TURBINE_VALVE.getItemStack());
 	}
 
 	@Override
