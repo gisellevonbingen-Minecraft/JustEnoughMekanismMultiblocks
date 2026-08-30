@@ -4,7 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import giselle.jei_mekanism_multiblocks.client.JEI_MekanismMultiblocks_Client;
@@ -30,6 +32,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
@@ -50,12 +53,28 @@ public class JeiPlugin implements IModPlugin
 		return JEI_MekanismMultiblocks.rl("jei_plugin");
 	}
 
-	private final List<MultiblockCategory<? extends MultiblockWidget>> categories;
+	private final Map<RecipeType<? extends MultiblockWidget>, MultiblockCategory<? extends MultiblockWidget>> categoryMap;
+	private final List<MultiblockCategory<? extends MultiblockWidget>> categoryList;
+	private final Map<RecipeType<? extends MultiblockWidget>, MultiblockWidget> widgetMap;
+	private final List<MultiblockWidget> widgetList;
+	private IJeiRuntime jeiRuntime;
 
 	public JeiPlugin()
 	{
 		INSTANCE = this;
-		this.categories = new ArrayList<>();
+		this.categoryMap = new HashMap<>();
+		this.categoryList = new ArrayList<>();
+		this.widgetMap = new HashMap<>();
+		this.widgetList = new ArrayList<>();
+		this.jeiRuntime = null;
+	}
+
+	@Override
+	public void onRuntimeAvailable(IJeiRuntime jeiRuntime)
+	{
+		IModPlugin.super.onRuntimeAvailable(jeiRuntime);
+
+		this.jeiRuntime = jeiRuntime;
 	}
 
 	@Override
@@ -65,7 +84,10 @@ public class JeiPlugin implements IModPlugin
 
 		ClientConfig config = JEI_MekanismMultiblocks_Config.CLIENT;
 		IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
-		this.categories.clear();
+		this.categoryMap.clear();
+		this.categoryList.clear();
+		this.widgetMap.clear();
+		this.widgetList.clear();
 		this.addCategory(config.dynamicTankVisible, () -> new DynamicTankCategory(guiHelper));
 		this.addCategory(config.evaporationPlantVisible, () -> new EvaporationPlantCategory(guiHelper));
 		this.addCategory(config.boilerVisible, () -> new BoilerCategory(guiHelper));
@@ -111,7 +133,9 @@ public class JeiPlugin implements IModPlugin
 	{
 		if (config.get())
 		{
-			this.categories.add(constructor.get());
+			CATEGOERY category = constructor.get();
+			this.categoryMap.put(category.getRecipeType(), category);
+			this.categoryList.add(category);
 		}
 
 	}
@@ -160,6 +184,9 @@ public class JeiPlugin implements IModPlugin
 			}
 
 			widget.addChangedHandler(w -> this.onWidgetChanged(category, widget));
+
+			this.widgetMap.put(recipeType, widget);
+			this.widgetList.add(widget);
 			return widget;
 		}
 		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
@@ -178,9 +205,31 @@ public class JeiPlugin implements IModPlugin
 		JEI_MekanismMultiblocks_Client.markNeedSave();
 	}
 
+	public IJeiRuntime getJeiRuntime()
+	{
+		return this.jeiRuntime;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <RECIPE_TYPE extends MultiblockWidget> MultiblockCategory<? extends RECIPE_TYPE> getCategory(RecipeType<RECIPE_TYPE> recipeType)
+	{
+		return (MultiblockCategory<? extends RECIPE_TYPE>) this.categoryMap.get(recipeType);
+	}
+
 	public List<MultiblockCategory<? extends MultiblockWidget>> getCategories()
 	{
-		return Collections.unmodifiableList(this.categories);
+		return Collections.unmodifiableList(this.categoryList);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <RECIPE_TYPE extends MultiblockWidget> RECIPE_TYPE getWidget(RecipeType<RECIPE_TYPE> recipeType)
+	{
+		return (RECIPE_TYPE) this.widgetMap.get(recipeType);
+	}
+
+	public List<MultiblockWidget> getWidgets()
+	{
+		return Collections.unmodifiableList(this.widgetList);
 	}
 
 }
