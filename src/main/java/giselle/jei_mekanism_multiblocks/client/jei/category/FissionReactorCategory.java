@@ -13,6 +13,7 @@ import giselle.jei_mekanism_multiblocks.client.gui.LongSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import giselle.jei_mekanism_multiblocks.common.util.DurationTextHelper;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.api.chemical.gas.attribute.GasAttributes.Coolant;
 import mekanism.api.heat.HeatAPI;
@@ -23,7 +24,6 @@ import mekanism.common.util.EnumUtils;
 import mekanism.common.util.HeatUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.UnitDisplayUtils.TemperatureUnit;
-import mekanism.common.util.text.TextUtils;
 import mekanism.generators.common.GeneratorsLang;
 import mekanism.generators.common.MekanismGenerators;
 import mekanism.generators.common.config.MekanismGeneratorsConfig;
@@ -409,7 +409,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 						burnRateTooltip, //
 						Component.translatable("text.jei_mekanism_multiblocks.tooltip.warning").withStyle(ChatFormatting.RED), //
 						Component.translatable("text.jei_mekanism_multiblocks.tooltip.reactor_will_damage").withStyle(ChatFormatting.RED), //
-						Component.translatable("text.jei_mekanism_multiblocks.tooltip.max_damage_ticks", TextUtils.format(maxDamageTicks)).withStyle(ChatFormatting.RED)));
+						Component.translatable("text.jei_mekanism_multiblocks.tooltip.max_damage_ticks", DurationTextHelper.duration(maxDamageTicks)).withStyle(ChatFormatting.RED)));
 			}
 			else
 			{
