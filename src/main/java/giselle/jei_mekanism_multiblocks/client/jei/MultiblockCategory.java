@@ -31,6 +31,7 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 	private final Class<? extends WIDGET> clazz;
 	private final IDrawable icon;
 	private final IDrawable background;
+	private final ITextComponent name;
 	private final ITextComponent title;
 
 	@Deprecated
@@ -56,6 +57,7 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 		this.clazz = recipeType.getRecipeClass();
 		this.icon = icon;
 		this.background = helper.createBlankDrawable(180, 120);
+		this.name = multiblockName;
 		this.title = new TranslationTextComponent("text.jei_mekanism_multiblocks.recipe_category.title", multiblockName);
 	}
 
@@ -176,6 +178,11 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 	public ITextComponent getTitleAsTextComponent()
 	{
 		return this.title;
+	}
+
+	public ITextComponent getName()
+	{
+		return this.name;
 	}
 
 	@Override
