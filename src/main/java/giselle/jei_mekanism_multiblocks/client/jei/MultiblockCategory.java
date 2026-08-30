@@ -35,6 +35,7 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 	private final RecipeType<WIDGET> type;
 	private final IDrawable icon;
 	private final IDrawable background;
+	private final Component name;
 	private final Component title;
 
 	@Deprecated
@@ -59,6 +60,7 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 		this.type = type;
 		this.icon = icon;
 		this.background = helper.createBlankDrawable(180, 120);
+		this.name = multiblockName;
 		this.title = new TranslatableComponent("text.jei_mekanism_multiblocks.recipe_category.title", multiblockName);
 	}
 
@@ -173,6 +175,11 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 	public IDrawable getBackground()
 	{
 		return this.background;
+	}
+
+	public Component getName()
+	{
+		return this.name;
 	}
 
 	@Override
