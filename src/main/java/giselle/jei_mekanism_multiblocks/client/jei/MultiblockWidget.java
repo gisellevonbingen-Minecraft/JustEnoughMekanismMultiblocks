@@ -114,7 +114,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 	protected void collectOtherConfigs(Consumer<AbstractWidget> consumer)
 	{
 		Block glassBlock = this.getGlassBlock();
-		this.useGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslatableComponent("text.jei_mekanism_multiblocks.specs.use_things", new ItemStack(glassBlock).getHoverName()), true);
+		this.useGlassCheckBox = new CheckBoxWidget(0, 0, 0, 0, glassBlock == null ? TextComponent.EMPTY : new TranslatableComponent("text.jei_mekanism_multiblocks.specs.use_things", new ItemStack(glassBlock).getHoverName()), true);
 		this.useGlassCheckBox.addSelectedChangedHandler(this::onUseGlassChanged);
 
 		if (glassBlock != null)
