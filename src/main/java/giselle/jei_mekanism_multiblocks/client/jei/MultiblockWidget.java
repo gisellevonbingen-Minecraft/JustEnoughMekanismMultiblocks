@@ -265,24 +265,24 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	public void updateInput(double pMouseX, double pMouseY)
 	{
-		if (JEI_MekanismMultiblocks_Client.PRESSED)
+		if (JEI_MekanismMultiblocks_Client.MOUSE_PRESSED)
 		{
 			this.pInputMouseX = pMouseX;
 			this.pInputMouseY = pMouseY;
 			this.mouseClicked(pMouseX, pMouseY, 0);
 		}
 
-		if (JEI_MekanismMultiblocks_Client.RELEASED)
+		if (JEI_MekanismMultiblocks_Client.MOUSE_RELEASED)
 		{
 			this.mouseReleased(pMouseX, pMouseY, 0);
 		}
 
-		if (JEI_MekanismMultiblocks_Client.DRAGGED)
+		if (JEI_MekanismMultiblocks_Client.MOUSE_DRAGGED)
 		{
 			this.mouseDragged(pMouseX, pMouseY, 0, pMouseX - this.pInputMouseX, pMouseY - this.pInputMouseY);
 		}
 
-		double scrolled = JEI_MekanismMultiblocks_Client.SCROLLED;
+		double scrolled = JEI_MekanismMultiblocks_Client.MOUSE_SCROLLED;
 
 		if (scrolled != 0.0D)
 		{
