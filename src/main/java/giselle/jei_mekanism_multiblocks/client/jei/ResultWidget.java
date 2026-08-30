@@ -1,5 +1,8 @@
 package giselle.jei_mekanism_multiblocks.client.jei;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import giselle.jei_mekanism_multiblocks.client.gui.ContainerWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.TextAlignment;
@@ -9,6 +12,8 @@ public class ResultWidget extends ContainerWidget
 {
 	private final LabelWidget textLabel;
 	private final LabelWidget valueLabel;
+
+	private final List<IPressHandler> pressHandlers;
 
 	public ResultWidget(ITextComponent text, ITextComponent value)
 	{
@@ -26,8 +31,31 @@ public class ResultWidget extends ContainerWidget
 		this.valueLabel.setFGColor(0x3F3F3F);
 		this.valueLabel.setShadow(false);
 
+		this.pressHandlers = new ArrayList<>();
+
 		this.updateChildrenHorizontal();
 		this.updateChildrenVertical();
+	}
+
+	public void addPressHandler(IPressHandler handler)
+	{
+		this.pressHandlers.add(handler);
+	}
+
+	@Override
+	public boolean mouseClicked(double pMouseX, double pMouseY, int pButton)
+	{
+		if (super.mouseClicked(pMouseX, pMouseY, pButton))
+		{
+			for (IPressHandler handler : this.pressHandlers)
+			{
+				handler.onPress(this);
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -86,6 +114,11 @@ public class ResultWidget extends ContainerWidget
 	{
 		this.getTextLabel().setTooltip(tooltip);
 		this.getValueLabel().setTooltip(tooltip);
+	}
+
+	public interface IPressHandler
+	{
+		void onPress(ResultWidget widget);
 	}
 
 }
