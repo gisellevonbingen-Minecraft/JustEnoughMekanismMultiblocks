@@ -2,8 +2,11 @@ package giselle.jei_mekanism_multiblocks.client.jei;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import giselle.jei_mekanism_multiblocks.client.JEI_MekanismMultiblocks_Client;
@@ -25,6 +28,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
@@ -45,12 +49,28 @@ public class JeiPlugin implements IModPlugin
 		return JEI_MekanismMultiblocks.rl("jei_plugin");
 	}
 
-	private final List<MultiblockCategory<?>> categories;
+	private final Map<ResourceLocation, MultiblockCategory<? extends MultiblockWidget>> categoryMap;
+	private final List<MultiblockCategory<? extends MultiblockWidget>> categoryList;
+	private final Map<ResourceLocation, MultiblockWidget> widgetMap;
+	private final List<MultiblockWidget> widgetList;
+	private IJeiRuntime jeiRuntime;
 
 	public JeiPlugin()
 	{
 		INSTANCE = this;
-		this.categories = new ArrayList<>();
+		this.categoryMap = new HashMap<>();
+		this.categoryList = new ArrayList<>();
+		this.widgetMap = new HashMap<>();
+		this.widgetList = new ArrayList<>();
+		this.jeiRuntime = null;
+	}
+
+	@Override
+	public void onRuntimeAvailable(IJeiRuntime jeiRuntime)
+	{
+		IModPlugin.super.onRuntimeAvailable(jeiRuntime);
+
+		this.jeiRuntime = jeiRuntime;
 	}
 
 	@Override
@@ -60,7 +80,10 @@ public class JeiPlugin implements IModPlugin
 
 		ClientConfig config = JEI_MekanismMultiblocks_Config.CLIENT;
 		IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
-		this.categories.clear();
+		this.categoryMap.clear();
+		this.categoryList.clear();
+		this.widgetMap.clear();
+		this.widgetList.clear();
 		this.addCategory(config.dynamicTankVisible, () -> new DynamicTankCategory(guiHelper));
 		this.addCategory(config.evaporationPlantVisible, () -> new EvaporationPlantCategory(guiHelper));
 		this.addCategory(config.boilerVisible, () -> new BoilerCategory(guiHelper));
@@ -90,7 +113,9 @@ public class JeiPlugin implements IModPlugin
 	{
 		if (config.get())
 		{
-			this.categories.add(constructor.get());
+			CATEGOERY category = constructor.get();
+			this.categoryMap.put(category.getUid(), category);
+			this.categoryList.add(category);
 		}
 
 	}
@@ -114,24 +139,32 @@ public class JeiPlugin implements IModPlugin
 
 		for (MultiblockCategory<?> category : this.getCategories())
 		{
-			try
+			registration.addRecipes(Arrays.asList(this.createWidget(category)), category.getUid());
+
+		}
+
+	}
+
+	public <WIDGET extends MultiblockWidget> WIDGET createWidget(MultiblockCategory<WIDGET> category)
+	{
+		try
+		{
+			WIDGET widget = category.getRecipeClass().getDeclaredConstructor().newInstance();
+
+			if (SavedData.hasMultiblock(category.getUid()))
 			{
-				MultiblockWidget widget = category.getRecipeClass().getDeclaredConstructor().newInstance();
-
-				if (SavedData.hasMultiblock(category.getUid()))
-				{
-					widget.load(SavedData.getMultiblock(category.getUid()));
-				}
-
-				widget.addChangedHandler(w -> this.onWidgetChanged(category, widget));
-				registration.addRecipes(Collections.singleton(widget), category.getUid());
-			}
-			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
-			{
-				System.err.println("Exception - " + category.getUid());
-				e.printStackTrace();
+				widget.load(SavedData.getMultiblock(category.getUid()));
 			}
 
+			widget.addChangedHandler(w -> this.onWidgetChanged(category, widget));
+
+			this.widgetMap.put(category.getUid(), widget);
+			this.widgetList.add(widget);
+			return widget;
+		}
+		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
+		{
+			throw new RuntimeException("Category: " + category.getUid(), e);
 		}
 
 	}
@@ -145,9 +178,31 @@ public class JeiPlugin implements IModPlugin
 		JEI_MekanismMultiblocks_Client.markNeedSave();
 	}
 
+	public IJeiRuntime getJeiRuntime()
+	{
+		return this.jeiRuntime;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <RECIPE_TYPE extends MultiblockWidget> MultiblockCategory<? extends RECIPE_TYPE> getCategory(ResourceLocation uid)
+	{
+		return (MultiblockCategory<? extends RECIPE_TYPE>) this.categoryMap.get(uid);
+	}
+
 	public List<MultiblockCategory<? extends MultiblockWidget>> getCategories()
 	{
-		return Collections.unmodifiableList(this.categories);
+		return Collections.unmodifiableList(this.categoryList);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <RECIPE_TYPE extends MultiblockWidget> RECIPE_TYPE getWidget(ResourceLocation uid)
+	{
+		return (RECIPE_TYPE) this.widgetMap.get(uid);
+	}
+
+	public List<MultiblockWidget> getWidgets()
+	{
+		return Collections.unmodifiableList(this.widgetList);
 	}
 
 }
