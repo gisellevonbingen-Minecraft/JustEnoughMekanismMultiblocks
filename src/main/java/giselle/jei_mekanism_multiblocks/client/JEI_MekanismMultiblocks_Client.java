@@ -11,10 +11,10 @@ public class JEI_MekanismMultiblocks_Client
 {
 	private static int SAVE_TIMER = 0;
 
-	public static boolean PRESSED;
-	public static boolean RELEASED;
-	public static boolean DRAGGED;
-	public static double SCROLLED;
+	public static boolean MOUSE_PRESSED;
+	public static boolean MOUSE_RELEASED;
+	public static boolean MOUSE_DRAGGED;
+	public static double MOUSE_SCROLLED;
 
 	public static void init()
 	{
@@ -48,10 +48,10 @@ public class JEI_MekanismMultiblocks_Client
 	@SubscribeEvent
 	public static void onScreenRenderPre(ScreenEvent.Render.Post e)
 	{
-		PRESSED = false;
-		RELEASED = false;
-		DRAGGED = false;
-		SCROLLED = 0.0D;
+		MOUSE_PRESSED = false;
+		MOUSE_RELEASED = false;
+		MOUSE_DRAGGED = false;
+		MOUSE_SCROLLED = 0.0D;
 	}
 
 	@SubscribeEvent
@@ -59,7 +59,7 @@ public class JEI_MekanismMultiblocks_Client
 	{
 		if (e.getButton() == 0)
 		{
-			PRESSED = true;
+			MOUSE_PRESSED = true;
 		}
 
 	}
@@ -69,7 +69,7 @@ public class JEI_MekanismMultiblocks_Client
 	{
 		if (e.getButton() == 0)
 		{
-			RELEASED = true;
+			MOUSE_RELEASED = true;
 		}
 
 	}
@@ -79,7 +79,7 @@ public class JEI_MekanismMultiblocks_Client
 	{
 		if (e.getMouseButton() == 0)
 		{
-			DRAGGED = true;
+			MOUSE_DRAGGED = true;
 		}
 
 	}
@@ -87,7 +87,7 @@ public class JEI_MekanismMultiblocks_Client
 	@SubscribeEvent
 	public static void onMouseScrolled(ScreenEvent.MouseScrolled.Pre e)
 	{
-		SCROLLED = e.getScrollDelta();
+		MOUSE_SCROLLED = e.getScrollDelta();
 	}
 
 }
