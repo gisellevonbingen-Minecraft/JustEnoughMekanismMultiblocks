@@ -71,13 +71,15 @@
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+CLIQUE: %s",
 	"text.jei_mekanism_multiblocks.tooltip.warning": "※ Aviso",
 	"text.jei_mekanism_multiblocks.tooltip.limited": "※ Limitado",
-	"text.jei_mekanism_multiblocks.tooltip.steam_height": "Distância do teto até '%s'.",
-	"text.jei_mekanism_multiblocks.tooltip.value_limited": "'%s' é limitado.",
-	"text.jei_mekanism_multiblocks.tooltip.when_burn_rate": "Quando a 'Taxa de Queima' for %s.",
-	"text.jei_mekanism_multiblocks.tooltip.when_temp_ge": "Quando a 'Temp.' for >= %s.",
-	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "O reator será danificado.",
-	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "Haverá perda de água.",
-	"text.jei_mekanism_multiblocks.tooltip.need_more": "Precisa de mais '%s'.",
-	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "Produção por fluxo: %s.",
-	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "É necessário definir a 'Taxa de Injeção' do reator para %s."
+	"text.jei_mekanism_multiblocks.tooltip.steam_height": "Distância do teto até '%s'",
+	"text.jei_mekanism_multiblocks.tooltip.value_limited": "'%s' é limitado",
+	"text.jei_mekanism_multiblocks.tooltip.when_burn_rate": "Quando a 'Taxa de Queima' for %s",
+	"text.jei_mekanism_multiblocks.tooltip.when_temp_ge": "Quando a 'Temp.' for >= %s",
+	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "O reator será danificado",
+	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "Haverá perda de água",
+	"text.jei_mekanism_multiblocks.tooltip.need_more": "Precisa de mais '%s'",
+	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "Produção por fluxo: %s",
+	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "É necessário definir a 'Taxa de Injeção' do reator para %s",
+	
+	"_eof": "_eof"
 }
