@@ -71,6 +71,7 @@
 	"text.jei_mekanism_multiblocks.result.boil_efficiency": "가열 효율",
 	"text.jei_mekanism_multiblocks.result.required_heater_usage": "필요 히터 사용량",
 	"text.jei_mekanism_multiblocks.result.required_laser_energy": "필요 레이저 에너지",
+	"text.jei_mekanism_multiblocks.result.production_per_flow": "유체당 생산량",
 	
 	"text.jei_mekanism_multiblocks.tooltip.click_normal": "클릭: %s",
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+클릭: %s",
@@ -84,7 +85,6 @@
 	"text.jei_mekanism_multiblocks.tooltip.max_damage_ticks": "피해 0%% 부터 100%% 까지 시간: %s",
 	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "물이 없어집니다",
 	"text.jei_mekanism_multiblocks.tooltip.need_more": "'%s'이(가) 더 필요합니다",
-	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "유체당 생산량: %s",
 	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "핵융합로의 '융합 속도'를 %s (으)로 설정해야 합니다",
 	"text.jei_mekanism_multiblocks.tooltip.required_heater_usage.plain": "평원 생물 군계에서: %s",
 	"text.jei_mekanism_multiblocks.tooltip.required_heater_usage.coldest": "가장 차가운 생물 군계에서: %s",

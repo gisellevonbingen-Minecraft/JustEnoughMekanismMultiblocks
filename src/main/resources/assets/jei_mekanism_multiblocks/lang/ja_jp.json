@@ -50,6 +50,7 @@
 	"text.jei_mekanism_multiblocks.result.energy_per_antimatter": "反物質あたりの電力消費",
 	"text.jei_mekanism_multiblocks.result.inner_volume": "内部容量",
 	"text.jei_mekanism_multiblocks.result.blocks": "%s ブロック",
+	"text.jei_mekanism_multiblocks.result.production_per_flow": "流量あたりの発電量",
 	
 	"text.jei_mekanism_multiblocks.tooltip.click_normal": "クリック: %s",
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+クリック %s",
@@ -62,7 +63,6 @@
 	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "原子炉がダメージを受けます",
 	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "水が失われます",
 	"text.jei_mekanism_multiblocks.tooltip.need_more": "「%s」がもっと必要です",
-	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "流量あたりの発電量: %s",
 	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "融合炉の「注入レート」を %s に設定する必要があります",
 	
 	"_eof": "_eof"
