@@ -48,6 +48,7 @@
 	"text.jei_mekanism_multiblocks.result.energy_per_antimatter": "Энергия за антиматерию",
 	"text.jei_mekanism_multiblocks.result.inner_volume": "Внутр. объём",
 	"text.jei_mekanism_multiblocks.result.blocks": "%s блоков",
+	"text.jei_mekanism_multiblocks.result.production_per_flow": "Производство за поток",
 	
 	"text.jei_mekanism_multiblocks.tooltip.click_normal": "НАЖМИ: %s",
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+НАЖМИ: %s",
@@ -60,7 +61,6 @@
 	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "Реактор будет повреждён",
 	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "Вода будет потеряна",
 	"text.jei_mekanism_multiblocks.tooltip.need_more": "Нужно больше '%s'",
-	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "Производство за поток: %s",
 	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "Нужно установить 'Скорость впрыска' на %s",
 	
 	"_eof": "_eof"
