@@ -306,13 +306,7 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 			long steamTank = this.getSteamTank(lowerVolume);
 			long energyCapacity = this.getEnergyCapacity(volume);
 
-			FloatingLong productionPerFlow = maxProduction.divide(maxFlow);
-			TranslationTextComponent productionPerFlowTooltip = new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.production_per_flow", new TranslationTextComponent("%1$s/%2$s", EnergyDisplay.of(productionPerFlow).getTextComponent(), "mB"));
-
-			ResultWidget maxProductionWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_production"), new TranslationTextComponent("%s/t", EnergyDisplay.of(maxProduction).getTextComponent()));
-			maxProductionWidget.setTooltip(productionPerFlowTooltip);
-
-			consumer.accept(maxProductionWidget);
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_production"), new TranslationTextComponent("%s/t", EnergyDisplay.of(maxProduction).getTextComponent())));
 			ResultWidget maxFlowRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_flow_rate"), VolumeTextHelper.formatMBt(maxFlow));
 			consumer.accept(maxFlowRateWidget);
 
@@ -322,12 +316,8 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 			{
 				maxFlowRateWidget.getValueLabel().setFGColor(0xFF8000);
 				maxFlowRateWidget.setTooltip(//
-						productionPerFlowTooltip, new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.limited").withStyle(TextFormatting.RED), //
+						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.limited").withStyle(TextFormatting.RED), //
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_more", GeneratorsBlocks.TURBINE_VENT.getTextComponent()).withStyle(TextFormatting.RED));
-			}
-			else
-			{
-				maxFlowRateWidget.setTooltip(productionPerFlowTooltip);
 			}
 
 			ResultWidget maxWaterOutputWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_water_output"), VolumeTextHelper.formatMBt(maxWaterOutput));
@@ -342,6 +332,7 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_more", GeneratorsBlocks.SATURATING_CONDENSER.getTextComponent()).withStyle(TextFormatting.RED));
 			}
 
+			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.production_per_flow"), new TranslationTextComponent("%s/%s", EnergyDisplay.of(maxProduction.divide(maxFlow)).getTextComponent(), "mB")));
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(steamTank)));
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.energy_capacity"), EnergyDisplay.of(FloatingLong.create(energyCapacity)).getTextComponent()));
 		}
