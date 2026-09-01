@@ -66,6 +66,7 @@
 	"text.jei_mekanism_multiblocks.result.supercharging_elements": "Elementos de Superalimentação: %s",
 	"text.jei_mekanism_multiblocks.result.processing_speed": "Velocidade de Processamento",
 	"text.jei_mekanism_multiblocks.result.boil_efficiency": "Eficiência de Ebulição",
+	"text.jei_mekanism_multiblocks.result.production_per_flow": "Produção por Fluxo",
 
 	"text.jei_mekanism_multiblocks.tooltip.click_normal": "CLIQUE: %s",
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+CLIQUE: %s",
@@ -78,7 +79,6 @@
 	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "O reator será danificado",
 	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "Haverá perda de água",
 	"text.jei_mekanism_multiblocks.tooltip.need_more": "Precisa de mais '%s'",
-	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "Produção por fluxo: %s",
 	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "É necessário definir a 'Taxa de Injeção' do reator para %s",
 	
 	"_eof": "_eof"

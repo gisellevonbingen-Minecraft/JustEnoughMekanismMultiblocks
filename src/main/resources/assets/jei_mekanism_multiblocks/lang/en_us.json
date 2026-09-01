@@ -75,6 +75,7 @@
 	"text.jei_mekanism_multiblocks.result.boil_efficiency": "Boil Efficiency",
 	"text.jei_mekanism_multiblocks.result.required_heater_usage": "Required Heater Usage",
 	"text.jei_mekanism_multiblocks.result.required_laser_energy": "Required Laser Energy",
+	"text.jei_mekanism_multiblocks.result.production_per_flow": "Production Per Flow",
 	
 	"text.jei_mekanism_multiblocks.tooltip.click_normal": "CLICK: %s",
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+CLICK: %s",
@@ -88,7 +89,6 @@
 	"text.jei_mekanism_multiblocks.tooltip.max_damage_ticks": "Time from 0%% to 100%% damage: %s",
 	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "Water will be losing",
 	"text.jei_mekanism_multiblocks.tooltip.need_more": "Need more '%s'",
-	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "Production per flow: %s",
 	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "Need set reactor's 'Injection Rate' to %s",
 	"text.jei_mekanism_multiblocks.tooltip.required_heater_usage.plain": "On Plain Biome: %s",
 	"text.jei_mekanism_multiblocks.tooltip.required_heater_usage.coldest": "On Coldest Biome: %s",
