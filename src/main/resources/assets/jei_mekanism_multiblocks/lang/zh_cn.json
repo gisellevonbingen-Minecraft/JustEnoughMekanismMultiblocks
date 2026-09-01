@@ -53,13 +53,15 @@
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+点击：%s",
 	"text.jei_mekanism_multiblocks.tooltip.warning": "※ 警告",
 	"text.jei_mekanism_multiblocks.tooltip.limited": "※ 达到上限",
-	"text.jei_mekanism_multiblocks.tooltip.steam_height": "从天花板到‘%s’的距离。",
-	"text.jei_mekanism_multiblocks.tooltip.value_limited": "‘%s’已达到上限。",
-	"text.jei_mekanism_multiblocks.tooltip.when_burn_rate": "当‘燃烧速率为’%s时。",
-	"text.jei_mekanism_multiblocks.tooltip.when_temp_ge": "当‘温度’>=%s时。",
-	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "反应堆将受到损坏。",
-	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "水将会耗尽。",
-	"text.jei_mekanism_multiblocks.tooltip.need_more": "需要更多‘%s’。",
-	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "每点流量的产出：%s。",
-	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "需要设置反应堆的‘输入速率’为%s。"
+	"text.jei_mekanism_multiblocks.tooltip.steam_height": "从天花板到‘%s’的距离",
+	"text.jei_mekanism_multiblocks.tooltip.value_limited": "‘%s’已达到上限",
+	"text.jei_mekanism_multiblocks.tooltip.when_burn_rate": "当‘燃烧速率为’%s时",
+	"text.jei_mekanism_multiblocks.tooltip.when_temp_ge": "当‘温度’>=%s时",
+	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "反应堆将受到损坏",
+	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "水将会耗尽",
+	"text.jei_mekanism_multiblocks.tooltip.need_more": "需要更多‘%s’",
+	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "每点流量的产出：%s",
+	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "需要设置反应堆的‘输入速率’为%s",
+	
+	"_eof": "_eof"
 }

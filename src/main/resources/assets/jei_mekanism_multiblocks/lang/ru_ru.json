@@ -53,13 +53,15 @@
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+НАЖМИ: %s",
 	"text.jei_mekanism_multiblocks.tooltip.warning": "※ Предупреждение",
 	"text.jei_mekanism_multiblocks.tooltip.limited": "※ Ограничение",
-	"text.jei_mekanism_multiblocks.tooltip.steam_height": "Расстояние от потолка до '%s'.",
-	"text.jei_mekanism_multiblocks.tooltip.value_limited": "'%s' ограничено.",
-	"text.jei_mekanism_multiblocks.tooltip.when_burn_rate": "Когда 'скорость горения' %s.",
-	"text.jei_mekanism_multiblocks.tooltip.when_temp_ge": "Когда 'Температура' >= %s.",
-	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "Реактор будет повреждён.",
-	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "Вода будет потеряна.",
-	"text.jei_mekanism_multiblocks.tooltip.need_more": "Нужно больше '%s'.",
-	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "Производство за поток: %s.",
-	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "Нужно установить 'Скорость впрыска' на %s."
+	"text.jei_mekanism_multiblocks.tooltip.steam_height": "Расстояние от потолка до '%s'",
+	"text.jei_mekanism_multiblocks.tooltip.value_limited": "'%s' ограничено",
+	"text.jei_mekanism_multiblocks.tooltip.when_burn_rate": "Когда 'скорость горения' %s",
+	"text.jei_mekanism_multiblocks.tooltip.when_temp_ge": "Когда 'Температура' >= %s",
+	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "Реактор будет повреждён",
+	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "Вода будет потеряна",
+	"text.jei_mekanism_multiblocks.tooltip.need_more": "Нужно больше '%s'",
+	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "Производство за поток: %s",
+	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "Нужно установить 'Скорость впрыска' на %s",
+	
+	"_eof": "_eof"
 }
