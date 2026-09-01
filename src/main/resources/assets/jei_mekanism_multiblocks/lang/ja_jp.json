@@ -55,13 +55,15 @@
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+クリック %s",
 	"text.jei_mekanism_multiblocks.tooltip.warning": "※警告",
 	"text.jei_mekanism_multiblocks.tooltip.limited": "※限定的",
-	"text.jei_mekanism_multiblocks.tooltip.steam_height": "天井から「%s」までの距離。",
-	"text.jei_mekanism_multiblocks.tooltip.value_limited": "「%s」は限定的。",
-	"text.jei_mekanism_multiblocks.tooltip.when_burn_rate": "「燃焼効率」が%sの場合。",
-	"text.jei_mekanism_multiblocks.tooltip.when_temp_ge": "「温度」>= %sの場合。",
-	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "原子炉がダメージを受けます。",
-	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "水が失われます。",
-	"text.jei_mekanism_multiblocks.tooltip.need_more": "「%s」がもっと必要です。",
-	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "流量あたりの発電量: %s。",
-	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "融合炉の「注入レート」を %s に設定する必要があります。"
+	"text.jei_mekanism_multiblocks.tooltip.steam_height": "天井から「%s」までの距離",
+	"text.jei_mekanism_multiblocks.tooltip.value_limited": "「%s」は限定的",
+	"text.jei_mekanism_multiblocks.tooltip.when_burn_rate": "「燃焼効率」が%sの場合",
+	"text.jei_mekanism_multiblocks.tooltip.when_temp_ge": "「温度」>= %sの場合",
+	"text.jei_mekanism_multiblocks.tooltip.reactor_will_damage": "原子炉がダメージを受けます",
+	"text.jei_mekanism_multiblocks.tooltip.water_will_losing": "水が失われます",
+	"text.jei_mekanism_multiblocks.tooltip.need_more": "「%s」がもっと必要です",
+	"text.jei_mekanism_multiblocks.tooltip.production_per_flow": "流量あたりの発電量: %s",
+	"text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate": "融合炉の「注入レート」を %s に設定する必要があります",
+	
+	"_eof": "_eof"
 }
