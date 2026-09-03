@@ -12,6 +12,7 @@ public class ClientConfig
 	public final BooleanValue boilerVisible;
 	public final BooleanValue spsVisible;
 	public final BooleanValue matrixVisible;
+	public final BooleanValue lasersVisible;
 
 	public final BooleanValue turbineVisible;
 	public final BooleanValue fissionReactorVisible;
@@ -50,6 +51,10 @@ public class ClientConfig
 
 		builder.comment("JEI 'Building [Induction Matrix]' page configuration").push("matrix");
 		this.matrixVisible = builder.comment("Set page visibility").define("visible", true);
+		builder.pop();
+
+		builder.comment("JEI 'Building [Lasers]' page configuration").push("lasers");
+		this.lasersVisible = builder.comment("Set page visibility").define("visible", true);
 		builder.pop();
 
 		builder.pop();
