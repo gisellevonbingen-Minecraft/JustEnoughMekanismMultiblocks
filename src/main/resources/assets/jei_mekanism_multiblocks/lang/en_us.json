@@ -1,8 +1,10 @@
 {
 	"text.jei_mekanism_multiblocks.recipe_category.title": "Building [%s]",
+	"text.jei_mekanism_multiblocks.building.lasers": "Lasers",
 	"text.jei_mekanism_multiblocks.building.better_fusion_reactor": "Better Fusion Reactor",
 	"text.jei_mekanism_multiblocks.building.extra_matrix": "Reinforced Induction Matrix",
 	
+	"text.jei_mekanism_multiblocks.enter": "Enter",
 	"text.jei_mekanism_multiblocks.specs": "Specs",
 	"text.jei_mekanism_multiblocks.costs": "Costs",
 	"text.jei_mekanism_multiblocks.results": "Results",
@@ -22,6 +24,7 @@
 	"text.jei_mekanism_multiblocks.duration.minutes": "%sm",
 	"text.jei_mekanism_multiblocks.duration.seconds": "%ss",
 	"text.jei_mekanism_multiblocks.duration.ticks": "%st",
+	"text.jei_mekanism_multiblocks.example": "Example",
 	
 	"text.jei_mekanism_multiblocks.specs.width": "Width: %s",
 	"text.jei_mekanism_multiblocks.specs.width_length": "Width, Length: %s",
@@ -42,6 +45,8 @@
 	"text.jei_mekanism_multiblocks.specs.for_sodium_cooling": "For Sodium Cooling",
 	"text.jei_mekanism_multiblocks.specs.advanced": "Advanced",
 	"text.jei_mekanism_multiblocks.specs.layout": "Layout",
+	"text.jei_mekanism_multiblocks.specs.target_energy": "Target Energy",
+	"text.jei_mekanism_multiblocks.specs.lasers": "Lasers: %s",
 	
 	"text.jei_mekanism_multiblocks.result.input_tank": "Input Tank",
 	"text.jei_mekanism_multiblocks.result.output_tank": "Output Tank",
@@ -76,6 +81,8 @@
 	"text.jei_mekanism_multiblocks.result.required_heater_usage": "Required Heater Usage",
 	"text.jei_mekanism_multiblocks.result.required_laser_energy": "Required Laser Energy",
 	"text.jei_mekanism_multiblocks.result.production_per_flow": "Production Per Flow",
+	"text.jei_mekanism_multiblocks.result.energy_rate": "Energy Rate",
+	"text.jei_mekanism_multiblocks.result.merge_time": "Merge Time",
 	
 	"text.jei_mekanism_multiblocks.tooltip.click_normal": "CLICK: %s",
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+CLICK: %s",
@@ -95,6 +102,7 @@
 	"text.jei_mekanism_multiblocks.tooltip.required_heater_usage.hottest": "On Hottest Biome: %s",
 	"text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_1": "'%1$s' must be placed",
 	"text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_2": "right next to '%2$s'",
+	"text.jei_mekanism_multiblocks.tooltip.click_to_simulate": "Click to simulate '%s'",
 	
 	"_eof": "_eof"
 }

@@ -1,5 +1,6 @@
 package giselle.jei_mekanism_multiblocks.client.jei.category.better_fusion;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -7,10 +8,13 @@ import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.gui.Mod2IntSliderWidget;
+import giselle.jei_mekanism_multiblocks.client.jei.JeiPlugin;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.category.ICostConsumer;
+import giselle.jei_mekanism_multiblocks.client.jei.category.LasersCategory;
+import giselle.jei_mekanism_multiblocks.client.jei.category.LasersCategory.LaserWidget;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import igentuman.bfr.common.BetterFusionReactor;
 import igentuman.bfr.common.content.fusion.FusionReactorMultiblockData;
@@ -73,6 +77,7 @@ public class BetterFusionReactorCategory extends MultiblockCategory<BetterFusion
 		private static final double burnTemperature = 100_000_000.0D;
 		private static final double plasmaHeatCapacity = 100.0D;
 		private static final double noBurningFactor = 10.0D;
+		private static final FloatingLong requiredLaserEnergy = FloatingLong.create(burnTemperature).multiply(plasmaHeatCapacity).divide(noBurningFactor);
 
 		protected CheckBoxWidget waterCooledCheckBox;
 		protected IntSliderWithButtons portsWidget;
@@ -283,8 +288,16 @@ public class BetterFusionReactorCategory extends MultiblockCategory<BetterFusion
 				consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.steam_production"), VolumeTextHelper.formatMBt(steamProduction)));
 			}
 
-			FloatingLong requiredLaserEnergy = FloatingLong.create(burnTemperature).multiply(plasmaHeatCapacity).divide(noBurningFactor);
-			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.required_laser_energy"), EnergyDisplay.of(requiredLaserEnergy).getTextComponent()));
+			ResultWidget requiredLaserEnergyWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.required_laser_energy"), EnergyDisplay.of(requiredLaserEnergy).getTextComponent());
+			MultiblockCategory<? extends LaserWidget> lasersCategory = JeiPlugin.instance().getCategory(LasersCategory.RECIPE_TYPE);
+
+			if (lasersCategory != null)
+			{
+				requiredLaserEnergyWidget.setTooltip(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_to_simulate", lasersCategory.getName()));
+				requiredLaserEnergyWidget.addPressHandler(this::onResultWidgetPress);
+			}
+
+			consumer.accept(requiredLaserEnergyWidget);
 			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.fuel_tank"), VolumeTextHelper.formatMB(fuelTank)));
 
 			if (this.isWaterCooled())
@@ -299,6 +312,15 @@ public class BetterFusionReactorCategory extends MultiblockCategory<BetterFusion
 			}
 
 			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.energy_capacity"), EnergyDisplay.of(MekanismGeneratorsConfig.generators.fusionEnergyCapacity.get()).getTextComponent()));
+		}
+
+		private void onResultWidgetPress(ResultWidget widget)
+		{
+			LaserWidget lasers = JeiPlugin.instance().getWidget(LasersCategory.RECIPE_TYPE);
+			lasers.setTargetEnergy(requiredLaserEnergy.doubleValue());
+			lasers.showResultPanel();
+
+			JeiPlugin.instance().getJeiRuntime().getRecipesGui().showTypes(Arrays.asList(LasersCategory.RECIPE_TYPE));
 		}
 
 		public int getPortCount()
