@@ -16,6 +16,7 @@ import giselle.jei_mekanism_multiblocks.client.jei.category.DynamicTankCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.EvaporationPlantCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.FissionReactorCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.FusionReactorCategory;
+import giselle.jei_mekanism_multiblocks.client.jei.category.LasersCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.MatrixCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.SPSCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.TurbineCategory;
@@ -90,6 +91,7 @@ public class JeiPlugin implements IModPlugin
 		this.addCategory(config.boilerVisible, () -> new BoilerCategory(guiHelper));
 		this.addCategory(config.spsVisible, () -> new SPSCategory(guiHelper));
 		this.addCategory(config.matrixVisible, () -> new MatrixCategory(guiHelper));
+		this.addCategory(config.lasersVisible, () -> new LasersCategory(guiHelper));
 
 		if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
 		{

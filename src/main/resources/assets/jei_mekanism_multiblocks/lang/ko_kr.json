@@ -1,6 +1,8 @@
 {
 	"text.jei_mekanism_multiblocks.recipe_category.title": "[%s] 건축",
+	"text.jei_mekanism_multiblocks.building.lasers": "레이저",
 	
+	"text.jei_mekanism_multiblocks.enter": "입력",
 	"text.jei_mekanism_multiblocks.specs": "사양",
 	"text.jei_mekanism_multiblocks.costs": "비용",
 	"text.jei_mekanism_multiblocks.results": "결과",
@@ -20,6 +22,7 @@
 	"text.jei_mekanism_multiblocks.duration.minutes": "%s분",
 	"text.jei_mekanism_multiblocks.duration.seconds": "%s초",
 	"text.jei_mekanism_multiblocks.duration.ticks": "%s틱",
+	"text.jei_mekanism_multiblocks.example": "예시",
 	
 	"text.jei_mekanism_multiblocks.specs.width": "가로: %s",
 	"text.jei_mekanism_multiblocks.specs.width_length": "가로, 세로: %s",
@@ -40,6 +43,8 @@
 	"text.jei_mekanism_multiblocks.specs.for_sodium_cooling": "나트륨 냉각용",
 	"text.jei_mekanism_multiblocks.specs.advanced": "고급",
 	"text.jei_mekanism_multiblocks.specs.layout": "배치",
+	"text.jei_mekanism_multiblocks.specs.target_energy": "목표 에너지",
+	"text.jei_mekanism_multiblocks.specs.lasers": "레이저: %s",
 	
 	"text.jei_mekanism_multiblocks.result.input_tank": "입력 탱크",
 	"text.jei_mekanism_multiblocks.result.output_tank": "출력 탱크",
@@ -72,6 +77,8 @@
 	"text.jei_mekanism_multiblocks.result.required_heater_usage": "필요 히터 사용량",
 	"text.jei_mekanism_multiblocks.result.required_laser_energy": "필요 레이저 에너지",
 	"text.jei_mekanism_multiblocks.result.production_per_flow": "유체당 생산량",
+	"text.jei_mekanism_multiblocks.result.energy_rate": "에너지 속도",
+	"text.jei_mekanism_multiblocks.result.merge_time": "수렴 시간",
 	
 	"text.jei_mekanism_multiblocks.tooltip.click_normal": "클릭: %s",
 	"text.jei_mekanism_multiblocks.tooltip.click_shift": "SHIFT+클릭: %s",
@@ -91,6 +98,7 @@
 	"text.jei_mekanism_multiblocks.tooltip.required_heater_usage.hottest": "가장 뜨거운 생물 군계에서: %s",
 	"text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_1": "'%1$s'는 '%2$s'의",
 	"text.jei_mekanism_multiblocks.tooltip.heater_near_and_1_sink_2": "바로 옆에 설치되어야 합니다",
+	"text.jei_mekanism_multiblocks.tooltip.click_to_simulate": "'%s'를 시뮬레이션하려면 클릭하세요.",
 	
 	"_eof": "_eof"
 }
