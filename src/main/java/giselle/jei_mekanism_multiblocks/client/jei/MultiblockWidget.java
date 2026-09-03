@@ -85,7 +85,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		}
 
 		this.needNotifyStateChange = true;
-		this.showRightPanel(true);
+		this.showCostPanel();
 	}
 
 	public void addChangedHandler(Consumer<MultiblockWidget> handler)
@@ -102,14 +102,24 @@ public abstract class MultiblockWidget extends ContainerWidget
 		this.resultsList.visible = results;
 	}
 
-	private void onCostsButtonClick(AbstractButton button)
+	public void showCostPanel()
 	{
 		this.showRightPanel(true);
 	}
 
-	private void onResultsButtonClick(AbstractButton button)
+	public void showResultPanel()
 	{
 		this.showRightPanel(false);
+	}
+
+	private void onCostsButtonClick(AbstractButton button)
+	{
+		this.showCostPanel();
+	}
+
+	private void onResultsButtonClick(AbstractButton button)
+	{
+		this.showResultPanel();
 	}
 
 	protected void collectOtherConfigs(Consumer<Widget> consumer)
