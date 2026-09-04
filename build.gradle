@@ -111,6 +111,7 @@ dependencies {
     implementation fg.deobf("curse.maven:mekanism-extras-1026040:${mekanism_extra_file}")
     implementation fg.deobf("curse.maven:iglee-library-541199:${iglee_library_file}")
     implementation fg.deobf("curse.maven:evolved-mekanism-1230085:${evolved_mekanism_file}")
+    implementation fg.deobf("curse.maven:mekanism-lasers-1060096:${mekanism_lasers_file}")
 
     implementation fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
     //implementation fg.deobf("dev.emi:emi-forge:${emi_version}+${mc_version}")
