@@ -30,6 +30,7 @@ import giselle.jei_mekanism_multiblocks.common.config.JEI_MekanismMultiblocks_Co
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.registration.IModIngredientRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
@@ -79,67 +80,74 @@ public class JeiPlugin implements IModPlugin
 	}
 
 	@Override
+	public void registerIngredients(IModIngredientRegistration registration)
+	{
+		IModPlugin.super.registerIngredients(registration);
+
+		this.categoryMap.clear();
+		this.categoryList.clear();
+		this.widgetMap.clear();
+		this.widgetList.clear();
+	}
+
+	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration)
 	{
 		IModPlugin.super.registerCategories(registration);
 
 		ClientConfig config = JEI_MekanismMultiblocks_Config.CLIENT;
 		IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
-		this.categoryMap.clear();
-		this.categoryList.clear();
-		this.widgetMap.clear();
-		this.widgetList.clear();
-		this.addCategory(config.dynamicTankVisible, () -> new DynamicTankCategory(guiHelper));
-		this.addCategory(config.evaporationPlantVisible, () -> new EvaporationPlantCategory(guiHelper));
-		this.addCategory(config.boilerVisible, () -> new BoilerCategory(guiHelper));
-		this.addCategory(config.spsVisible, () -> new SPSCategory(guiHelper));
-		this.addCategory(config.matrixVisible, () -> new MatrixCategory(guiHelper));
-		this.addCategory(config.lasersVisible, () -> new LasersCategory(guiHelper));
+		this.addCategory(registration, config.dynamicTankVisible, () -> new DynamicTankCategory(guiHelper));
+		this.addCategory(registration, config.evaporationPlantVisible, () -> new EvaporationPlantCategory(guiHelper));
+		this.addCategory(registration, config.boilerVisible, () -> new BoilerCategory(guiHelper));
+		this.addCategory(registration, config.spsVisible, () -> new SPSCategory(guiHelper));
+		this.addCategory(registration, config.matrixVisible, () -> new MatrixCategory(guiHelper));
+		this.addCategory(registration, config.lasersVisible, () -> new LasersCategory(guiHelper));
 
 		if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
 		{
-			this.addCategory(config.turbineVisible, () -> new TurbineCategory(guiHelper));
-			this.addCategory(config.fissionReactorVisible, () -> new FissionReactorCategory(guiHelper));
-			this.addCategory(config.fusionReactorVisible, () -> new FusionReactorCategory(guiHelper));
+			this.addCategory(registration, config.turbineVisible, () -> new TurbineCategory(guiHelper));
+			this.addCategory(registration, config.fissionReactorVisible, () -> new FissionReactorCategory(guiHelper));
+			this.addCategory(registration, config.fusionReactorVisible, () -> new FusionReactorCategory(guiHelper));
 		}
 
 		if (JEI_MekanismMultiblocks.BetterFusionReactorLoaded)
 		{
-			this.addCategory(config.betterFusionVisible, () -> new BetterFusionReactorCategory(guiHelper));
+			this.addCategory(registration, config.betterFusionVisible, () -> new BetterFusionReactorCategory(guiHelper));
 		}
 
 		if (JEI_MekanismMultiblocks.MekanismExtrasLoaded)
 		{
-			this.addCategory(config.extraMatrixVisible, () -> new ExtraMatrixCategory(guiHelper));
+			this.addCategory(registration, config.extraMatrixVisible, () -> new ExtraMatrixCategory(guiHelper));
 
 			if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)
 			{
-				this.addCategory(config.naquadahReactorVisible, () -> new NaquadahReactorCategory(guiHelper));
+				this.addCategory(registration, config.naquadahReactorVisible, () -> new NaquadahReactorCategory(guiHelper));
 			}
 
 		}
 
 		if (JEI_MekanismMultiblocks.EvoledMekanismLoaded)
 		{
-			this.addCategory(config.aptVisible, () -> new APTCategory(guiHelper));
-		}
-
-		for (MultiblockCategory<?> category : this.getCategories())
-		{
-			registration.addRecipeCategories(category);
+			this.addCategory(registration, config.aptVisible, () -> new APTCategory(guiHelper));
 		}
 
 	}
 
-	private <CATEGOERY extends MultiblockCategory<?>> void addCategory(BooleanValue config, Supplier<CATEGOERY> constructor)
+	private <CATEGOERY extends MultiblockCategory<?>> void addCategory(IRecipeCategoryRegistration registration, BooleanValue config, Supplier<CATEGOERY> constructor)
 	{
 		if (config.get())
 		{
-			CATEGOERY category = constructor.get();
-			this.categoryMap.put(category.getRecipeType(), category);
-			this.categoryList.add(category);
+			this.addCategory(registration, constructor.get());
 		}
 
+	}
+
+	public <CATEGOERY extends MultiblockCategory<?>> void addCategory(IRecipeCategoryRegistration registration, CATEGOERY category)
+	{
+		this.categoryMap.put(category.getRecipeType(), category);
+		this.categoryList.add(category);
+		registration.addRecipeCategories(category);
 	}
 
 	@Override
