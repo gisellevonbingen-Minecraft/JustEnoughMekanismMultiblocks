@@ -34,6 +34,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fluids.FluidType;
@@ -75,6 +76,9 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		private static final double noBurningFactor = 10.0D;
 		private static final FloatingLong requiredLaserEnergy = FloatingLong.create(burnTemperature).multiply(plasmaHeatCapacity).divide(noBurningFactor);
 
+		private static final double burnRatio = 1.0D;
+		private static final double plasmaCaseConductivity = 0.2D;
+
 		protected CheckBoxWidget waterCooledCheckBox;
 		protected IntSliderWithButtons portsWidget;
 		protected IntSliderWithButtons logicAdaptersWidget;
@@ -96,11 +100,11 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			this.portsWidget.getSlider().addValueChangeHanlder(this::onPortsChanged);
 			consumer.accept(this.logicAdaptersWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.logic_adapters", 0, 0, 0));
 			this.logicAdaptersWidget.getSlider().addValueChangeHanlder(this::onLogicAdaptersChanged);
-			consumer.accept(this.injectionRateWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.injection_rate", new Mod2IntSliderWidget(0, 0, 0, 0, Component.empty(), 2, 2, FluidType.BUCKET_VOLUME, 1)));
+			consumer.accept(this.injectionRateWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.injection_rate", new Mod2IntSliderWidget(0, 0, 0, 0, Component.empty(), 0, 0, FluidType.BUCKET_VOLUME, 1)));
 			this.injectionRateWidget.getSlider().addValueChangeHanlder(this::onInjectionRateChanged);
 
 			this.updatePortsSliderLimit();
-			this.updateInjectionRateInfoMessage();
+			this.updateInjectionRateSliderLimit();
 		}
 
 		@Override
@@ -169,6 +173,16 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			adaptersSlider.setValue(adapters);
 		}
 
+		public void updateInjectionRateSliderLimit()
+		{
+			IntSliderWidget injectionRateSlider = this.injectionRateWidget.getSlider();
+			int injectionRate = injectionRateSlider.getValue();
+			injectionRateSlider.setMinValue(this.getMinInjectionRate(this.isWaterCooled()));
+			injectionRateSlider.setValue(injectionRate);
+
+			this.updateInjectionRateInfoMessage();
+		}
+
 		protected void onPortsChanged(int ports)
 		{
 			this.updateLogicAdaptersSliderLimit();
@@ -189,9 +203,17 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		protected void onWaterCooledChanged(boolean waterCooled)
 		{
 			this.updatePortsSliderLimit();
+			this.updateInjectionRateSliderLimit();
 
 			this.markNeedUpdate();
-			this.updateInjectionRateInfoMessage();
+		}
+
+		public int getMinInjectionRate(boolean waterCooled)
+		{
+			double k = waterCooled ? MekanismGeneratorsConfig.generators.fusionWaterHeatingRatio.get() : 0.0D;
+			double caseAirConductivity = MekanismGeneratorsConfig.generators.fusionCasingThermalConductivity.get();
+			double aMin = burnTemperature * burnRatio * plasmaCaseConductivity * (k + caseAirConductivity) / (MekanismGeneratorsConfig.generators.energyPerFusionFuel.get().doubleValue() * burnRatio * (plasmaCaseConductivity + k + caseAirConductivity) - plasmaCaseConductivity * (k + caseAirConductivity));
+			return 2 * Mth.ceil(aMin / 2.0D);
 		}
 
 		public void updateInjectionRateInfoMessage()
