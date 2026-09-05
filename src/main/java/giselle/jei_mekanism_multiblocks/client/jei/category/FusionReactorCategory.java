@@ -8,7 +8,7 @@ import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.gui.Mod2IntSliderWidget;
-import giselle.jei_mekanism_multiblocks.client.jei.JeiPlugin;
+import giselle.jei_mekanism_multiblocks.client.jei.JEI_MekanismMultiblocks_JeiPlugin;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
@@ -286,7 +286,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			}
 
 			ResultWidget requiredLaserEnergyWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.required_laser_energy"), EnergyDisplay.of(requiredLaserEnergy).getTextComponent());
-			MultiblockCategory<? extends LaserWidget> lasersCategory = JeiPlugin.instance().<LaserWidget> getCategory(LasersCategory.RECIPE_TYPE.getUid());
+			MultiblockCategory<? extends LaserWidget> lasersCategory = JEI_MekanismMultiblocks_JeiPlugin.instance().<LaserWidget> getCategory(LasersCategory.RECIPE_TYPE.getUid());
 
 			if (lasersCategory != null)
 			{
@@ -313,11 +313,11 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 		private void onResultWidgetPress(ResultWidget widget)
 		{
-			LaserWidget lasers = JeiPlugin.instance().getWidget(LasersCategory.RECIPE_TYPE.getUid());
+			LaserWidget lasers = JEI_MekanismMultiblocks_JeiPlugin.instance().getWidget(LasersCategory.RECIPE_TYPE.getUid());
 			lasers.setTargetEnergy(requiredLaserEnergy.doubleValue());
 			lasers.showResultPanel();
 
-			JeiPlugin.instance().getJeiRuntime().getRecipesGui().showCategories(Arrays.asList(LasersCategory.RECIPE_TYPE.getUid()));
+			JEI_MekanismMultiblocks_JeiPlugin.instance().getJeiRuntime().getRecipesGui().showCategories(Arrays.asList(LasersCategory.RECIPE_TYPE.getUid()));
 		}
 
 		public int getPortCount()
