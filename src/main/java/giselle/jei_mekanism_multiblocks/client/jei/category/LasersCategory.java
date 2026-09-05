@@ -51,9 +51,13 @@ public class LasersCategory extends MultiblockCategory<LasersCategory.LaserWidge
 		if (JEI_MekanismMultiblocks.MekanismLasersLoaded)
 		{
 			consumer.accept(BlockRegistry.BASIC_LASER.getItemStack());
+			consumer.accept(BlockRegistry.BASIC_TOGGLEABLE_LASER.getItemStack());
 			consumer.accept(BlockRegistry.ADVANCED_LASER.getItemStack());
+			consumer.accept(BlockRegistry.ADVANCED_TOGGLEABLE_LASER.getItemStack());
 			consumer.accept(BlockRegistry.ELITE_LASER.getItemStack());
+			consumer.accept(BlockRegistry.ELITE_TOGGLEABLE_LASER.getItemStack());
 			consumer.accept(BlockRegistry.ULTIMATE_LASER.getItemStack());
+			consumer.accept(BlockRegistry.ULTIMATE_TOGGLEABLE_LASER.getItemStack());
 		}
 
 	}
