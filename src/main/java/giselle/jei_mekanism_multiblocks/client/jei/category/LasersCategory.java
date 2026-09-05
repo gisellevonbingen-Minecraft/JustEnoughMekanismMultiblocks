@@ -1,5 +1,7 @@
 package giselle.jei_mekanism_multiblocks.client.jei.category;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import giselle.jei_mekanism_multiblocks.client.gui.ButtonWidget;
@@ -22,6 +24,7 @@ import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class LasersCategory extends MultiblockCategory<LasersCategory.LaserWidget>
 {
@@ -36,14 +39,15 @@ public class LasersCategory extends MultiblockCategory<LasersCategory.LaserWidge
 	protected void getRecipeCatalystItemStacks(Consumer<ItemStack> consumer)
 	{
 		super.getRecipeCatalystItemStacks(consumer);
-		consumer.accept(MekanismBlocks.LASER.getItemStack());
 		consumer.accept(MekanismBlocks.LASER_AMPLIFIER.getItemStack());
+		consumer.accept(MekanismBlocks.LASER.getItemStack());
 	}
 
 	public static class LaserWidget extends MultiblockWidget
 	{
 		protected ButtonWidget enterButton;
-		protected IntSliderWithButtons laserWidget;
+		protected Map<Block, IntSliderWithButtons> laserWidgets;
+		protected Map<Block, FloatingLong> laserUsages;
 		private double targetEnergy;
 
 		@Override
@@ -61,9 +65,29 @@ public class LasersCategory extends MultiblockCategory<LasersCategory.LaserWidge
 			this.enterButton.addPressHandler(this::onEnterButtonPress);
 			consumer.accept(this.enterButton);
 
-			consumer.accept(this.laserWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.lasers", 1, 1, 100));
-			this.laserWidget.getSlider().addValueChangeHanlder(this::onLasersChanged);
+			this.laserWidgets = new HashMap<>();
+			this.laserUsages = new HashMap<>();
 
+			IntSliderWithButtons laserWidget = this.createLaserConfig(consumer, MekanismBlocks.LASER.getBlock(), MekanismConfig.usage.laser.get());
+			laserWidget.getSlider().setMinValue(1);
+			laserWidget.getSlider().setValue(1);
+		}
+
+		protected IntSliderWithButtons createLaserConfig(Consumer<Widget> consumer, Block block, FloatingLong usage)
+		{
+			IntSliderWithButtons widget = new IntSliderWithButtons(0, 0, 0, 0, "", 1, 0, 100)
+			{
+				@Override
+				protected void updateMessage()
+				{
+					this.getSlider().setMessage(new TranslationTextComponent("%s: %s", new ItemStack(block).getHoverName(), this.getDisplayValue()));
+				}
+			};
+			consumer.accept(widget);
+			widget.getSlider().addValueChangeHanlder(this::onLasersChanged);
+			this.laserWidgets.put(block, widget);
+			this.laserUsages.put(block, usage);
+			return widget;
 		}
 
 		private void onEnterButtonPress(AbstractButton button)
@@ -81,7 +105,13 @@ public class LasersCategory extends MultiblockCategory<LasersCategory.LaserWidge
 		{
 			super.load(tag);
 
-			this.setLaserCount(tag.getInt("LaserCount"));
+			CompoundNBT laserCounts = tag.getCompound("LaserCounts");
+
+			for (Block block : this.laserWidgets.keySet())
+			{
+				this.setLaserCount(block, laserCounts.getInt(String.valueOf(ForgeRegistries.BLOCKS.getKey(block))));
+			}
+
 			this.setTargetEnergy(tag.getDouble("TargetEnergy"));
 		}
 
@@ -90,7 +120,14 @@ public class LasersCategory extends MultiblockCategory<LasersCategory.LaserWidge
 		{
 			super.save(tag);
 
-			tag.putInt("LaserCount", this.getLaserCount());
+			CompoundNBT laserCounts = new CompoundNBT();
+
+			for (Block block : this.laserWidgets.keySet())
+			{
+				laserCounts.putInt(String.valueOf(ForgeRegistries.BLOCKS.getKey(block)), this.getLaserCount(block));
+			}
+
+			tag.put("LaserCounts", laserCounts);
 			tag.putDouble("TargetEnergy", this.getTargetEnergy());
 		}
 
@@ -104,11 +141,21 @@ public class LasersCategory extends MultiblockCategory<LasersCategory.LaserWidge
 		{
 			super.collectCost(consumer);
 
-			int lasers = this.getLaserCount();
-			int amplifiers = (lasers + 2) / 4;
+			int lasers = 0;
 
-			consumer.accept(new ItemStack(MekanismBlocks.LASER, lasers));
+			for (Block block : this.laserWidgets.keySet())
+			{
+				lasers += this.getLaserCount(block);
+			}
+
+			int amplifiers = (lasers + 2) / 4;
 			consumer.accept(new ItemStack(MekanismBlocks.LASER_AMPLIFIER, amplifiers));
+
+			for (Block block : this.laserWidgets.keySet())
+			{
+				consumer.accept(new ItemStack(block, this.getLaserCount(block)));
+			}
+
 		}
 
 		@Override
@@ -116,26 +163,31 @@ public class LasersCategory extends MultiblockCategory<LasersCategory.LaserWidge
 		{
 			super.collectResult(consumer);
 
-			int lasers = this.getLaserCount();
-			FloatingLong ept = MekanismConfig.usage.laser.get().multiply(lasers);
-			long ticks = FloatingLong.create(this.targetEnergy).divide(ept).ceil().longValue();
+			FloatingLong ept = FloatingLong.create(0.0D);
+
+			for (Block block : this.laserWidgets.keySet())
+			{
+				int laserCount = this.getLaserCount(block);
+				ept = ept.plusEqual(this.laserUsages.get(block).multiply(laserCount));
+			}
 
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.target_energy"), EnergyDisplay.of(FloatingLong.create(this.targetEnergy)).getTextComponent()));
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.energy_rate"), new TranslationTextComponent("%s/t", EnergyDisplay.of(ept).getTextComponent())));
 
+			long ticks = ept.isZero() ? 0L : FloatingLong.create(this.targetEnergy).divide(ept).ceil().longValue();
 			ResultWidget mergeTimeWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.merge_time"), DurationTextHelper.duration(ticks));
 			mergeTimeWidget.setTooltip(DurationTextHelper.ticks(ticks));
 			consumer.accept(mergeTimeWidget);
 		}
 
-		public int getLaserCount()
+		public int getLaserCount(Block block)
 		{
-			return this.laserWidget.getSlider().getValue();
+			return this.laserWidgets.get(block).getSlider().getValue();
 		}
 
-		public void setLaserCount(int laserCount)
+		public void setLaserCount(Block block, int laserCount)
 		{
-			this.laserWidget.getSlider().setValue(laserCount);
+			this.laserWidgets.get(block).getSlider().setValue(laserCount);
 		}
 
 		public double getTargetEnergy()
