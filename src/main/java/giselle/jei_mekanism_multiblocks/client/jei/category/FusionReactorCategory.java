@@ -3,6 +3,7 @@ package giselle.jei_mekanism_multiblocks.client.jei.category;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
@@ -55,17 +56,12 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		consumer.accept(GeneratorsBlocks.LASER_FOCUS_MATRIX.getItemStack());
 		consumer.accept(GeneratorsBlocks.REACTOR_GLASS.getItemStack());
 
-		List<Gas> fusionFuelGases = GeneratorTags.Gases.FUSION_FUEL.getValues();
+		List<Gas> fusionFuelGases = GeneratorTags.Gases.FUSION_FUEL.getValues().stream().collect(Collectors.toList());
+		long capacity = MekanismGeneratorsConfig.generators.hohlraumMaxGas.get();
 
-		if (fusionFuelGases.size() > 0)
+		for (Gas gas : fusionFuelGases)
 		{
-			Gas fusionFuelGas = fusionFuelGases.get(0);
-			long capacity = MekanismGeneratorsConfig.generators.hohlraumMaxGas.get();
-			consumer.accept(ChemicalUtil.getFilledVariant(GeneratorsItems.HOHLRAUM.getItemStack(), capacity, fusionFuelGas));
-		}
-		else
-		{
-			consumer.accept(GeneratorsItems.HOHLRAUM.getItemStack());
+			consumer.accept(ChemicalUtil.getFilledVariant(new ItemStack(GeneratorsItems.HOHLRAUM.get()), capacity, gas));
 		}
 
 	}
@@ -76,6 +72,9 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		private static final double plasmaHeatCapacity = 100.0D;
 		private static final double noBurningFactor = 10.0D;
 		private static final FloatingLong requiredLaserEnergy = FloatingLong.create(burnTemperature).multiply(plasmaHeatCapacity).divide(noBurningFactor);
+
+		private static final double burnRatio = 1.0D;
+		private static final double plasmaCaseConductivity = 0.2D;
 
 		protected CheckBoxWidget waterCooledCheckBox;
 		protected IntSliderWithButtons portsWidget;
@@ -102,7 +101,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			this.injectionRateWidget.getSlider().addValueChangeHanlder(this::onInjectionRateChanged);
 
 			this.updatePortsSliderLimit();
-			this.updateInjectionRateInfoMessage();
+			this.updateInjectionRateSliderLimit();
 		}
 
 		@Override
@@ -171,6 +170,16 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			adaptersSlider.setValue(adapters);
 		}
 
+		public void updateInjectionRateSliderLimit()
+		{
+			IntSliderWidget injectionRateSlider = this.injectionRateWidget.getSlider();
+			int injectionRate = injectionRateSlider.getValue();
+			injectionRateSlider.setMinValue(this.getMinInjectionRate(this.isWaterCooled()));
+			injectionRateSlider.setValue(injectionRate);
+
+			this.updateInjectionRateInfoMessage();
+		}
+
 		protected void onPortsChanged(int ports)
 		{
 			this.updateLogicAdaptersSliderLimit();
@@ -191,9 +200,17 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		protected void onWaterCooledChanged(boolean waterCooled)
 		{
 			this.updatePortsSliderLimit();
+			this.updateInjectionRateSliderLimit();
 
 			this.markNeedUpdate();
-			this.updateInjectionRateInfoMessage();
+		}
+
+		public int getMinInjectionRate(boolean waterCooled)
+		{
+			double k = waterCooled ? MekanismGeneratorsConfig.generators.fusionWaterHeatingRatio.get() : 0.0D;
+			double caseAirConductivity = MekanismGeneratorsConfig.generators.fusionCasingThermalConductivity.get();
+			double aMin = burnTemperature * burnRatio * plasmaCaseConductivity * (k + caseAirConductivity) / (MekanismGeneratorsConfig.generators.energyPerFusionFuel.get().doubleValue() * burnRatio * (plasmaCaseConductivity + k + caseAirConductivity) - plasmaCaseConductivity * (k + caseAirConductivity));
+			return (int) (2 * Math.ceil(aMin / 2.0D));
 		}
 
 		public void updateInjectionRateInfoMessage()
