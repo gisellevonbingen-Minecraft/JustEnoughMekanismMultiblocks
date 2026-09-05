@@ -66,6 +66,7 @@
 	"text.jei_mekanism_multiblocks.result.temp_with": "'%s' 사용시 온도",
 	"text.jei_mekanism_multiblocks.result.heating_rate_with": "'%s' 가열 속도",
 	"text.jei_mekanism_multiblocks.result.steam_production": "증기 생산량",
+	"text.jei_mekanism_multiblocks.result.pcs_production": "PCS 생산량",
 	"text.jei_mekanism_multiblocks.result.passive_generation": "지속 발전량",
 	"text.jei_mekanism_multiblocks.result.energy_per_antimatter": "반물질당 에너지",
 	"text.jei_mekanism_multiblocks.result.energy_per_polonium": "폴로늄당 에너지",
