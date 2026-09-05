@@ -44,7 +44,6 @@
 	"text.jei_mekanism_multiblocks.specs.advanced": "고급",
 	"text.jei_mekanism_multiblocks.specs.layout": "배치",
 	"text.jei_mekanism_multiblocks.specs.target_energy": "목표 에너지",
-	"text.jei_mekanism_multiblocks.specs.lasers": "레이저: %s",
 	
 	"text.jei_mekanism_multiblocks.result.input_tank": "입력 탱크",
 	"text.jei_mekanism_multiblocks.result.output_tank": "출력 탱크",
