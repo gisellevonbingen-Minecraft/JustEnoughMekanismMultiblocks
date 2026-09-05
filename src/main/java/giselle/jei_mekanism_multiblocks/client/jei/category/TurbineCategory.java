@@ -302,7 +302,7 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 
 			FloatingLong maxProduction = this.getMaxProduction(lowerVolume, blades, vents);
 			int maxFlow = MathUtils.clampToInt(this.getMaxFlowRateClamped(lowerVolume, vents));
-			long maxWaterOutput = getMaxWaterOutput();
+			long maxWaterOutput = this.getMaxWaterOutput();
 			long steamTank = this.getSteamTank(lowerVolume);
 			long energyCapacity = this.getEnergyCapacity(volume);
 
