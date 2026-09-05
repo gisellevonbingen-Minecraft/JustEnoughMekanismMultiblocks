@@ -15,7 +15,7 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.jemi.JemiPlugin;
 import dev.emi.emi.jemi.JemiRecipe;
 import giselle.jei_mekanism_multiblocks.client.emi.EMIMultiblockRecipe;
-import giselle.jei_mekanism_multiblocks.client.jei.JeiPlugin;
+import giselle.jei_mekanism_multiblocks.client.jei.JEI_MekanismMultiblocks_JeiPlugin;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
@@ -42,7 +42,7 @@ public abstract class JemiPluginMixin
 			reverse.put(entry.getValue(), entry.getKey());
 		}
 
-		for (MultiblockCategory<? extends MultiblockWidget> jeiCategory : JeiPlugin.instance().getCategories())
+		for (MultiblockCategory<? extends MultiblockWidget> jeiCategory : JEI_MekanismMultiblocks_JeiPlugin.instance().getCategories())
 		{
 			EmiRecipeCategory emiCategory = reverse.get(jeiCategory);
 
@@ -59,7 +59,7 @@ public abstract class JemiPluginMixin
 
 	private <WIDGET extends MultiblockWidget> EMIMultiblockRecipe<WIDGET> createRecipe(MultiblockCategory<WIDGET> jeiCategory, EmiRecipeCategory emiCategory)
 	{
-		WIDGET jeiRecipe = JeiPlugin.instance().createWidget(jeiCategory);
+		WIDGET jeiRecipe = JEI_MekanismMultiblocks_JeiPlugin.instance().createWidget(jeiCategory);
 		EMIMultiblockRecipe<WIDGET> emiRecipe = new EMIMultiblockRecipe<>(new JemiRecipe<>(emiCategory, jeiCategory, jeiRecipe));
 		jeiRecipe.addChangedHandler(w -> emiRecipe.invalidate());
 		return emiRecipe;
