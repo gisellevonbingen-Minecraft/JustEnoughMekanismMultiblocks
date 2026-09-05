@@ -8,7 +8,7 @@ import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.gui.Mod2IntSliderWidget;
-import giselle.jei_mekanism_multiblocks.client.jei.JeiPlugin;
+import giselle.jei_mekanism_multiblocks.client.jei.JEI_MekanismMultiblocks_JeiPlugin;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
@@ -290,7 +290,7 @@ public class BetterFusionReactorCategory extends MultiblockCategory<BetterFusion
 			}
 
 			ResultWidget requiredLaserEnergyWidget = new ResultWidget(new TranslatableComponent("text.jei_mekanism_multiblocks.result.required_laser_energy"), EnergyDisplay.of(requiredLaserEnergy).getTextComponent());
-			MultiblockCategory<? extends LaserWidget> lasersCategory = JeiPlugin.instance().getCategory(LasersCategory.RECIPE_TYPE);
+			MultiblockCategory<? extends LaserWidget> lasersCategory = JEI_MekanismMultiblocks_JeiPlugin.instance().getCategory(LasersCategory.RECIPE_TYPE);
 
 			if (lasersCategory != null)
 			{
@@ -317,11 +317,11 @@ public class BetterFusionReactorCategory extends MultiblockCategory<BetterFusion
 
 		private void onResultWidgetPress(ResultWidget widget)
 		{
-			LaserWidget lasers = JeiPlugin.instance().getWidget(LasersCategory.RECIPE_TYPE);
+			LaserWidget lasers = JEI_MekanismMultiblocks_JeiPlugin.instance().getWidget(LasersCategory.RECIPE_TYPE);
 			lasers.setTargetEnergy(requiredLaserEnergy.doubleValue());
 			lasers.showResultPanel();
 
-			JeiPlugin.instance().getJeiRuntime().getRecipesGui().showTypes(Arrays.asList(LasersCategory.RECIPE_TYPE));
+			JEI_MekanismMultiblocks_JeiPlugin.instance().getJeiRuntime().getRecipesGui().showTypes(Arrays.asList(LasersCategory.RECIPE_TYPE));
 		}
 
 		public int getPortCount()

@@ -37,11 +37,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 
 @mezz.jei.api.JeiPlugin
-public class JeiPlugin implements IModPlugin
+public class JEI_MekanismMultiblocks_JeiPlugin implements IModPlugin
 {
-	private static JeiPlugin INSTANCE = null;
+	private static JEI_MekanismMultiblocks_JeiPlugin INSTANCE = null;
 
-	public static JeiPlugin instance()
+	public static JEI_MekanismMultiblocks_JeiPlugin instance()
 	{
 		return INSTANCE;
 	}
@@ -58,7 +58,7 @@ public class JeiPlugin implements IModPlugin
 	private final List<MultiblockWidget> widgetList;
 	private IJeiRuntime jeiRuntime;
 
-	public JeiPlugin()
+	public JEI_MekanismMultiblocks_JeiPlugin()
 	{
 		INSTANCE = this;
 		this.categoryMap = new HashMap<>();
