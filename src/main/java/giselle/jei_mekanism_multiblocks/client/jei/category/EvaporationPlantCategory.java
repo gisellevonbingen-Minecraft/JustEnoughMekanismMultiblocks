@@ -27,6 +27,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -59,9 +60,11 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 	public static class EvaporationPlantWidget extends MultiblockWidget
 	{
 		protected CheckBoxWidget useAdvancedSolarGeneratorCheckBox;
+		protected CheckBoxWidget useFuelwoodHeaterCheckBox;
 		protected IntSliderWithButtons valvesWidget;
 
 		private boolean needHeatSource;
+		private int fuelwoodHeaters;
 
 		public EvaporationPlantWidget()
 		{
@@ -92,6 +95,9 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 				this.useAdvancedSolarGeneratorCheckBox.addSelectedChangedHandler(this::onUseAdvancedSolarGeneratorChanged);
 			}
 
+			consumer.accept(this.useFuelwoodHeaterCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.use_things", new ItemStack(MekanismBlocks.FUELWOOD_HEATER).getHoverName()), true));
+			this.useFuelwoodHeaterCheckBox.addSelectedChangedHandler(this::onUseFuelwoodHeaterChanged);
+
 			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 2, 0));
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 
@@ -104,6 +110,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			super.load(tag);
 
 			this.setUseAdvancedSolarGenerator(tag.getBoolean("UseAdvancedSolarGenerator"));
+			this.setUseFuelwoodHeater(tag.getBoolean("UseFuelwoodHeater"));
 			this.setValveCount(tag.getInt("ValveCount"));
 		}
 
@@ -113,6 +120,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			super.save(tag);
 
 			tag.putBoolean("UseAdvancedSolarGenerator", this.isUseAdvancedSolarGenerator());
+			tag.putBoolean("UseFuelwoodHeater", this.isUseFuelwoodHeater());
 			tag.putInt("ValveCount", this.getValveCount());
 		}
 
@@ -129,14 +137,27 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
 			int minValves = valvesSlider.getMinValue();
 			int valves = valvesSlider.getValue();
-			valvesSlider.setMinValue(this.isNeedHeatSource() ? 3 : 2);
+			valvesSlider.setMinValue(2 + (this.isNeedHeatSource() ? (this.isUseFuelwoodHeater() ? this.getFuelwoodHeaters() : 1) : 0));
 			valvesSlider.setMaxValue(this.getSideBlocks());
 			valvesSlider.setValue(valves + (valvesSlider.getMinValue() - minValves));
 		}
 
 		protected void onThermalModelChanged()
 		{
-			this.needHeatSource = this.getMaxMultiplierHeat(0.0D) > 0.0D;
+			double requiredHeat = this.getMaxMultiplierHeat(0.0D);
+			this.needHeatSource = requiredHeat > 0.0D;
+			this.fuelwoodHeaters = 0;
+
+			if (this.isNeedHeatSource())
+			{
+				if (this.isUseFuelwoodHeater())
+				{
+					double heatPerTick = MekanismConfig.general.heatPerFuelTick.get() * MekanismConfig.general.fuelwoodTickMultiplier.get();
+					this.fuelwoodHeaters = MathHelper.ceil(requiredHeat / heatPerTick);
+				}
+
+			}
+
 			this.updateValveSliderLimit();
 		}
 
@@ -152,6 +173,13 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 		}
 
 		protected void onUseAdvancedSolarGeneratorChanged(boolean useAdvancedSolarGenerator)
+		{
+			this.markNeedUpdate();
+
+			this.onThermalModelChanged();
+		}
+
+		protected void onUseFuelwoodHeaterChanged(boolean useFuelwoodHeater)
 		{
 			this.markNeedUpdate();
 
@@ -215,7 +243,15 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 
 			if (this.isNeedHeatSource())
 			{
-				consumer.accept(new ItemStack(MekanismBlocks.RESISTIVE_HEATER));
+				if (this.isUseFuelwoodHeater())
+				{
+					consumer.accept(new ItemStack(MekanismBlocks.FUELWOOD_HEATER, this.getFuelwoodHeaters()));
+				}
+				else
+				{
+					consumer.accept(new ItemStack(MekanismBlocks.RESISTIVE_HEATER));
+				}
+
 			}
 
 		}
@@ -236,7 +272,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(inputCapacity)));
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(outputCapacity)));
 
-			if (this.isNeedHeatSource())
+			if (this.isNeedHeatSource() && !this.isUseFuelwoodHeater())
 			{
 				this.createRequiredHeaterEnergyWidget(consumer);
 			}
@@ -295,9 +331,24 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			this.useAdvancedSolarGeneratorCheckBox.setSelected(useAdvancedSolarGenerator);
 		}
 
+		public boolean isUseFuelwoodHeater()
+		{
+			return this.useFuelwoodHeaterCheckBox.isSelected();
+		}
+
+		public void setUseFuelwoodHeater(boolean useFuelwoodHeater)
+		{
+			this.useFuelwoodHeaterCheckBox.setSelected(useFuelwoodHeater);
+		}
+
 		public boolean isNeedHeatSource()
 		{
 			return this.needHeatSource;
+		}
+
+		public int getFuelwoodHeaters()
+		{
+			return this.fuelwoodHeaters;
 		}
 
 		@Override
