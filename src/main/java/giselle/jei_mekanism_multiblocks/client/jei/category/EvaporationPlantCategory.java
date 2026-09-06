@@ -60,6 +60,8 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 		protected CheckBoxWidget useAdvancedSolarGeneratorCheckBox;
 		protected IntSliderWithButtons valvesWidget;
 
+		private boolean needHeatSource;
+
 		public EvaporationPlantWidget()
 		{
 
@@ -92,7 +94,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			consumer.accept(this.valvesWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.specs.valves", 0, 2, 0));
 			this.valvesWidget.getSlider().addValueChangeHanlder(this::onValvesChanged);
 
-			this.updateValveSliderLimit();
+			this.onThermalModelChanged();
 		}
 
 		@Override
@@ -118,7 +120,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 		{
 			super.onDimensionChanged();
 
-			this.updateValveSliderLimit();
+			this.onThermalModelChanged();
 		}
 
 		public void updateValveSliderLimit()
@@ -126,9 +128,15 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			IntSliderWidget valvesSlider = this.valvesWidget.getSlider();
 			int minValves = valvesSlider.getMinValue();
 			int valves = valvesSlider.getValue();
-			valvesSlider.setMinValue(this.useAdvancedSolarGeneratorCheckBox.isSelected() ? 2 : 3);
+			valvesSlider.setMinValue(this.isNeedHeatSource() ? 3 : 2);
 			valvesSlider.setMaxValue(this.getSideBlocks());
 			valvesSlider.setValue(valves + (valvesSlider.getMinValue() - minValves));
+		}
+
+		protected void onThermalModelChanged()
+		{
+			this.needHeatSource = this.getMaxMultiplierHeat(0.0D) > 0.0D;
+			this.updateValveSliderLimit();
 		}
 
 		protected void onValvesChanged(int valves)
@@ -146,7 +154,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 		{
 			this.markNeedUpdate();
 
-			this.updateValveSliderLimit();
+			this.onThermalModelChanged();
 		}
 
 		@Override
@@ -204,6 +212,11 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 				consumer.accept(new ItemStack(GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR, advancedSolarGenerators));
 			}
 
+			if (this.isNeedHeatSource())
+			{
+				consumer.accept(new ItemStack(MekanismBlocks.RESISTIVE_HEATER));
+			}
+
 		}
 
 		@Override
@@ -222,7 +235,11 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(inputCapacity)));
 			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(outputCapacity)));
 
-			this.createRequiredHeaterEnergyWidget(consumer);
+			if (this.isNeedHeatSource())
+			{
+				this.createRequiredHeaterEnergyWidget(consumer);
+			}
+
 		}
 
 		private void createRequiredHeaterEnergyWidget(Consumer<AbstractWidget> consumer)
@@ -250,7 +267,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 
 		public double getMaxMultiplierHeat(double ambientTemp)
 		{
-			int activeSolars = this.useAdvancedSolarGeneratorCheckBox.isSelected() ? 4 : 0;
+			int activeSolars = this.isUseAdvancedSolarGenerator() ? 4 : 0;
 			double heatCapacity = this.getDimensionHeight() * MekanismConfig.general.evaporationHeatCapacity.get();
 			double gain = activeSolars * MekanismConfig.general.evaporationSolarMultiplier.get() * heatCapacity;
 			double loss = MekanismConfig.general.evaporationHeatDissipation.get() * Math.sqrt(Math.abs(EvaporationMultiblockData.MAX_MULTIPLIER_TEMP - ambientTemp)) * heatCapacity;
@@ -275,6 +292,11 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 		public void setUseAdvancedSolarGenerator(boolean useAdvancedSolarGenerator)
 		{
 			this.useAdvancedSolarGeneratorCheckBox.setSelected(useAdvancedSolarGenerator);
+		}
+
+		public boolean isNeedHeatSource()
+		{
+			return this.needHeatSource;
 		}
 
 		@Override
