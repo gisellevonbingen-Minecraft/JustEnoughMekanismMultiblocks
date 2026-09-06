@@ -33,6 +33,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -211,7 +212,7 @@ public class BetterFusionReactorCategory extends MultiblockCategory<BetterFusion
 			double k = waterCooled ? MekanismGeneratorsConfig.generators.fusionWaterHeatingRatio.get() : 0.0D;
 			double caseAirConductivity = MekanismGeneratorsConfig.generators.fusionCasingThermalConductivity.get();
 			double aMin = burnTemperature * burnRatio * plasmaCaseConductivity * (k + caseAirConductivity) / (MekanismGeneratorsConfig.generators.energyPerFusionFuel.get().doubleValue() * burnRatio * (plasmaCaseConductivity + k + caseAirConductivity) - plasmaCaseConductivity * (k + caseAirConductivity));
-			return (int) (2 * Math.ceil(aMin / 2.0D));
+			return 2 * MathHelper.ceil(aMin / 2.0D);
 		}
 
 		public void updateInjectionRateInfoMessage()
