@@ -78,7 +78,7 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 		{
 			super.collectCost(consumer);
 
-			int corners = this.getCornerBlocks();
+			int edges = this.getEdgeBlocks();
 			int sides = this.getSideBlocks();
 			int ports = this.getPortCount();
 			sides -= ports;
@@ -88,12 +88,12 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 
 			if (this.isUseGlass())
 			{
-				casing = corners;
+				casing = edges;
 				glasses = sides;
 			}
 			else
 			{
-				casing = corners + sides;
+				casing = edges + sides;
 				glasses = 0;
 			}
 
@@ -124,7 +124,7 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 		}
 
 		@Override
-		public int getCornerBlocks()
+		public int getEdgeBlocks()
 		{
 			return 60;
 		}

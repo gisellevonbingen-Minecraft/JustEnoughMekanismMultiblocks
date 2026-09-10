@@ -86,7 +86,7 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 		{
 			super.collectCost(consumer);
 
-			int corners = this.getCornerBlocks();
+			int edges = this.getEdgeBlocks();
 			int sides = this.getSideBlocks();
 
 			int ports = this.getPortCount();
@@ -97,12 +97,12 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 
 			if (this.isUseGlass())
 			{
-				casing = corners;
+				casing = edges;
 				glasses = sides;
 			}
 			else
 			{
-				casing = corners + sides;
+				casing = edges + sides;
 				glasses = 0;
 			}
 

@@ -354,7 +354,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		return dimension.getX() * dimension.getY() * dimension.getZ();
 	}
 
-	public int getDimensionCornerBlocks()
+	public int getDimensionEdgeBlocks()
 	{
 		Vector3i innerDimension = this.getDimensionInner();
 		return 8 + (innerDimension.getX() * 4) + (innerDimension.getZ() * 4) + (innerDimension.getY() * 4);
@@ -368,12 +368,12 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 	public int getDimensionCasingBlocks()
 	{
-		return this.getDimensionCornerBlocks() + this.getDimensionSideBlocks();
+		return this.getDimensionEdgeBlocks() + this.getDimensionSideBlocks();
 	}
 
-	public int getCornerBlocks()
+	public int getEdgeBlocks()
 	{
-		return this.getDimensionCornerBlocks();
+		return this.getDimensionEdgeBlocks();
 	}
 
 	public int getSideBlocks()

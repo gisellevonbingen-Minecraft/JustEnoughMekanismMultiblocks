@@ -99,7 +99,7 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		{
 			super.collectCost(consumer);
 
-			int corners = this.getCornerBlocks();
+			int edges = this.getEdgeBlocks();
 			int sides = this.getSideBlocks();
 			int valves = this.getValveCount();
 			sides -= valves;
@@ -109,12 +109,12 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 
 			if (this.isUseGlass())
 			{
-				tanks = corners;
+				tanks = edges;
 				glasses = sides;
 			}
 			else
 			{
-				tanks = corners + sides;
+				tanks = edges + sides;
 			}
 
 			consumer.accept(new ItemStack(MekanismBlocks.DYNAMIC_TANK, tanks));
