@@ -140,7 +140,7 @@ public class BetterFusionReactorCategory extends MultiblockCategory<BetterFusion
 		}
 
 		@Override
-		public int getCornerBlocks()
+		public int getEdgeBlocks()
 		{
 			// 36 Totals
 			return 8 + 8 + 4 + 8 + 8;
@@ -240,7 +240,7 @@ public class BetterFusionReactorCategory extends MultiblockCategory<BetterFusion
 		{
 			super.collectCost(consumer);
 
-			int corners = this.getCornerBlocks();
+			int edges = this.getEdgeBlocks();
 			int sides = this.getSideBlocks();
 			int ports = this.getPortCount();
 			sides -= ports;
@@ -252,12 +252,12 @@ public class BetterFusionReactorCategory extends MultiblockCategory<BetterFusion
 
 			if (this.isUseGlass())
 			{
-				frames = corners;
+				frames = edges;
 				glasses = sides;
 			}
 			else
 			{
-				frames = corners + sides;
+				frames = edges + sides;
 				glasses = 0;
 			}
 

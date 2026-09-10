@@ -141,7 +141,7 @@ public class NaquadahReactorCategory extends MultiblockCategory<NaquadahReactorC
 		}
 
 		@Override
-		public int getCornerBlocks()
+		public int getEdgeBlocks()
 		{
 			// 108 Totals
 			return (24 + 16 + 8 + 4) * 2 + 4;
@@ -241,7 +241,7 @@ public class NaquadahReactorCategory extends MultiblockCategory<NaquadahReactorC
 		{
 			super.collectCost(consumer);
 
-			int corners = this.getCornerBlocks();
+			int edges = this.getEdgeBlocks();
 			int sides = this.getSideBlocks();
 			int ports = this.getPortCount();
 			sides -= ports;
@@ -253,12 +253,12 @@ public class NaquadahReactorCategory extends MultiblockCategory<NaquadahReactorC
 
 			if (this.isUseGlass())
 			{
-				frames = corners;
+				frames = edges;
 				glasses = sides;
 			}
 			else
 			{
-				frames = corners + sides;
+				frames = edges + sides;
 				glasses = 0;
 			}
 

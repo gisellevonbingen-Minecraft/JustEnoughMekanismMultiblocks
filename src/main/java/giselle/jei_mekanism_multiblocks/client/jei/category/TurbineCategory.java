@@ -229,7 +229,7 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 		{
 			super.collectCost(consumer);
 
-			int corners = this.getCornerBlocks();
+			int edges = this.getEdgeBlocks();
 			int sides = this.getSideBlocks();
 			int rotors = this.getRotorCount();
 			int blades = this.getBladeCount(rotors);
@@ -246,12 +246,12 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 
 			if (this.isUseGlass())
 			{
-				casing = corners;
+				casing = edges;
 				glasses = sides;
 			}
 			else
 			{
-				casing = corners + sides;
+				casing = edges + sides;
 				glasses = 0;
 			}
 

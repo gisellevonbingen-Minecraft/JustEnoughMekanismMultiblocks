@@ -233,7 +233,7 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 		{
 			super.collectCost(consumer);
 
-			int corners = this.getCornerBlocks();
+			int edges = this.getEdgeBlocks();
 			int sides = this.getSideBlocks();
 			int valves = this.getValveCount();
 			sides -= valves;
@@ -243,12 +243,12 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 
 			if (this.isUseGlass())
 			{
-				casing = corners;
+				casing = edges;
 				glasses = sides;
 			}
 			else
 			{
-				casing = corners + sides;
+				casing = edges + sides;
 			}
 
 			consumer.accept(new ItemStack(MekanismBlocks.BOILER_CASING, casing));
