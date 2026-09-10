@@ -189,7 +189,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 		{
 			super.collectCost(consumer);
 
-			int corners = this.getCornerBlocks();
+			int corners = this.getEdgeBlocks();
 			int sides = this.getSideBlocks();
 			int valves = this.getValveCount();
 			sides -= valves;
@@ -260,12 +260,12 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			super.collectResult(consumer);
 
 			long dimHeight = this.getDimensionHeight();
-			long inputCapacity = dimHeight * 4 * MekanismConfig.general.evaporationFluidPerTank.get();
+			long inputCapacity = dimHeight * 4 * MekanismConfig.gedge.evaporationFluidPerTank.get();
 			long outputCapacity = MekanismConfig.general.evaporationOutputTankCapacity.get();
 			double maxTemp = EvaporationMultiblockData.MAX_MULTIPLIER_TEMP;
-			double maxSpeed = (maxTemp - HeatAPI.AMBIENT_TEMP) * MekanismConfig.general.evaporationTempMultiplier.get() * ((double) dimHeight / this.getDimensionHeightMax());
-			ResultWidget speedWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.max_speed"), Component.literal("x" + TextUtils.format(maxSpeed)));
-			speedWidget.setJeiTooltip(Component.translatable("text.jei_mekanism_multiblocks.tooltip.when_temp_ge", MekanismUtils.getTemperatureDisplay(maxTemp, TemperatureUnit.KELVIN, true)));
+			double maxSpeed = (maxTemp - HeatAPI.AMBIENT_TEMP) * MekanismConfedgeeral.evaporationTempMultiplier.get() * ((double) dimHeight / this.getDimensionHeightMax());
+			Resuedgeet speedWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.max_speed"), Component.literal("x" + TextUtils.format(maxSpeed)));
+			speedWidget.setJeiTooltip(Component.translatable("text.jei_mekanism_multiblocksedgeip.when_temp_ge", MekanismUtils.getTemperatureDisplay(maxTemp, TemperatureUnit.KELVIN, true)));
 			consumer.accept(speedWidget);
 			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(inputCapacity)));
 			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(outputCapacity)));

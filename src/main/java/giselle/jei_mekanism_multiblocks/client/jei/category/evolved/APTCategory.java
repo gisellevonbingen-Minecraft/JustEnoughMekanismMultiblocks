@@ -64,7 +64,7 @@ public class APTCategory extends MultiblockCategory<APTCategory.APTWidget>
 		protected void collectCost(ICostConsumer consumer)
 		{
 			super.collectCost(consumer);
-			int corners = this.getCornerBlocks();
+			int edges = this.getEdgeBlocks();
 			int ports = this.getPortCount();
 			int sides = this.getSideBlocks() - ports;
 			int superchargingElements = this.getSuperchargingElementsCount();
@@ -73,12 +73,12 @@ public class APTCategory extends MultiblockCategory<APTCategory.APTWidget>
 
 			if (this.isUseGlass())
 			{
-				casing = corners;
+				casing = edges;
 				glasses = sides;
 			}
 			else
 			{
-				casing = corners + sides;
+				casing = edges + sides;
 				glasses = 0;
 			}
 			consumer.accept(new ItemStack(EMBlocks.APT_CASING, casing));
@@ -110,7 +110,7 @@ public class APTCategory extends MultiblockCategory<APTCategory.APTWidget>
 		}
 
 		@Override
-		public int getCornerBlocks()
+		public int getEdgeBlocks()
 		{
 			return 52;
 		}

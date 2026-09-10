@@ -138,7 +138,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		}
 
 		@Override
-		public int getCornerBlocks()
+		public int getEdgeBlocks()
 		{
 			// 36 Totals
 			return 8 + 8 + 4 + 8 + 8;
@@ -238,7 +238,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 		{
 			super.collectCost(consumer);
 
-			int corners = this.getCornerBlocks();
+			int edges = this.getEdgeBlocks();
 			int sides = this.getSideBlocks();
 			int ports = this.getPortCount();
 			sides -= ports;
@@ -250,12 +250,12 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 			if (this.isUseGlass())
 			{
-				frames = corners;
+				frames = edges;
 				glasses = sides;
 			}
 			else
 			{
-				frames = corners + sides;
+				frames = edges + sides;
 				glasses = 0;
 			}
 
