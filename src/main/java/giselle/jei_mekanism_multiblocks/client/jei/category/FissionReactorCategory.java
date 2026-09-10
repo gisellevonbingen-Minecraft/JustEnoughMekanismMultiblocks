@@ -319,7 +319,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		{
 			super.collectCost(consumer);
 
-			int corners = this.getCornerBlocks();
+			int edges = this.getEdgeBlocks();
 			int sides = this.getSideBlocks();
 			int ports = this.getPortCount();
 			sides -= ports;
@@ -331,12 +331,12 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 
 			if (this.isUseGlass())
 			{
-				casings = corners;
+				casings = edges;
 				glasses = sides;
 			}
 			else
 			{
-				casings = corners + sides;
+				casings = edges + sides;
 				glasses = 0;
 			}
 

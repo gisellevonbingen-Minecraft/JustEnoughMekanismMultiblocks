@@ -190,7 +190,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 		{
 			super.collectCost(consumer);
 
-			int corners = this.getCornerBlocks();
+			int edges = this.getEdgeBlocks();
 			int sides = this.getSideBlocks();
 			int valves = this.getValveCount();
 			sides -= valves;
@@ -201,12 +201,12 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 
 			if (this.isUseGlass())
 			{
-				casing = corners;
+				casing = edges;
 				glasses = sides;
 
 				if (this.isUseAdvancedSolarGenerator())
 				{
-					// Replace top corner to solar generator
+					// Replace top edge to solar generator
 					casing -= 4;
 					advancedSolarGenerators += 4;
 				}
@@ -221,7 +221,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			else
 			{
 				// Remove top vertices
-				casing = corners + sides - 4;
+				casing = edges + sides - 4;
 
 				if (this.isUseAdvancedSolarGenerator())
 				{
