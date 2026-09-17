@@ -83,21 +83,21 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 			int ports = this.getPortCount();
 			sides -= ports;
 
-			int casing = 0;
+			int casings = 0;
 			int glasses = 0;
 
 			if (this.isUseGlass())
 			{
-				casing = edges;
+				casings = edges;
 				glasses = sides;
 			}
 			else
 			{
-				casing = edges + sides;
+				casings = edges + sides;
 				glasses = 0;
 			}
 
-			consumer.accept(new ItemStack(MekanismBlocks.SPS_CASING, casing));
+			consumer.accept(new ItemStack(MekanismBlocks.SPS_CASING, casings));
 			consumer.accept(new ItemStack(MekanismBlocks.SPS_PORT, ports));
 			consumer.accept(new ItemStack(MekanismBlocks.SUPERCHARGED_COIL));
 			consumer.accept(new ItemStack(this.getGlassBlock(), glasses));
