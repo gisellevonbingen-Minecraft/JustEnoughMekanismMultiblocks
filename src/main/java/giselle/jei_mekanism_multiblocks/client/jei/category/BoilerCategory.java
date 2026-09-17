@@ -238,20 +238,20 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			int valves = this.getValveCount();
 			sides -= valves;
 
-			int casing = 0;
+			int casings = 0;
 			int glasses = 0;
 
 			if (this.isUseGlass())
 			{
-				casing = edges;
+				casings = edges;
 				glasses = sides;
 			}
 			else
 			{
-				casing = edges + sides;
+				casings = edges + sides;
 			}
 
-			consumer.accept(new ItemStack(MekanismBlocks.BOILER_CASING, casing));
+			consumer.accept(new ItemStack(MekanismBlocks.BOILER_CASING, casings));
 			consumer.accept(new ItemStack(MekanismBlocks.BOILER_VALVE, valves));
 			consumer.accept(new ItemStack(this.getGlassBlock(), glasses));
 

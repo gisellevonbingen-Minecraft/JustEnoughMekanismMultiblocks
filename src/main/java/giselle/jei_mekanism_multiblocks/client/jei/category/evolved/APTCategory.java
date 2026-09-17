@@ -68,20 +68,20 @@ public class APTCategory extends MultiblockCategory<APTCategory.APTWidget>
 			int ports = this.getPortCount();
 			int sides = this.getSideBlocks() - ports;
 			int superchargingElements = this.getSuperchargingElementsCount();
-			int casing = 0;
+			int casings = 0;
 			int glasses = 0;
 
 			if (this.isUseGlass())
 			{
-				casing = edges;
+				casings = edges;
 				glasses = sides;
 			}
 			else
 			{
-				casing = edges + sides;
+				casings = edges + sides;
 				glasses = 0;
 			}
-			consumer.accept(new ItemStack(EMBlocks.APT_CASING, casing));
+			consumer.accept(new ItemStack(EMBlocks.APT_CASING, casings));
 			consumer.accept(new ItemStack(EMBlocks.APT_PORT, ports));
 			if (superchargingElements > 0)
 			{
