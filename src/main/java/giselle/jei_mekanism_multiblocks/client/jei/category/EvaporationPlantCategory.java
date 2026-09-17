@@ -195,25 +195,25 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			int valves = this.getValveCount();
 			sides -= valves;
 
-			int casing = 0;
+			int casings = 0;
 			int glasses = 0;
 			int advancedSolarGenerators = 0;
 
 			if (this.isUseGlass())
 			{
-				casing = edges;
+				casings = edges;
 				glasses = sides;
 
 				if (this.isUseAdvancedSolarGenerator())
 				{
 					// Replace top edge to solar generator
-					casing -= 4;
+					casings -= 4;
 					advancedSolarGenerators += 4;
 				}
 				else
 				{
 					// Replace top side to glass
-					casing -= 8;
+					casings -= 8;
 					glasses += 8;
 				}
 
@@ -221,7 +221,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			else
 			{
 				// Remove top vertices
-				casing = edges + sides - 4;
+				casings = edges + sides - 4;
 
 				if (this.isUseAdvancedSolarGenerator())
 				{
@@ -232,7 +232,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 
 			consumer.accept(new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER, 1));
 			consumer.accept(new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE, valves));
-			consumer.accept(new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_BLOCK, casing));
+			consumer.accept(new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_BLOCK, casings));
 			consumer.accept(new ItemStack(this.getGlassBlock(), glasses));
 
 			if (JEI_MekanismMultiblocks.MekanismGeneratorsLoaded)

@@ -93,21 +93,21 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 			int ports = this.getPortCount();
 			sides -= ports;
 
-			int casing = 0;
+			int casings = 0;
 			int glasses = 0;
 
 			if (this.isUseGlass())
 			{
-				casing = edges;
+				casings = edges;
 				glasses = sides;
 			}
 			else
 			{
-				casing = edges + sides;
+				casings = edges + sides;
 				glasses = 0;
 			}
 
-			consumer.accept(new ItemStack(MekanismBlocks.INDUCTION_CASING, casing));
+			consumer.accept(new ItemStack(MekanismBlocks.INDUCTION_CASING, casings));
 			consumer.accept(new ItemStack(MekanismBlocks.INDUCTION_PORT, ports));
 			consumer.accept(new ItemStack(this.getGlassBlock(), glasses));
 		}

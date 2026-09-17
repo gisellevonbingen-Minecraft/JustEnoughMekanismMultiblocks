@@ -240,21 +240,21 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 			int valves = this.getValveCount();
 			sides -= valves;
 
-			int casing = 0;
+			int casings = 0;
 			int glasses = 0;
 
 			if (this.isUseGlass())
 			{
-				casing = edges;
+				casings = edges;
 				glasses = sides;
 			}
 			else
 			{
-				casing = edges + sides;
+				casings = edges + sides;
 				glasses = 0;
 			}
 
-			consumer.accept(new ItemStack(GeneratorsBlocks.TURBINE_CASING, casing));
+			consumer.accept(new ItemStack(GeneratorsBlocks.TURBINE_CASING, casings));
 			consumer.accept(new ItemStack(GeneratorsBlocks.TURBINE_VALVE, valves));
 			CostWidget vent = consumer.accept(new ItemStack(GeneratorsBlocks.TURBINE_VENT, vents));
 
