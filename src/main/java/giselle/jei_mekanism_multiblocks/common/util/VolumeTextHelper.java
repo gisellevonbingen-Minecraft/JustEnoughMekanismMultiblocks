@@ -1,18 +1,18 @@
 package giselle.jei_mekanism_multiblocks.common.util;
 
 import java.text.NumberFormat;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import mekanism.common.util.text.TextUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
 public class VolumeTextHelper
 {
-	private static final Map<Integer, VolumeUnit> MULTIPLIER_TO_UNIT = new HashMap<>();
-	private static final Map<Integer, NumberFormat> DECIMALS_TO_FORMAT = new HashMap<>();
+	private static final Int2ObjectMap<VolumeUnit> MULTIPLIER_TO_UNIT = new Int2ObjectOpenHashMap<>();
+	private static final Int2ObjectMap<NumberFormat> DECIMALS_TO_FORMAT = new Int2ObjectOpenHashMap<>();
 
 	static
 	{
