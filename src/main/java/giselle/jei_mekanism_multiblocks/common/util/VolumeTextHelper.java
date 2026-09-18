@@ -1,6 +1,8 @@
 package giselle.jei_mekanism_multiblocks.common.util;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import mekanism.common.util.text.TextUtils;
@@ -9,6 +11,7 @@ import net.minecraft.network.chat.Component;
 public class VolumeTextHelper
 {
 	private static final Map<Integer, VolumeUnit> MULTIPLIER_TO_UNIT = new HashMap<>();
+	private static final Map<Integer, NumberFormat> DECIMALS_TO_FORMAT = new HashMap<>();
 
 	static
 	{
@@ -57,36 +60,28 @@ public class VolumeTextHelper
 
 		}
 
-		String text = TextUtils.format(remain);
+		String text = formatDecimals(remain, decimals, multiplier > -1);
+		return Component.literal(new StringBuilder().append(text).append(" ").append(to.getShortName()).append(unit).toString());
+	}
 
-		if (multiplier > -1)
+	private static String formatDecimals(double value, int decimals, boolean fixedDigits)
+	{
+		if (fixedDigits)
 		{
-			int decimalIndex = text.indexOf('.');
-			boolean hasDecimalPart = decimalIndex > -1;
-			String exponentialPart = hasDecimalPart ? text.substring(0, decimalIndex) : text;
-			String deciamlPart = hasDecimalPart ? text.substring(decimalIndex + 1) : "";
-			int currentDecimals = hasDecimalPart ? deciamlPart.length() : 0;
-
-			if (currentDecimals > decimals)
+			return DECIMALS_TO_FORMAT.computeIfAbsent(decimals, d ->
 			{
-				deciamlPart = deciamlPart.substring(0, decimals);
-			}
-			else if (currentDecimals < decimals)
-			{
-				StringBuilder zero = new StringBuilder();
-
-				for (int i = 0; i < decimals - currentDecimals; i++)
-				{
-					zero.append('0');
-				}
-
-				deciamlPart += zero;
-			}
-
-			text = new StringBuilder().append(exponentialPart).append(".").append(deciamlPart).toString();
+				NumberFormat format = NumberFormat.getNumberInstance(Locale.ROOT);
+				format.setGroupingUsed(false);
+				format.setMinimumFractionDigits(d);
+				format.setMaximumFractionDigits(d);
+				return format;
+			}).format(value);
+		}
+		else
+		{
+			return TextUtils.format(value);
 		}
 
-		return Component.literal(new StringBuilder().append(text).append(" ").append(to.getShortName()).append(unit).toString());
 	}
 
 	private VolumeTextHelper()
