@@ -96,7 +96,7 @@ public class LasersCategory extends MultiblockCategory<LasersCategory.LaserWidge
 			{
 				this.setTargetEnergy(jules.doubleValue());
 			});
-			screen.setJules(FloatingLong.create(this.targetEnergy));
+			screen.setJules(FloatingLong.create(this.getTargetEnergy()));
 			Minecraft.getInstance().pushGuiLayer(screen);
 		}
 
