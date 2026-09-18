@@ -90,6 +90,8 @@ public class ClientConfig
 		this.naquadahReactorVisible = builder.comment("Set page visibility").define("visible", true);
 		builder.pop();
 
+		builder.pop();
+
 		builder.push("evolvedmekanism");
 		builder.comment("JEI 'Building [Antimatter Protomolecular Transmutator]' page configuration").push("apt");
 		this.aptVisible = builder.comment("Set page visibility").define("visible", true);
