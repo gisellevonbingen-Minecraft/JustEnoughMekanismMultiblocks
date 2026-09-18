@@ -21,7 +21,7 @@ public class EnergyEnterScreen extends Screen
 {
 	private static final ITextComponent COMPONENT_ENTER = new TranslationTextComponent("text.jei_mekanism_multiblocks.enter");
 	private static final ITextComponent COMPONENT_EXAMPLE = new TranslationTextComponent("text.jei_mekanism_multiblocks.example");
-	private static final ITextComponent COMPONENT_EXAMPLES = new StringTextComponent("1000, 100_000, 10K, 400MFE, 1GJ");
+	private static final ITextComponent COMPONENT_EXAMPLES = new StringTextComponent("1000, 100_000, 10.5K, 400MFE, 1.5GJ");
 
 	private final Consumer<FloatingLong> doneHandler;
 
