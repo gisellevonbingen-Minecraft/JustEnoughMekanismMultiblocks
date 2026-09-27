@@ -207,7 +207,7 @@ public class LasersCategory extends MultiblockCategory<LasersCategory.LaserWidge
 			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.specs.target_energy"), UnitDisplayUtils.getDisplayShort(this.targetEnergy / displayUnit.getConversion(), displayUnit)));
 			consumer.accept(new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.energy_rate"), Component.translatable("%s/t", EnergyDisplay.of(ept).getTextComponent())));
 
-			long ticks = ept == 0L ? 0L : (long) Math.ceil(this.targetEnergy / (double) ept);
+			long ticks = ept == 0L ? 0L : (long) Math.ceil(this.targetEnergy / ept);
 			ResultWidget mergeTimeWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.merge_time"), DurationTextHelper.duration(ticks));
 			mergeTimeWidget.setTooltip(TooltipHelper.createMessageOnly(DurationTextHelper.ticks(ticks)));
 			consumer.accept(mergeTimeWidget);
