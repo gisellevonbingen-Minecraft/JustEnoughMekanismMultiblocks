@@ -11,15 +11,20 @@ import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.category.ICostConsumer;
+import giselle.jei_mekanism_multiblocks.client.preview.IPreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelector;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelectors;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.EnergyDisplay;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class APTCategory extends MultiblockCategory<APTCategory.APTWidget>
 {
@@ -42,6 +47,41 @@ public class APTCategory extends MultiblockCategory<APTCategory.APTWidget>
 
 	public static class APTWidget extends MultiblockWidget
 	{
+		private static final byte[][] PREVIEW_HORIZONTAL_LAYER = {//
+				{0, 0, 1, 1, 1, 0, 0}, //
+				{0, 1, 2, 2, 2, 1, 0}, //
+				{1, 2, 2, 2, 2, 2, 1}, //
+				{1, 2, 2, 2, 2, 2, 1}, //
+				{1, 2, 2, 2, 2, 2, 1}, //
+				{0, 1, 2, 2, 2, 1, 0}, //
+				{0, 0, 1, 1, 1, 0, 0}//
+		};
+		private static final byte[][] PREVIEW_NARROW_SIDE_LAYER = {//
+				{0, 1, 2, 2, 2, 1, 0}, //
+				{1, 0, 0, 0, 0, 0, 1}, //
+				{2, 0, 0, 0, 0, 0, 2}, //
+				{2, 0, 0, 0, 0, 0, 2}, //
+				{2, 0, 0, 0, 0, 0, 2}, //
+				{1, 0, 0, 0, 0, 0, 1}, //
+				{0, 1, 2, 2, 2, 1, 0}//
+		};
+		private static final byte[][] PREVIEW_WIDE_SIDE_LAYER = {//
+				{1, 2, 2, 2, 2, 2, 1}, //
+				{2, 0, 0, 0, 0, 0, 2}, //
+				{2, 0, 0, 0, 0, 0, 2}, //
+				{2, 0, 0, 0, 0, 0, 2}, //
+				{2, 0, 0, 0, 0, 0, 2}, //
+				{2, 0, 0, 0, 0, 0, 2}, //
+				{1, 2, 2, 2, 2, 2, 1}//
+		};
+		private static final byte[][][] PREVIEW_PATTERN = {//
+				PREVIEW_HORIZONTAL_LAYER, //
+				PREVIEW_NARROW_SIDE_LAYER, //
+				PREVIEW_WIDE_SIDE_LAYER, //
+				PREVIEW_NARROW_SIDE_LAYER, //
+				PREVIEW_HORIZONTAL_LAYER//
+		};
+
 		protected IntSliderWithButtons portsWidget;
 		protected IntSliderWithButtons superchargingElementsWidget;
 
@@ -58,6 +98,30 @@ public class APTCategory extends MultiblockCategory<APTCategory.APTWidget>
 			this.portsWidget.getSlider().addValueChangeHanlder(this::onPortsChanged);
 			consumer.accept(this.superchargingElementsWidget = new IntSliderWithButtons(0, 0, 0, 0, "text.jei_mekanism_multiblocks.result.supercharging_elements", 0, 0, 25));
 			this.superchargingElementsWidget.getSlider().addValueChangeHanlder(this::onSuperchargingElementsChanged);
+		}
+
+		@Override
+		public boolean canCreatePreview()
+		{
+			return true;
+		}
+
+		@Override
+		protected void fillPreview(IPreviewBuilder builder)
+		{
+			super.fillPreview(builder);
+
+			BlockState casingState = EMBlocks.APT_CASING.getBlock().defaultBlockState();
+			BlockState sideState = this.isUseGlass() ? this.getGlassBlock().defaultBlockState() : casingState;
+			BlockState portState = EMBlocks.APT_PORT.getBlock().defaultBlockState();
+			PreviewSelector casingPositions = PreviewSelectors.volumePattern(PREVIEW_PATTERN, value -> value == 1);
+			PreviewSelector sidePositions = PreviewSelectors.volumePattern(PREVIEW_PATTERN, value -> value == 2);
+			PreviewSelector portPositions = PreviewSelectors.shellSidesCCW().and(sidePositions);
+
+			builder.setBlock(casingPositions, casingState);
+			builder.setBlock(sidePositions, sideState);
+			builder.replaceBlock(portPositions, sideState, portState, this.getPortCount());
+			builder.setBlock(PreviewSelectors.planeSpiralCCW(context -> new BlockPos(3, 1, 3), context -> this.getSuperchargingElementsCount()), EMBlocks.SUPERCHARGING_ELEMENT.getBlock().defaultBlockState());
 		}
 
 		@Override

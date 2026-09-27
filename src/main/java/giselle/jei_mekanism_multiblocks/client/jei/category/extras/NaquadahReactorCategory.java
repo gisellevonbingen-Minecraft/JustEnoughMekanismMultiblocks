@@ -23,6 +23,9 @@ import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.category.ICostConsumer;
 import giselle.jei_mekanism_multiblocks.client.jei.category.LasersCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.LasersCategory.LaserWidget;
+import giselle.jei_mekanism_multiblocks.client.preview.IPreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelector;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelectors;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.api.chemical.ChemicalTags;
 import mekanism.api.chemical.gas.Gas;
@@ -35,11 +38,13 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidType;
 
 public class NaquadahReactorCategory extends MultiblockCategory<NaquadahReactorCategory.NaquadahReactor>
@@ -74,6 +79,18 @@ public class NaquadahReactorCategory extends MultiblockCategory<NaquadahReactorC
 
 	public static class NaquadahReactor extends MultiblockWidget
 	{
+		private static final byte[][] PREVIEW_SHELL_PATTERN = {//
+				{0, 0, 0, 1, 1, 1, 0, 0, 0}, //
+				{0, 1, 1, 2, 2, 2, 1, 1, 0}, //
+				{0, 1, 2, 2, 2, 2, 2, 1, 0}, //
+				{1, 2, 2, 2, 2, 2, 2, 2, 1}, //
+				{1, 2, 2, 2, 2, 2, 2, 2, 1}, //
+				{1, 2, 2, 2, 2, 2, 2, 2, 1}, //
+				{0, 1, 2, 2, 2, 2, 2, 1, 0}, //
+				{0, 1, 1, 2, 2, 2, 1, 1, 0}, //
+				{0, 0, 0, 1, 1, 1, 0, 0, 0}//
+		};
+
 		private static final double burnTemperature = 400_000_000.0D;
 		private static final double plasmaHeatCapacity = 100.0D;
 		private static final double noBurningFactor = 10.0D;
@@ -234,6 +251,34 @@ public class NaquadahReactorCategory extends MultiblockCategory<NaquadahReactorC
 				this.injectionRateWidget.setTooltip(null);
 			}
 
+		}
+
+		@Override
+		public boolean canCreatePreview()
+		{
+			return true;
+		}
+
+		@Override
+		protected void fillPreview(IPreviewBuilder builder)
+		{
+			super.fillPreview(builder);
+
+			BlockPos controllerPos = new BlockPos(4, 8, 4);
+			BlockPos laserFocusMatrixPos = new BlockPos(4, 4, 8);
+
+			BlockState casingState = ExtraGenBlocks.NAQUADAH_REACTOR_CASING.getBlock().defaultBlockState();
+			BlockState sideState = this.isUseGlass() ? this.getGlassBlock().defaultBlockState() : casingState;
+			PreviewSelector casingPositions = PreviewSelectors.shellPattern(PREVIEW_SHELL_PATTERN, value -> value == 1);
+			PreviewSelector sidePositions = PreviewSelectors.shellPattern(PREVIEW_SHELL_PATTERN, value -> value == 2);
+			PreviewSelector portPositions = PreviewSelectors.shellSidesCCW().and(sidePositions);
+
+			builder.setBlock(casingPositions, casingState);
+			builder.setBlock(sidePositions, sideState);
+			builder.setBlock(controllerPos, ExtraGenBlocks.NAQUADAH_REACTOR_CONTROLLER.getBlock().defaultBlockState());
+			builder.setBlock(laserFocusMatrixPos, ExtraGenBlocks.LEAD_COATED_LASER_FOCUS_MATRIX.getBlock().defaultBlockState());
+			builder.replaceBlock(portPositions, sideState, ExtraGenBlocks.NAQUADAH_REACTOR_PORT.getBlock().defaultBlockState(), this.getPortCount());
+			builder.replaceBlock(portPositions, sideState, ExtraGenBlocks.NAQUADAH_REACTOR_LOGIC_ADAPTER.getBlock().defaultBlockState(), this.getLogicAdapterCount());
 		}
 
 		@Override

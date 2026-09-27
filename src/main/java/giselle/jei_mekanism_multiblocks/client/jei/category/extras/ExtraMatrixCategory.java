@@ -11,6 +11,8 @@ import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.category.ICostConsumer;
+import giselle.jei_mekanism_multiblocks.client.preview.IPreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelectors;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.TextUtils;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -20,6 +22,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class ExtraMatrixCategory extends MultiblockCategory<ExtraMatrixCategory.MatrixWidget>
 {
@@ -82,6 +85,25 @@ public class ExtraMatrixCategory extends MultiblockCategory<ExtraMatrixCategory.
 			super.save(tag);
 
 			tag.putInt("PortCount", this.getPortCount());
+		}
+
+		@Override
+		public boolean canCreatePreview()
+		{
+			return true;
+		}
+
+		@Override
+		protected void fillPreview(IPreviewBuilder builder)
+		{
+			super.fillPreview(builder);
+
+			BlockState edgeState = ExtraBlocks.REINFORCED_INDUCTION_CASING.getBlock().defaultBlockState();
+			BlockState valveState = ExtraBlocks.REINFORCED_INDUCTION_PORT.getBlock().defaultBlockState();
+			BlockState sideState = this.isUseGlass() ? this.getGlassBlock().defaultBlockState() : edgeState;
+
+			builder.setBlockShell(edgeState, sideState);
+			builder.replaceBlock(PreviewSelectors.shellSidesCCW(), sideState, valveState, this.getPortCount());
 		}
 
 		@Override
