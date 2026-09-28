@@ -2,7 +2,6 @@ package giselle.jei_mekanism_multiblocks.client.jei;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -12,7 +11,7 @@ import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import giselle.jei_mekanism_multiblocks.client.IRecipeLogicStateListener;
 import giselle.jei_mekanism_multiblocks.client.gui.ButtonWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
-import giselle.jei_mekanism_multiblocks.client.gui.ContainerWidget;
+import giselle.jei_mekanism_multiblocks.client.gui.ElementWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
@@ -30,7 +29,6 @@ import mekanism.common.util.UnitDisplayUtils.TempType;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.vector.Vector3i;
@@ -38,7 +36,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.ForgeHooksClient;
 
-public abstract class MultiblockWidget extends ContainerWidget
+public abstract class MultiblockWidget extends ElementWidget
 {
 	private final List<Consumer<MultiblockWidget>> changedHandlers = new ArrayList<>();
 
@@ -91,7 +89,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 		if (otherWidgets.size() > 0)
 		{
-			otherWidgets.forEach(this.configsList::addChild);
+			otherWidgets.forEach(this.configsList.getItems()::addChild);
 		}
 
 		this.needNotifyStateChange = true;
@@ -103,7 +101,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		this.changedHandlers.add(handler);
 	}
 
-	private void onPreviewButtonPress(AbstractButton button)
+	private void onPreviewButtonPress(ButtonWidget button)
 	{
 		PreviewLevel level = this.createPreview();
 		ForgeHooksClient.pushGuiLayer(Minecraft.getInstance(), new PreviewScreen(this.previewButton.getMessage(), level));
@@ -151,12 +149,12 @@ public abstract class MultiblockWidget extends ContainerWidget
 		this.showRightPanel(false);
 	}
 
-	private void onCostsButtonClick(AbstractButton button)
+	private void onCostsButtonClick(ButtonWidget button)
 	{
 		this.showCostPanel();
 	}
 
-	private void onResultsButtonClick(AbstractButton button)
+	private void onResultsButtonClick(ButtonWidget button)
 	{
 		this.showResultPanel();
 	}
@@ -169,7 +167,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 		if (glassBlock != null)
 		{
-			this.configsList.addChild(this.useGlassCheckBox);
+			consumer.accept(this.useGlassCheckBox);
 		}
 
 	}
@@ -236,7 +234,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 		if (list.size() > 0)
 		{
-			list.forEach(this.configsList::addChild);
+			list.forEach(this.configsList.getItems()::addChild);
 		}
 
 	}
@@ -302,8 +300,8 @@ public abstract class MultiblockWidget extends ContainerWidget
 		List<Widget> costs = new ArrayList<>();
 		this.collectResult(costs::add);
 
-		this.resultsList.clearChildren();
-		costs.forEach(this.resultsList::addChild);
+		this.resultsList.getItems().clearChildren();
+		costs.forEach(this.resultsList.getItems()::addChild);
 	}
 
 	protected void collectResult(Consumer<Widget> consumer)
@@ -364,11 +362,6 @@ public abstract class MultiblockWidget extends ContainerWidget
 			this.markNeedUpdate();
 		}
 
-	}
-
-	public Optional<Object> getIngredientUnderMouse(double pMouseX, double pMouseY)
-	{
-		return this.costsList.getIngredientUnderMouse(this.toChildX(pMouseX), this.toChildY(pMouseY));
 	}
 
 	public void markNeedUpdate()

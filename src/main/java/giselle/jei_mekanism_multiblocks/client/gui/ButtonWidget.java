@@ -3,25 +3,25 @@ package giselle.jei_mekanism_multiblocks.client.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 
-public class ButtonWidget extends AbstractButton
+public class ButtonWidget extends ElementWidget
 {
 	private final List<IPressHandler> pressHandlers;
-	private ITextComponent[] tooltip;
 
 	public ButtonWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage)
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.pressHandlers = new ArrayList<>();
-		this.tooltip = new ITextComponent[0];
+		this.playDownSound = true;
 	}
 
 	public void addPressHandler(IPressHandler handler)
@@ -29,7 +29,6 @@ public class ButtonWidget extends AbstractButton
 		this.pressHandlers.add(handler);
 	}
 
-	@Override
 	public void onPress()
 	{
 		for (IPressHandler handler : this.pressHandlers)
@@ -37,6 +36,29 @@ public class ButtonWidget extends AbstractButton
 			handler.onPress(this);
 		}
 
+	}
+
+	@Override
+	public void onClick(double pMouseX, double pMouseY)
+	{
+		this.onPress();
+	}
+
+	@Override
+	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers)
+	{
+		if (this.active && this.visible)
+		{
+			if (pKeyCode == GLFW.GLFW_KEY_ENTER || pKeyCode == GLFW.GLFW_KEY_SPACE || pKeyCode == GLFW.GLFW_KEY_KP_ENTER)
+			{
+				this.playDownSound(Minecraft.getInstance().getSoundManager());
+				this.onPress();
+				return true;
+			}
+
+		}
+
+		return false;
 	}
 
 	@Override
@@ -54,29 +76,9 @@ public class ButtonWidget extends AbstractButton
 		GuiHelper.drawScaledText(pMatrixStack, this.getMessage(), this.x + 2, this.y + this.height / 2 - 4, this.width - 4, j | MathHelper.ceil(this.alpha * 255.0F) << 24, true, TextAlignment.CENTER);
 	}
 
-	@Override
-	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
-	{
-		if (this.visible && this.isHovered())
-		{
-			GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
-		}
-
-	}
-
-	public void setTooltip(ITextComponent... tooltip)
-	{
-		this.tooltip = tooltip.clone();
-	}
-
-	public ITextComponent[] getTooltip()
-	{
-		return this.tooltip.clone();
-	}
-
 	public interface IPressHandler
 	{
-		void onPress(AbstractButton pButton);
+		void onPress(ButtonWidget pButton);
 	}
 
 }

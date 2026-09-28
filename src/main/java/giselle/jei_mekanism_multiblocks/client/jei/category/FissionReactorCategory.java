@@ -38,7 +38,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -112,11 +111,11 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		{
 			this.advancedCheckBox = new CheckBoxWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.advanced"), false);
 			this.advancedCheckBox.addSelectedChangedHandler(this::onAdvancedChanged);
-			this.configsList.addChild(this.advancedCheckBox);
+			this.configsList.getItems().addChild(this.advancedCheckBox);
 
 			this.layoutButton = new ButtonWidget(0, 0, 0, 0, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs.layout"));
 			this.layoutButton.addPressHandler(this::onLayoutButtonClick);
-			this.configsList.addChild(this.layoutButton);
+			this.configsList.getItems().addChild(this.layoutButton);
 
 			super.createSpecDimension();
 
@@ -198,7 +197,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			this.configsList.setVisible(this.layoutButton, advanced);
 		}
 
-		protected void onLayoutButtonClick(AbstractButton button)
+		protected void onLayoutButtonClick(ButtonWidget button)
 		{
 			Minecraft minecraft = Minecraft.getInstance();
 			minecraft.pushGuiLayer(new FissionLayoutScreen(StringTextComponent.EMPTY, this));
@@ -478,19 +477,19 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			{
 				int maxDamageTicks = this.getMaxDamageTicks(HeatUtils.BASE_BOIL_TEMP, conductivity, thermalEnthalpy);
 				tempWidget.getValueLabel().setMessage(new TranslationTextComponent("※ %s", tempWidget.getValueLabel().getMessage()));
-				tempWidget.setTooltip(burnRateTooltip, //
+				tempWidget.setTooltipMessage(burnRateTooltip, //
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.warning").withStyle(TextFormatting.RED), //
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.reactor_will_damage").withStyle(TextFormatting.RED), //
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.max_damage_ticks", DurationTextHelper.duration(maxDamageTicks)).withStyle(TextFormatting.RED));
 			}
 			else
 			{
-				tempWidget.setTooltip(burnRateTooltip);
+				tempWidget.setTooltipMessage(burnRateTooltip);
 			}
 
 			long heatedCoolant = this.getHeatedCoolant(stableTemp, conductivity, thermalEnthalpy);
 			ResultWidget heatingRateWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.heating_rate_with", with), VolumeTextHelper.formatMBt(heatedCoolant));
-			heatingRateWidget.setTooltip(burnRateTooltip);
+			heatingRateWidget.setTooltipMessage(burnRateTooltip);
 			consumer.accept(heatingRateWidget);
 		}
 

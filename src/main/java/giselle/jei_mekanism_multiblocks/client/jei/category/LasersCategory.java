@@ -20,7 +20,6 @@ import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -90,7 +89,7 @@ public class LasersCategory extends MultiblockCategory<LasersCategory.LaserWidge
 			return widget;
 		}
 
-		private void onEnterButtonPress(AbstractButton button)
+		private void onEnterButtonPress(ButtonWidget button)
 		{
 			EnergyEnterScreen screen = new EnergyEnterScreen(this.enterButton.getMessage(), jules ->
 			{
@@ -176,7 +175,7 @@ public class LasersCategory extends MultiblockCategory<LasersCategory.LaserWidge
 
 			long ticks = ept.isZero() ? 0L : FloatingLong.create(this.targetEnergy).divide(ept).ceil().longValue();
 			ResultWidget mergeTimeWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.merge_time"), DurationTextHelper.duration(ticks));
-			mergeTimeWidget.setTooltip(DurationTextHelper.ticks(ticks));
+			mergeTimeWidget.setTooltipMessage(DurationTextHelper.ticks(ticks));
 			consumer.accept(mergeTimeWidget);
 		}
 

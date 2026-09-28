@@ -11,13 +11,12 @@ import mekanism.api.math.FloatingLong;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.UnitDisplayUtils.EnergyType;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class EnergyEnterScreen extends Screen
+public class EnergyEnterScreen extends WidgetScreen
 {
 	private static final ITextComponent COMPONENT_ENTER = new TranslationTextComponent("text.jei_mekanism_multiblocks.enter");
 	private static final ITextComponent COMPONENT_EXAMPLE = new TranslationTextComponent("text.jei_mekanism_multiblocks.example");
@@ -189,11 +188,9 @@ public class EnergyEnterScreen extends Screen
 	}
 
 	@Override
-	public void render(MatrixStack pMatrixStack, int mouseX, int mouseY, float partialTick)
+	public void renderForeground(MatrixStack pMatrixStack, int mouseX, int mouseY, float partialTick)
 	{
-		this.renderBackground(pMatrixStack);
-
-		super.render(pMatrixStack, mouseX, mouseY, partialTick);
+		super.renderForeground(pMatrixStack, mouseX, mouseY, partialTick);
 
 		if (this.displayText == null || !this.lastJules.equals(this.jules) || this.lastUnit != this.displayUnit)
 		{

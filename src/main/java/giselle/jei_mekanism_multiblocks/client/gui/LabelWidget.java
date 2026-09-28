@@ -3,16 +3,13 @@ package giselle.jei_mekanism_multiblocks.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 
-public class LabelWidget extends Widget
+public class LabelWidget extends ElementWidget
 {
 	private boolean shadow;
 	private TextAlignment alignment;
-	private ITextComponent[] tooltip;
 
 	public LabelWidget(int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage)
 	{
@@ -24,7 +21,6 @@ public class LabelWidget extends Widget
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.shadow = true;
 		this.alignment = alignment;
-		this.tooltip = new ITextComponent[0];
 	}
 
 	@Override
@@ -33,22 +29,6 @@ public class LabelWidget extends Widget
 		int color = this.getFGColor() | MathHelper.ceil(this.alpha * 255.0F) << 24;
 		ITextComponent message = this.getMessage();
 		GuiHelper.drawScaledText(pMatrixStack, message, this.x, this.y, this.width, color, this.isShadow(), this.getAlignment());
-	}
-
-	@Override
-	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
-	{
-		if (this.visible && this.isHovered())
-		{
-			GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
-		}
-
-	}
-
-	@Override
-	public void playDownSound(SoundHandler pHandler)
-	{
-
 	}
 
 	public boolean isShadow()
@@ -74,16 +54,6 @@ public class LabelWidget extends Widget
 		}
 
 		this.alignment = alignment;
-	}
-
-	public ITextComponent[] getTooltip()
-	{
-		return this.tooltip.clone();
-	}
-
-	public void setTooltip(ITextComponent... tooltip)
-	{
-		this.tooltip = tooltip.clone();
 	}
 
 }

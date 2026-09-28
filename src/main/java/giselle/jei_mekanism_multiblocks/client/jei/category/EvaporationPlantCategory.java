@@ -317,7 +317,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			double maxTemp = EvaporationMultiblockData.MAX_MULTIPLIER_TEMP;
 			double maxSpeed = (maxTemp - HeatAPI.AMBIENT_TEMP) * MekanismConfig.general.evaporationTempMultiplier.get() * ((double) dimHeight / this.getDimensionHeightMax());
 			ResultWidget speedWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.max_speed"), new StringTextComponent("x" + TextUtils.format(maxSpeed)));
-			speedWidget.setTooltip(new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.when_temp_ge", MekanismUtils.getTemperatureDisplay(maxTemp, TemperatureUnit.KELVIN, true)));
+			speedWidget.setTooltipMessage(new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.when_temp_ge", MekanismUtils.getTemperatureDisplay(maxTemp, TemperatureUnit.KELVIN, true)));
 			consumer.accept(speedWidget);
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.input_tank"), VolumeTextHelper.formatMB(inputCapacity)));
 			consumer.accept(new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.output_tank"), VolumeTextHelper.formatMB(outputCapacity)));
@@ -337,7 +337,7 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			ResultWidget requiredEnergyWidget = new ResultWidget(new TranslationTextComponent("text.jei_mekanism_multiblocks.result.required_heater_usage"), new TranslationTextComponent("%s/t", EnergyDisplay.of(plainRequiredEnergy).getTextComponent()));
 			ITextComponent heaterName = new ItemStack(MekanismBlocks.RESISTIVE_HEATER).getHoverName();
 			ITextComponent valveName = new ItemStack(MekanismBlocks.THERMAL_EVAPORATION_VALVE).getHoverName();
-			requiredEnergyWidget.setTooltip(//
+			requiredEnergyWidget.setTooltipMessage(//
 					new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.plain", new TranslationTextComponent("%s %s/t", TextUtils.format(plainRequiredEnergy.longValue()), new TranslationTextComponent(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
 					new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.coldest", new TranslationTextComponent("%s %s/t", TextUtils.format(coldestRequiredEnergy.longValue()), new TranslationTextComponent(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //
 					new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.required_heater_usage.hottest", new TranslationTextComponent("%s %s/t", TextUtils.format(hotestRequiredEnergy.longValue()), new TranslationTextComponent(MekanismLang.ENERGY_JOULES_SHORT.getTranslationKey()))), //

@@ -11,14 +11,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 
-public class CheckBoxWidget extends AbstractButton
+public class CheckBoxWidget extends ButtonWidget
 {
 	private final List<Consumer<Boolean>> selectedChangedHandlers;
-	private ITextComponent[] tooltip;
 	private boolean selected;
 	private boolean shadow;
 
@@ -26,7 +24,6 @@ public class CheckBoxWidget extends AbstractButton
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.selectedChangedHandlers = new ArrayList<>();
-		this.tooltip = new ITextComponent[0];
 		this.selected = pSelected;
 		this.setFGColor(0x3F3F3F);
 		this.shadow = false;
@@ -41,6 +38,8 @@ public class CheckBoxWidget extends AbstractButton
 	public void onPress()
 	{
 		this.setSelected(!this.isSelected());
+
+		super.onPress();
 	}
 
 	public boolean isSelected()
@@ -79,26 +78,6 @@ public class CheckBoxWidget extends AbstractButton
 		this.renderBg(pMatrixStack, minecraft, pMouseX, pMouseY);
 
 		GuiHelper.drawScaledText(pMatrixStack, this.getMessage(), this.x + checkerLength + 1, this.y, this.width - checkerLength - 1, this.getFGColor() | MathHelper.ceil(this.alpha * 255.0F) << 24, this.isShadow());
-	}
-
-	@Override
-	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
-	{
-		if (this.visible && this.isHovered())
-		{
-			GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
-		}
-
-	}
-
-	public void setTooltip(ITextComponent... tooltip)
-	{
-		this.tooltip = tooltip.clone();
-	}
-
-	public ITextComponent[] getTooltip()
-	{
-		return this.tooltip.clone();
 	}
 
 	public boolean isShadow()

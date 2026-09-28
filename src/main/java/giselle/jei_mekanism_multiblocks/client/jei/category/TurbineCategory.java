@@ -355,7 +355,7 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 			if (this.needMoreVents)
 			{
 				maxFlowRateWidget.getValueLabel().setFGColor(0xFF8000);
-				maxFlowRateWidget.setTooltip(//
+				maxFlowRateWidget.setTooltipMessage(//
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.limited").withStyle(TextFormatting.RED), //
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_more", GeneratorsBlocks.TURBINE_VENT.getTextComponent()).withStyle(TextFormatting.RED));
 			}
@@ -366,7 +366,7 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 			if (maxFlow > maxWaterOutput)
 			{
 				maxWaterOutputWidget.getValueLabel().setFGColor(0xFF8000);
-				maxWaterOutputWidget.setTooltip(//
+				maxWaterOutputWidget.setTooltipMessage(//
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.warning").withStyle(TextFormatting.RED), //
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.water_will_losing").withStyle(TextFormatting.RED), //
 						new TranslationTextComponent("text.jei_mekanism_multiblocks.tooltip.need_more", GeneratorsBlocks.SATURATING_CONDENSER.getTextComponent()).withStyle(TextFormatting.RED));

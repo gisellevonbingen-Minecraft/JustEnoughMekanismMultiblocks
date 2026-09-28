@@ -9,20 +9,17 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import it.unimi.dsi.fastutil.doubles.DoubleConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class SliderWidget extends Widget
+public class SliderWidget extends ElementWidget
 {
 	private final List<DoubleConsumer> ratioChangeHandlers;
 	private double ratio;
 	private boolean horizontal;
-	private ITextComponent[] tooltip;
 
 	public SliderWidget()
 	{
@@ -35,7 +32,6 @@ public class SliderWidget extends Widget
 		this.ratioChangeHandlers = new ArrayList<>();
 		this.ratio = MathHelper.clamp(pRatio, 0.0D, 1.0D);
 		this.horizontal = true;
-		this.tooltip = new ITextComponent[0];
 	}
 
 	public void addRatioChangeHanlder(DoubleConsumer handler)
@@ -69,16 +65,6 @@ public class SliderWidget extends Widget
 		int j = this.getFGColor();
 		int lineHeight = Minecraft.getInstance().font.lineHeight;
 		GuiHelper.drawScaledText(pMatrixStack, this.getMessage(), this.x + 2, this.y + 1 + (this.height - lineHeight) / 2, this.width - 4, j, true, TextAlignment.CENTER);
-	}
-
-	@Override
-	public void renderToolTip(MatrixStack pMatrixStack, int pMouseX, int pMouseY)
-	{
-		if (this.visible && this.isHovered())
-		{
-			GuiHelper.renderComponentTooltip(pMatrixStack, pMouseX, pMouseY, this.getTooltip());
-		}
-
 	}
 
 	@Override
@@ -219,27 +205,11 @@ public class SliderWidget extends Widget
 	}
 
 	@Override
-	public void playDownSound(SoundHandler pHandler)
-	{
-
-	}
-
-	@Override
 	public void onRelease(double pMouseX, double pMouseY)
 	{
 		super.onRelease(pMouseX, pMouseY);
 
-		super.playDownSound(Minecraft.getInstance().getSoundManager());
-	}
-
-	public void setTooltip(ITextComponent... tooltip)
-	{
-		this.tooltip = tooltip.clone();
-	}
-
-	public ITextComponent[] getTooltip()
-	{
-		return tooltip.clone();
+		this.playDownSound();
 	}
 
 }
