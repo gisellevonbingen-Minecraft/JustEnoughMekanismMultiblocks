@@ -8,12 +8,15 @@ import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import giselle.jei_mekanism_multiblocks.client.preview.IPreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelectors;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.api.heat.HeatAPI;
 import mekanism.api.math.FloatingLong;
 import mekanism.common.Mekanism;
 import mekanism.common.MekanismLang;
+import mekanism.common.block.attribute.Attribute;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.content.evaporation.EvaporationMultiblockData;
 import mekanism.common.registries.MekanismBlocks;
@@ -24,10 +27,15 @@ import mekanism.common.util.text.TextUtils;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -184,6 +192,48 @@ public class EvaporationPlantCategory extends MultiblockCategory<EvaporationPlan
 			this.markNeedUpdate();
 
 			this.onThermalModelChanged();
+		}
+
+		@Override
+		public boolean canCreatePreview()
+		{
+			return true;
+		}
+
+		@Override
+		protected void fillPreview(IPreviewBuilder builder)
+		{
+			super.fillPreview(builder);
+
+			Vector3i dimension = this.getDimension();
+			BlockPos controllerPos = new BlockPos(dimension.getX() - 2, 1, dimension.getZ() - 1);
+
+			boolean useGlass = this.isUseGlass();
+			boolean useAdvancedSolarGenerator = this.isUseAdvancedSolarGenerator();
+			BlockState edgeState = MekanismBlocks.THERMAL_EVAPORATION_BLOCK.getBlock().defaultBlockState();
+			BlockState valveState = MekanismBlocks.THERMAL_EVAPORATION_VALVE.getBlock().defaultBlockState();
+			BlockState sideState = useGlass ? this.getGlassBlock().defaultBlockState() : edgeState;
+
+			builder.setBlockShell(edgeState, sideState);
+			builder.setBlock(PreviewSelectors.top(), Blocks.AIR.defaultBlockState());
+			builder.setBlock(controllerPos, Attribute.setFacing(Attribute.setActive(MekanismBlocks.THERMAL_EVAPORATION_CONTROLLER.getBlock().defaultBlockState(), true), Direction.SOUTH));
+			builder.replaceBlock(PreviewSelectors.shellSidesCCW(), sideState, valveState, this.getValveCount());
+
+			if (useGlass && !useAdvancedSolarGenerator)
+			{
+				builder.setBlock(PreviewSelectors.topCorners(), edgeState);
+				builder.setBlock(PreviewSelectors.topEdges(), sideState);
+			}
+			else
+			{
+				builder.setBlock(PreviewSelectors.topEdges(), edgeState);
+			}
+
+			if (useAdvancedSolarGenerator)
+			{
+				builder.setBlock(PreviewSelectors.topCorners(), GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR.getBlock().defaultBlockState());
+			}
+
 		}
 
 		@Override

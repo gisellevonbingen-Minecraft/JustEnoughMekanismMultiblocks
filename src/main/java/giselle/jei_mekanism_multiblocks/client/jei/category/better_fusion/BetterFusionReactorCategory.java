@@ -16,6 +16,9 @@ import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.category.ICostConsumer;
 import giselle.jei_mekanism_multiblocks.client.jei.category.LasersCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.category.LasersCategory.LaserWidget;
+import giselle.jei_mekanism_multiblocks.client.preview.IPreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelector;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelectors;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import igentuman.bfr.common.BetterFusionReactor;
 import igentuman.bfr.common.content.fusion.FusionReactorMultiblockData;
@@ -30,9 +33,11 @@ import mekanism.generators.common.config.MekanismGeneratorsConfig;
 import mekanism.generators.common.registries.GeneratorsItems;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -70,6 +75,14 @@ public class BetterFusionReactorCategory extends MultiblockCategory<BetterFusion
 
 	public static class FusionReactorCategoryWidget extends MultiblockWidget
 	{
+		private static final byte[][] PREVIEW_SHELL_PATTERN = {//
+				{0, 0, 1, 0, 0}, //
+				{0, 1, 2, 1, 0}, //
+				{1, 2, 2, 2, 1}, //
+				{0, 1, 2, 1, 0}, //
+				{0, 0, 1, 0, 0}//
+		};
+
 		private static final double burnTemperature = 100_000_000.0D;
 		private static final double plasmaHeatCapacity = 100.0D;
 		private static final double noBurningFactor = 10.0D;
@@ -230,6 +243,34 @@ public class BetterFusionReactorCategory extends MultiblockCategory<BetterFusion
 				this.injectionRateWidget.setTooltip();
 			}
 
+		}
+
+		@Override
+		public boolean canCreatePreview()
+		{
+			return true;
+		}
+
+		@Override
+		protected void fillPreview(IPreviewBuilder builder)
+		{
+			super.fillPreview(builder);
+
+			BlockPos controllerPos = new BlockPos(2, 4, 2);
+			BlockPos laserFocusMatrixPos = new BlockPos(2, 2, 4);
+
+			BlockState frameState = BfrBlocks.FUSION_REACTOR_FRAME.getBlock().defaultBlockState();
+			BlockState sideState = this.isUseGlass() ? this.getGlassBlock().defaultBlockState() : frameState;
+			PreviewSelector framePositions = PreviewSelectors.shellPattern(PREVIEW_SHELL_PATTERN, value -> value == 1);
+			PreviewSelector sidePositions = PreviewSelectors.shellPattern(PREVIEW_SHELL_PATTERN, value -> value == 2);
+			PreviewSelector portPositions = PreviewSelectors.shellSidesCCW().and(sidePositions);
+
+			builder.setBlock(framePositions, frameState);
+			builder.setBlock(sidePositions, sideState);
+			builder.setBlock(controllerPos, BfrBlocks.FUSION_REACTOR_CONTROLLER.getBlock().defaultBlockState());
+			builder.setBlock(laserFocusMatrixPos, BfrBlocks.LASER_FOCUS_MATRIX.getBlock().defaultBlockState());
+			builder.replaceBlock(portPositions, sideState, BfrBlocks.FUSION_REACTOR_PORT.getBlock().defaultBlockState(), this.getPortCount());
+			builder.replaceBlock(portPositions, sideState, BfrBlocks.FUSION_REACTOR_LOGIC_ADAPTER.getBlock().defaultBlockState(), this.getLogicAdapterCount());
 		}
 
 		@Override

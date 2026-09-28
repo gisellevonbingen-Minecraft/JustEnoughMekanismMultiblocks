@@ -9,6 +9,8 @@ import giselle.jei_mekanism_multiblocks.client.jei.CostWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import giselle.jei_mekanism_multiblocks.client.preview.IPreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelectors;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.api.heat.HeatAPI;
 import mekanism.api.math.MathUtils;
@@ -22,6 +24,7 @@ import mekanism.common.registries.MekanismGases.Coolants;
 import mekanism.common.util.HeatUtils;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
@@ -224,6 +227,31 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			}
 
 			this.markNeedUpdate();
+		}
+
+		@Override
+		public boolean canCreatePreview()
+		{
+			return true;
+		}
+
+		@Override
+		protected void fillPreview(IPreviewBuilder builder)
+		{
+			super.fillPreview(builder);
+
+			Vector3i dimension = this.getDimension();
+			int pressureDispenserY = dimension.getY() - 1 - this.getSteamHeight();
+			int superheatingElementY = dimension.getY() - 2 - this.getSteamHeight();
+
+			BlockState edgeState = MekanismBlocks.BOILER_CASING.getBlock().defaultBlockState();
+			BlockState valveState = MekanismBlocks.BOILER_VALVE.getBlock().defaultBlockState();
+			BlockState sideState = this.isUseGlass() ? this.getGlassBlock().defaultBlockState() : edgeState;
+
+			builder.setBlockShell(edgeState, sideState);
+			builder.replaceBlock(PreviewSelectors.shellSidesCCW(), sideState, valveState, this.getValveCount());
+			builder.setBlock(PreviewSelectors.innerPlane(context -> pressureDispenserY), MekanismBlocks.PRESSURE_DISPERSER.getBlock().defaultBlockState());
+			builder.setBlock(PreviewSelectors.innerCube(context -> 1, context -> superheatingElementY), MekanismBlocks.SUPERHEATING_ELEMENT.getBlock().defaultBlockState(), this.getHeatingElementCount());
 		}
 
 		@Override

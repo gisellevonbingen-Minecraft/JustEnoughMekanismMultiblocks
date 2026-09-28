@@ -7,6 +7,8 @@ import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import giselle.jei_mekanism_multiblocks.client.preview.IPreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelectors;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.common.Mekanism;
 import mekanism.common.MekanismLang;
@@ -14,6 +16,7 @@ import mekanism.common.config.MekanismConfig;
 import mekanism.common.registries.MekanismBlocks;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -92,6 +95,25 @@ public class DynamicTankCategory extends MultiblockCategory<DynamicTankCategory.
 		protected void onValvesChanged(int valves)
 		{
 			this.markNeedUpdate();
+		}
+
+		@Override
+		public boolean canCreatePreview()
+		{
+			return true;
+		}
+
+		@Override
+		protected void fillPreview(IPreviewBuilder builder)
+		{
+			super.fillPreview(builder);
+
+			BlockState edgeState = MekanismBlocks.DYNAMIC_TANK.getBlock().defaultBlockState();
+			BlockState valveState = MekanismBlocks.DYNAMIC_VALVE.getBlock().defaultBlockState();
+			BlockState sideState = this.isUseGlass() ? this.getGlassBlock().defaultBlockState() : edgeState;
+
+			builder.setBlockShell(edgeState, sideState);
+			builder.replaceBlock(PreviewSelectors.shellSidesCCW(), sideState, valveState, this.getValveCount());
 		}
 
 		@Override

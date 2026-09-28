@@ -10,15 +10,20 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import giselle.jei_mekanism_multiblocks.client.IRecipeLogicStateListener;
+import giselle.jei_mekanism_multiblocks.client.gui.ButtonWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.ContainerWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.ListWidget;
+import giselle.jei_mekanism_multiblocks.client.gui.PreviewScreen;
 import giselle.jei_mekanism_multiblocks.client.gui.TabButtonWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.TextAlignment;
 import giselle.jei_mekanism_multiblocks.client.jei.category.ICostConsumer;
+import giselle.jei_mekanism_multiblocks.client.preview.IPreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewLevel;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.util.UnitDisplayUtils.EnergyType;
 import mekanism.common.util.UnitDisplayUtils.TempType;
@@ -31,12 +36,14 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.client.ForgeHooksClient;
 
 public abstract class MultiblockWidget extends ContainerWidget
 {
 	private final List<Consumer<MultiblockWidget>> changedHandlers = new ArrayList<>();
 
 	protected final ListWidget configsList;
+	protected final ButtonWidget previewButton;
 	protected final TabButtonWidget costsButton;
 	protected final TabButtonWidget resultsButton;
 	protected final CostList costsList;
@@ -55,13 +62,16 @@ public abstract class MultiblockWidget extends ContainerWidget
 	{
 		super(0, 0, 0, 0);
 
-		LabelWidget specsLabel = new LabelWidget(00, 00, 100, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs"), TextAlignment.LEFT);
+		LabelWidget specsLabel = new LabelWidget(00, 00, 40, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.specs"), TextAlignment.LEFT);
 		specsLabel.setFGColor(0x3F3F3F);
 		specsLabel.setShadow(false);
 		this.addChild(specsLabel);
 		this.addChild(this.configsList = new ListWidget(00, 10, 100, 110, 10));
 		this.configsList.setItemsPadding(2);
 		this.configsList.setItemOffset(2);
+		ButtonWidget previewButton = this.addChild(this.previewButton = new ButtonWidget(40, 0, 58, 9, new TranslationTextComponent("text.jei_mekanism_multiblocks.preview")));
+		previewButton.visible = this.canCreatePreview();
+		previewButton.addPressHandler(this::onPreviewButtonPress);
 
 		this.addChild(this.costsButton = new TabButtonWidget(99, 0, 41, 10, new TranslationTextComponent("text.jei_mekanism_multiblocks.costs")));
 		this.costsButton.addPressHandler(this::onCostsButtonClick);
@@ -91,6 +101,35 @@ public abstract class MultiblockWidget extends ContainerWidget
 	public void addChangedHandler(Consumer<MultiblockWidget> handler)
 	{
 		this.changedHandlers.add(handler);
+	}
+
+	private void onPreviewButtonPress(AbstractButton button)
+	{
+		PreviewLevel level = this.createPreview();
+		ForgeHooksClient.pushGuiLayer(Minecraft.getInstance(), new PreviewScreen(this.previewButton.getMessage(), level));
+	}
+
+	public PreviewLevel createPreview()
+	{
+		if (!this.canCreatePreview())
+		{
+			return null;
+		}
+
+		PreviewBuilder builder = new PreviewBuilder(this.getDimension());
+		this.fillPreview(builder);
+
+		return new PreviewLevel(builder);
+	}
+
+	public boolean canCreatePreview()
+	{
+		return false;
+	}
+
+	protected void fillPreview(IPreviewBuilder builder)
+	{
+
 	}
 
 	private void showRightPanel(boolean costs)
