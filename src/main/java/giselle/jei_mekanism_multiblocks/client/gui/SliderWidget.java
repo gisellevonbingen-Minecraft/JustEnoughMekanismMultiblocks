@@ -9,22 +9,19 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import it.unimi.dsi.fastutil.doubles.DoubleConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 
-public class SliderWidget extends AbstractWidget
+public class SliderWidget extends ElementWidget
 {
 	private final List<DoubleConsumer> ratioChangeHandlers;
 	private double ratio;
 	private boolean horizontal;
-	private Component[] tooltip;
 
 	public SliderWidget()
 	{
@@ -37,7 +34,6 @@ public class SliderWidget extends AbstractWidget
 		this.ratioChangeHandlers = new ArrayList<>();
 		this.ratio = Mth.clamp(pRatio, 0.0D, 1.0D);
 		this.horizontal = true;
-		this.tooltip = new Component[0];
 	}
 
 	public void addRatioChangeHanlder(DoubleConsumer handler)
@@ -71,15 +67,6 @@ public class SliderWidget extends AbstractWidget
 		int j = this.getFGColor();
 		int lineHeight = Minecraft.getInstance().font.lineHeight;
 		GuiHelper.drawScaledText(pPoseStack, this.getMessage(), this.x + 2, this.y + 1 + (this.height - lineHeight) / 2, this.width - 4, j, true, TextAlignment.CENTER);
-	}
-
-	@Override
-	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
-	{
-		if (this.visible && this.isHoveredOrFocused())
-		{
-			GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
-		}
 
 	}
 
@@ -221,27 +208,11 @@ public class SliderWidget extends AbstractWidget
 	}
 
 	@Override
-	public void playDownSound(SoundManager pHandler)
-	{
-
-	}
-
-	@Override
 	public void onRelease(double pMouseX, double pMouseY)
 	{
 		super.onRelease(pMouseX, pMouseY);
 
-		super.playDownSound(Minecraft.getInstance().getSoundManager());
-	}
-
-	public void setTooltip(Component... tooltip)
-	{
-		this.tooltip = tooltip.clone();
-	}
-
-	public Component[] getTooltip()
-	{
-		return tooltip.clone();
+		this.playDownSound();
 	}
 
 	@Override

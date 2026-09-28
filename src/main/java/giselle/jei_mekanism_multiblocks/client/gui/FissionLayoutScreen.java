@@ -1,7 +1,6 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
 import java.text.DecimalFormat;
-import java.util.Arrays;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,15 +21,13 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import mekanism.generators.common.GeneratorsLang;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
-public class FissionLayoutScreen extends Screen
+public class FissionLayoutScreen extends WidgetScreen
 {
 	private static final ResourceLocation TEXTURE = JEI_MekanismMultiblocks.rl("textures/gui/fission_layout.png");
 	private static final Int2ObjectMap<Component> PILLAR_COMPONENT_CACHE = new Int2ObjectOpenHashMap<>();
@@ -107,12 +104,12 @@ public class FissionLayoutScreen extends Screen
 		Layout layout = this.layout;
 
 		this.importButton = new ButtonWidget(widgetX, widgetY, widgetWidth / 2, 15, COMPONENT_IMPORT);
-		this.importButton.setTooltip(COMPONENT_IMPORT_FROM_CLIPBOARD);
+		this.importButton.setTooltipMessage(COMPONENT_IMPORT_FROM_CLIPBOARD);
 		this.importButton.addPressHandler(this::onButtonPress);
 		this.addRenderableWidget(this.importButton);
 
 		this.exportButton = new ButtonWidget(widgetX + this.importButton.getWidth(), widgetY, widgetWidth / 2, 15, COMPONENT_EXPORT);
-		this.exportButton.setTooltip(COMPONENT_EXPORT_TO_CLIPBOARD);
+		this.exportButton.setTooltipMessage(COMPONENT_EXPORT_TO_CLIPBOARD);
 		this.exportButton.addPressHandler(this::onButtonPress);
 		this.addRenderableWidget(this.exportButton);
 		widgetY += this.exportButton.getHeight() + widgetOffset;
@@ -165,11 +162,9 @@ public class FissionLayoutScreen extends Screen
 	}
 
 	@Override
-	public void render(PoseStack pPoseStack, int mouseX, int mouseY, float partialTick)
+	protected void renderForeground(PoseStack pPoseStack, int mouseX, int mouseY, float partialTick)
 	{
-		this.renderBackground(pPoseStack);
-
-		super.render(pPoseStack, mouseX, mouseY, partialTick);
+		super.renderForeground(pPoseStack, mouseX, mouseY, partialTick);
 
 		Layout layout = this.layout;
 
@@ -241,24 +236,19 @@ public class FissionLayoutScreen extends Screen
 		if (this.resultDirty)
 		{
 			this.resultDirty = false;
-			this.resultsList.clearChildren();
-			this.resultsList.addChild(new ResultWidget(COMPONENT_BOIL_EFFICIENCY, new TextComponent(String.valueOf(Math.round(this.simulation.getBoilEfficiency() * 1000.0D) / 1000.0D))));
-			this.resultsList.addChild(new ResultWidget(COMPONENT_MAX_BURN_RATE, VolumeTextHelper.formatMBt(this.burnRateSlider.getSlider().getMaxValue())));
-			this.simulation.createStableTempWidgets(this.resultsList::addChild);
+			ElementWidget resultsItems = this.resultsList.getItems();
+			resultsItems.clearChildren();
+			resultsItems.addChild(new ResultWidget(COMPONENT_BOIL_EFFICIENCY, new TextComponent(String.valueOf(Math.round(this.simulation.getBoilEfficiency() * 1000.0D) / 1000.0D))));
+			resultsItems.addChild(new ResultWidget(COMPONENT_MAX_BURN_RATE, VolumeTextHelper.formatMBt(this.burnRateSlider.getSlider().getMaxValue())));
+			this.simulation.createStableTempWidgets(resultsItems::addChild);
 
 			long coolantCapacity = this.simulation.getCooledCoolantCapacity();
 			long heatedCoolantCapacity = this.simulation.getHeatedCoolantCapacity();
 			long fuelCapacity = this.simulation.getFuelCapacity();
-			this.resultsList.addChild(new ResultWidget(GeneratorsLang.FISSION_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(coolantCapacity)));
-			this.resultsList.addChild(new ResultWidget(GeneratorsLang.FISSION_FUEL_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
-			this.resultsList.addChild(new ResultWidget(GeneratorsLang.FISSION_HEATED_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(heatedCoolantCapacity)));
-			this.resultsList.addChild(new ResultWidget(GeneratorsLang.FISSION_WASTE_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
-		}
-
-		if (this.resultsList.getChildUnderMouse(mouseX, mouseY) instanceof ResultWidget result)
-		{
-			Component[] tooltip = result.getValueLabel().getTooltip();
-			this.renderComponentTooltip(pPoseStack, Arrays.asList(tooltip), mouseX, mouseY);
+			resultsItems.addChild(new ResultWidget(GeneratorsLang.FISSION_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(coolantCapacity)));
+			resultsItems.addChild(new ResultWidget(GeneratorsLang.FISSION_FUEL_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
+			resultsItems.addChild(new ResultWidget(GeneratorsLang.FISSION_HEATED_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(heatedCoolantCapacity)));
+			resultsItems.addChild(new ResultWidget(GeneratorsLang.FISSION_WASTE_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
 		}
 
 	}
@@ -407,7 +397,7 @@ public class FissionLayoutScreen extends Screen
 		this.layoutDirty = true;
 	}
 
-	private void onButtonPress(AbstractButton button)
+	private void onButtonPress(ButtonWidget button)
 	{
 		if (button == this.resetButton)
 		{
@@ -526,19 +516,19 @@ public class FissionLayoutScreen extends Screen
 		{
 			this.importButton.setMessage(COMPONENT_CHECK);
 			this.importButton.setFGColor(0xFF00FF00);
-			this.importButton.setTooltip(COMPONENT_IMPORTED_SUCCESSFULLY);
+			this.importButton.setTooltipMessage(COMPONENT_IMPORTED_SUCCESSFULLY);
 		}
 		else if (result == Result.ERROR)
 		{
 			this.importButton.setMessage(COMPONENT_ERROR);
 			this.importButton.setFGColor(0xFFFF0000);
-			this.importButton.setTooltip(COMPONENT_JSON_SYNTAX_ERROR);
+			this.importButton.setTooltipMessage(COMPONENT_JSON_SYNTAX_ERROR);
 		}
 		else
 		{
 			this.importButton.setMessage(COMPONENT_IMPORT);
 			this.importButton.setFGColor(0xFFFFFFFF);
-			this.importButton.setTooltip(COMPONENT_IMPORT_FROM_CLIPBOARD);
+			this.importButton.setTooltipMessage(COMPONENT_IMPORT_FROM_CLIPBOARD);
 		}
 
 	}
@@ -556,19 +546,19 @@ public class FissionLayoutScreen extends Screen
 		{
 			this.exportButton.setMessage(COMPONENT_CHECK);
 			this.exportButton.setFGColor(0xFF00FF00);
-			this.exportButton.setTooltip(COMPONENT_EXPORTED_SUCCESSFULLY);
+			this.exportButton.setTooltipMessage(COMPONENT_EXPORTED_SUCCESSFULLY);
 		}
 		else if (result == Result.ERROR)
 		{
 			this.exportButton.setMessage(COMPONENT_ERROR);
 			this.exportButton.setFGColor(0xFFFF0000);
-			this.exportButton.setTooltip(new TranslatableComponent("ERROR"));
+			this.exportButton.setTooltipMessage(new TranslatableComponent("ERROR"));
 		}
 		else
 		{
 			this.exportButton.setMessage(COMPONENT_EXPORT);
 			this.exportButton.setFGColor(0xFFFFFFFF);
-			this.exportButton.setTooltip(COMPONENT_EXPORT_TO_CLIPBOARD);
+			this.exportButton.setTooltipMessage(COMPONENT_EXPORT_TO_CLIPBOARD);
 		}
 
 	}

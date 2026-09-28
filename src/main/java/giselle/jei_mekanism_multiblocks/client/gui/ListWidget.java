@@ -4,11 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.TextComponent;
 
-public class ListWidget extends ContainerWidget
+public class ListWidget extends ElementWidget
 {
 	private int itemsLeft;
 	private int itemsTop;
@@ -24,6 +23,7 @@ public class ListWidget extends ContainerWidget
 	private boolean scrollBarHorizontalChanged;
 	private boolean scrollBarVerticalChanged;
 
+	private ItemsWidget items;
 	private ButtonWidget upButton;
 	private ButtonWidget downButton;
 	private IntSliderWidget scrollBar;
@@ -42,13 +42,15 @@ public class ListWidget extends ContainerWidget
 		this.itemOffset = 0;
 		this.scrollBarWidth = 12;
 
-		this.addFunctionWidget(this.upButton = new ButtonWidget(0, 0, 0, 0, new TextComponent("▲")));
+		this.addChild(this.items = new ItemsWidget(this));
+
+		this.addChild(this.upButton = new ButtonWidget(0, 0, 0, 0, new TextComponent("▲")));
 		this.upButton.addPressHandler(this::onScrollButtonClick);
 
-		this.addFunctionWidget(this.downButton = new ButtonWidget(0, 0, 0, 0, new TextComponent("▼")));
+		this.addChild(this.downButton = new ButtonWidget(0, 0, 0, 0, new TextComponent("▼")));
 		this.downButton.addPressHandler(this::onScrollButtonClick);
 
-		this.addFunctionWidget(this.scrollBar = new IntSliderWidget(0, 0, 0, 0, TextComponent.EMPTY, 0, 0, 0));
+		this.addChild(this.scrollBar = new IntSliderWidget(0, 0, 0, 0, TextComponent.EMPTY, 0, 0, 0));
 		this.scrollBar.addValueChangeHanlder(this::onScrollChanged);
 
 		this.visibleMap = new Object2BooleanOpenHashMap<>();
@@ -61,7 +63,7 @@ public class ListWidget extends ContainerWidget
 
 	public void setVisible(AbstractWidget widget, boolean visible)
 	{
-		if (this.contains(widget))
+		if (this.getItems().contains(widget))
 		{
 			this.visibleMap.put(widget, visible);
 			this.itemsVerticalChanged = true;
@@ -74,7 +76,7 @@ public class ListWidget extends ContainerWidget
 		this.itemsVerticalChanged = true;
 	}
 
-	protected void onScrollButtonClick(AbstractButton button)
+	protected void onScrollButtonClick(ButtonWidget button)
 	{
 		if (button == this.upButton)
 		{
@@ -131,7 +133,7 @@ public class ListWidget extends ContainerWidget
 			this.itemsChanged = false;
 
 			int scroll = this.scrollBar.getValue();
-			int childCount = this.getChildren().size();
+			int childCount = this.items.getChildren().size();
 			this.scrollBar.setMaxValue(Math.max(childCount - this.getItemCountInHeight(), 0));
 			this.scrollBar.setValue(scroll);
 			this.scrollBar.active = this.scrollBar.getMaxValue() > 0;
@@ -154,15 +156,29 @@ public class ListWidget extends ContainerWidget
 		super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
 	}
 
+	protected void onRenderItemBackground(AbstractWidget widget, PoseStack pPoseStack, int childMouseX, int childMouseY, float pPartialTicks)
+	{
+
+	}
+
+	protected void onRenderItemForeground(AbstractWidget widget, PoseStack pPoseStack, int childMouseX, int childMouseY, float pPartialTicks)
+	{
+
+	}
+
 	protected void updateItemsVertical()
 	{
+		this.items.y = this.getItemsTop();
+		this.items.setHeight(this.getHeight() - this.getItemsBottom());
+
 		int itemHeight = this.getItemHeight();
 		int itemOffset = this.getItemOffset();
-		int itemY = this.getItemsTop() + -this.getScrollAmount() * (itemHeight + itemOffset);
-		int top = 0;
-		int bottom = this.getHeight() - this.getItemsBottom() - itemHeight;
+		int itemY = -this.getScrollAmount() * (itemHeight + itemOffset);
 
-		for (AbstractWidget widget : this.getChildren())
+		int top = 0;
+		int bottom = this.items.getHeight() - itemHeight;
+
+		for (AbstractWidget widget : this.items.getChildren())
 		{
 			if (this.visibleMap.getOrDefault(widget, true))
 			{
@@ -182,7 +198,10 @@ public class ListWidget extends ContainerWidget
 
 	protected void updateItemsHorizontal()
 	{
-		for (AbstractWidget widget : this.getChildren())
+		this.items.x = this.getItemsLeft();
+		this.items.setWidth(this.scrollBar.x - this.getItemsRight() - this.items.x);
+
+		for (AbstractWidget widget : this.items.getChildren())
 		{
 			this.updateItemHorizontal(widget);
 		}
@@ -191,28 +210,8 @@ public class ListWidget extends ContainerWidget
 
 	protected void updateItemHorizontal(AbstractWidget widget)
 	{
-		widget.x = this.getItemsLeft();
-		widget.setWidth(this.scrollBar.x - this.getItemsRight() - widget.x);
-	}
-
-	@Override
-	protected void onChildAdded(AbstractWidget widget)
-	{
-		super.onChildAdded(widget);
-
-		this.updateItemHorizontal(widget);
-		this.itemsChanged = true;
-		this.itemsVerticalChanged = true;
-	}
-
-	@Override
-	protected void onChildRemoved(AbstractWidget widget)
-	{
-		super.onChildRemoved(widget);
-
-		this.itemsChanged = true;
-		this.itemsVerticalChanged = true;
-		this.visibleMap.removeBoolean(widget);
+		widget.x = 0;
+		widget.setWidth(this.items.getWidth());
 	}
 
 	private void updateScrollWidgetsHorizontal()
@@ -394,6 +393,69 @@ public class ListWidget extends ContainerWidget
 	public void setScrollAmount(int scrollAmount)
 	{
 		this.scrollBar.setValue(scrollAmount);
+	}
+
+	public ElementWidget getItems()
+	{
+		return this.items;
+	}
+
+	public ButtonWidget getUpButton()
+	{
+		return this.upButton;
+	}
+
+	public ButtonWidget getDownButton()
+	{
+		return this.downButton;
+	}
+
+	private class ItemsWidget extends ElementWidget
+	{
+		private final ListWidget parent;
+
+		public ItemsWidget(ListWidget parent)
+		{
+			super(0, 0, 0, 0);
+			this.parent = parent;
+		}
+
+		@Override
+		protected void onRenderWidgetBackground(AbstractWidget widget, PoseStack pPoseStack, int childMouseX, int childMouseY, float pPartialTicks)
+		{
+			super.onRenderWidgetBackground(widget, pPoseStack, childMouseX, childMouseY, pPartialTicks);
+
+			this.parent.onRenderItemBackground(widget, pPoseStack, childMouseX, childMouseY, pPartialTicks);
+		}
+
+		@Override
+		protected void onRenderWidgetForeground(AbstractWidget widget, PoseStack pPoseStack, int childMouseX, int childMouseY, float pPartialTicks)
+		{
+			super.onRenderWidgetForeground(widget, pPoseStack, childMouseX, childMouseY, pPartialTicks);
+
+			this.parent.onRenderItemForeground(widget, pPoseStack, childMouseX, childMouseY, pPartialTicks);
+		}
+
+		@Override
+		protected void onChildAdded(AbstractWidget widget)
+		{
+			super.onChildAdded(widget);
+
+			this.parent.updateItemHorizontal(widget);
+			this.parent.itemsChanged = true;
+			this.parent.itemsVerticalChanged = true;
+		}
+
+		@Override
+		protected void onChildRemoved(AbstractWidget widget)
+		{
+			super.onChildRemoved(widget);
+
+			this.parent.itemsChanged = true;
+			this.parent.itemsVerticalChanged = true;
+			this.parent.visibleMap.removeBoolean(widget);
+		}
+
 	}
 
 }

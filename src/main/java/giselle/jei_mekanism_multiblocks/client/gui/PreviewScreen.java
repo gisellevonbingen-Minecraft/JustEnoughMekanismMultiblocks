@@ -12,7 +12,6 @@ import com.mojang.math.Vector4f;
 import giselle.jei_mekanism_multiblocks.client.preview.PreviewLevel;
 import giselle.jei_mekanism_multiblocks.client.preview.PreviewMesh;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -26,7 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class PreviewScreen extends Screen
+public class PreviewScreen extends WidgetScreen
 {
 	private final PreviewLevel level;
 	private final PreviewMesh mesh;
@@ -39,6 +38,7 @@ public class PreviewScreen extends Screen
 	private float rotationX;
 	private float translationX;
 	private float translationY;
+	private BlockHitResult hit;
 
 	public PreviewScreen(Component title, PreviewLevel level)
 	{
@@ -106,7 +106,7 @@ public class PreviewScreen extends Screen
 		this.level.setRenderHeight(renderHeight);
 	}
 
-	private void onButtonPress(AbstractButton button)
+	private void onButtonPress(ButtonWidget button)
 	{
 		if (button == this.resetButton)
 		{
@@ -116,11 +116,9 @@ public class PreviewScreen extends Screen
 	}
 
 	@Override
-	public void render(PoseStack pose, int mouseX, int mouseY, float partialTick)
+	protected void renderForeground(PoseStack pose, int pMouseX, int pMouseY, float pPartialTicks)
 	{
-		this.renderBackground(pose);
-
-		super.render(pose, mouseX, mouseY, partialTick);
+		super.renderForeground(pose, pMouseX, pMouseY, pPartialTicks);
 
 		Vec3i dimension = this.level.getDimension();
 		RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX);
@@ -133,16 +131,23 @@ public class PreviewScreen extends Screen
 		pose.mulPose(Vector3f.YP.rotationDegrees(this.rotationY));
 		pose.translate(-dimension.getX() * 0.5F, -dimension.getY() * 0.5F, -dimension.getZ() * 0.5F);
 
-		BlockHitResult hit = this.pickBlock(pose, mouseX, mouseY);
+		this.hit = this.pickBlock(pose, pMouseX, pMouseY);
 
 		this.mesh.render(pose, this.minecraft.getBlockRenderer());
 		pose.popPose();
 
-		if (hit.getType() == HitResult.Type.BLOCK)
+	}
+
+	@Override
+	protected void renderTooltip(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks)
+	{
+		super.renderTooltip(pPoseStack, pMouseX, pMouseY, pPartialTicks);
+
+		if (this.hit != null && this.hit.getType() == HitResult.Type.BLOCK)
 		{
-			BlockPos pos = hit.getBlockPos();
+			BlockPos pos = this.hit.getBlockPos();
 			BlockState state = this.level.getBlockState(pos);
-			this.renderTooltip(pose, new ItemStack(state.getBlock()), mouseX, mouseY);
+			this.renderTooltip(pPoseStack, new ItemStack(state.getBlock()), pMouseX, pMouseY);
 		}
 
 	}
