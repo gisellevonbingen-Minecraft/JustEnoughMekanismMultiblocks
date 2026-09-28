@@ -48,6 +48,12 @@ public class EnergyEnterScreen extends Screen
 	}
 
 	@Override
+	public boolean isPauseScreen()
+	{
+		return false;
+	}
+
+	@Override
 	protected void init()
 	{
 		super.init();
