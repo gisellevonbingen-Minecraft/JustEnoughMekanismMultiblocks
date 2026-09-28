@@ -11,15 +11,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
-public class CheckBoxWidget extends AbstractButton
+public class CheckBoxWidget extends ButtonWidget
 {
 	private final List<Consumer<Boolean>> selectedChangedHandlers;
-	private Component[] tooltip;
 	private boolean selected;
 	private boolean shadow;
 
@@ -27,7 +24,6 @@ public class CheckBoxWidget extends AbstractButton
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.selectedChangedHandlers = new ArrayList<>();
-		this.tooltip = new Component[0];
 		this.selected = pSelected;
 		this.setFGColor(0x3F3F3F);
 		this.shadow = false;
@@ -42,6 +38,8 @@ public class CheckBoxWidget extends AbstractButton
 	public void onPress()
 	{
 		this.setSelected(!this.isSelected());
+
+		super.onPress();
 	}
 
 	public boolean isSelected()
@@ -80,32 +78,6 @@ public class CheckBoxWidget extends AbstractButton
 		this.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);
 
 		GuiHelper.drawScaledText(pPoseStack, this.getMessage(), this.x + checkerLength + 1, this.y, this.width - checkerLength - 1, this.getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24, this.isShadow());
-	}
-
-	@Override
-	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
-	{
-		if (this.visible && this.isHoveredOrFocused())
-		{
-			GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
-		}
-
-	}
-
-	@Override
-	public void updateNarration(NarrationElementOutput pNarrationElementOutput)
-	{
-		this.defaultButtonNarrationText(pNarrationElementOutput);
-	}
-
-	public void setTooltip(Component... tooltip)
-	{
-		this.tooltip = tooltip.clone();
-	}
-
-	public Component[] getTooltip()
-	{
-		return this.tooltip.clone();
 	}
 
 	public boolean isShadow()

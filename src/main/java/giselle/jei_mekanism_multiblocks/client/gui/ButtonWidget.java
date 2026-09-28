@@ -3,26 +3,26 @@ package giselle.jei_mekanism_multiblocks.client.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
-public class ButtonWidget extends AbstractButton
+public class ButtonWidget extends ElementWidget
 {
 	private final List<IPressHandler> pressHandlers;
-	private Component[] tooltip;
 
 	public ButtonWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage)
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.pressHandlers = new ArrayList<>();
-		this.tooltip = new Component[0];
+		this.playDownSound = true;
 	}
 
 	public void addPressHandler(IPressHandler handler)
@@ -30,7 +30,6 @@ public class ButtonWidget extends AbstractButton
 		this.pressHandlers.add(handler);
 	}
 
-	@Override
 	public void onPress()
 	{
 		for (IPressHandler handler : this.pressHandlers)
@@ -38,6 +37,29 @@ public class ButtonWidget extends AbstractButton
 			handler.onPress(this);
 		}
 
+	}
+
+	@Override
+	public void onClick(double pMouseX, double pMouseY)
+	{
+		this.onPress();
+	}
+
+	@Override
+	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers)
+	{
+		if (this.active && this.visible)
+		{
+			if (pKeyCode == GLFW.GLFW_KEY_ENTER || pKeyCode == GLFW.GLFW_KEY_SPACE || pKeyCode == GLFW.GLFW_KEY_KP_ENTER)
+			{
+				this.playDownSound(Minecraft.getInstance().getSoundManager());
+				this.onPress();
+				return true;
+			}
+
+		}
+
+		return false;
 	}
 
 	@Override
@@ -56,34 +78,14 @@ public class ButtonWidget extends AbstractButton
 	}
 
 	@Override
-	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
-	{
-		if (this.visible && this.isHoveredOrFocused())
-		{
-			GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltip());
-		}
-
-	}
-
-	@Override
 	public void updateNarration(NarrationElementOutput pNarrationElementOutput)
 	{
 		this.defaultButtonNarrationText(pNarrationElementOutput);
 	}
 
-	public void setTooltip(Component... tooltip)
-	{
-		this.tooltip = tooltip.clone();
-	}
-
-	public Component[] getTooltip()
-	{
-		return this.tooltip.clone();
-	}
-
 	public interface IPressHandler
 	{
-		void onPress(AbstractButton pButton);
+		void onPress(ButtonWidget pButton);
 	}
 
 }

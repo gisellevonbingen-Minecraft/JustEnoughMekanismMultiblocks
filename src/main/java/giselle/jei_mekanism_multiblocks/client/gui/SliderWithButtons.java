@@ -1,7 +1,6 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,7 @@ import com.ibm.icu.text.DecimalFormat;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends ContainerWidget
+public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends ElementWidget
 {
 	public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("+#;-#");
 	public static int SHIFT_DELTA = 5;
@@ -39,9 +38,12 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 		this.onHeightChanged();
 	}
 
-	public void setTooltip(Component... tooltip)
+	@Override
+	protected void onTooltipMessageChanged()
 	{
-		this.getSlider().setTooltip(tooltip);
+		super.onTooltipMessageChanged();
+
+		this.getSlider().setTooltipMessage(this.getTooltipMessage());
 
 		for (Entry<ButtonWidget, Integer> entry : this.button2DirectionMap.entrySet())
 		{
@@ -74,10 +76,10 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 	private void updateAdjustButtonTooltip(ButtonWidget button, int direction)
 	{
 		List<Component> tooltip = new ArrayList<>();
-		Collections.addAll(tooltip, this.getSlider().getTooltip());
+		tooltip.addAll(this.getSlider().getTooltipMessage());
 		tooltip.add(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_normal", DECIMAL_FORMAT.format(direction * NORMAL_DELTA)));
 		tooltip.add(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_shift", DECIMAL_FORMAT.format(direction * SHIFT_DELTA)));
-		button.setTooltip(tooltip.stream().toArray(Component[]::new));
+		button.setTooltipMessage(tooltip);
 	}
 
 	protected void onAdjustButtonPress(int delta)

@@ -10,10 +10,9 @@ import mekanism.api.math.FloatingLong;
 import mekanism.common.util.UnitDisplayUtils;
 import mekanism.common.util.UnitDisplayUtils.EnergyUnit;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public class EnergyEnterScreen extends Screen
+public class EnergyEnterScreen extends WidgetScreen
 {
 	private static final Component COMPONENT_ENTER = Component.translatable("text.jei_mekanism_multiblocks.enter");
 	private static final Component COMPONENT_EXAMPLE = Component.translatable("text.jei_mekanism_multiblocks.example");
@@ -171,11 +170,9 @@ public class EnergyEnterScreen extends Screen
 	}
 
 	@Override
-	public void render(PoseStack pPoseStack, int mouseX, int mouseY, float partialTick)
+	public void renderForeground(PoseStack pPoseStack, int mouseX, int mouseY, float partialTick)
 	{
-		this.renderBackground(pPoseStack);
-
-		super.render(pPoseStack, mouseX, mouseY, partialTick);
+		super.renderForeground(pPoseStack, mouseX, mouseY, partialTick);
 
 		if (this.displayText == null || !this.lastJules.equals(this.jules) || this.lastUnit != this.displayUnit)
 		{

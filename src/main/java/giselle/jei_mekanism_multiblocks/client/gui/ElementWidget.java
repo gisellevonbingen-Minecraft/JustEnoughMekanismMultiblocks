@@ -1,35 +1,45 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import giselle.jei_mekanism_multiblocks.client.GuiHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 
-public class ContainerWidget extends AbstractWidget
+public class ElementWidget extends AbstractWidget
 {
 	private final List<AbstractWidget> children;
 	private final List<AbstractWidget> unmodifiableChildren;
-	private final List<AbstractWidget> functionWidgets;
-	private final List<AbstractWidget> unmodifiableFunctionWidgets;
+
+	private ElementWidget parent;
+	private List<Component> tooltipMessage;
 
 	private AbstractWidget focused;
 
-	public ContainerWidget(int pX, int pY, int pWidth, int pHeight)
+	protected boolean playDownSound;
+
+	public ElementWidget(int pX, int pY, int pWidth, int pHeight)
 	{
-		super(pX, pY, pWidth, pHeight, Component.empty());
+		this(pX, pY, pWidth, pHeight, Component.empty());
+	}
+
+	public ElementWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage)
+	{
+		super(pX, pY, pWidth, pHeight, pMessage);
 
 		this.children = new ArrayList<>();
 		this.unmodifiableChildren = Collections.unmodifiableList(this.children);
-		this.functionWidgets = new ArrayList<>();
-		this.unmodifiableFunctionWidgets = Collections.unmodifiableList(this.functionWidgets);
+
+		this.tooltipMessage = Collections.emptyList();
 	}
 
 	public boolean contains(AbstractWidget widget)
@@ -39,11 +49,11 @@ public class ContainerWidget extends AbstractWidget
 
 	public AbstractWidget getChildUnderMouse(double pMouseX, double pMouseY)
 	{
+		double childMouseX = this.toChildX(pMouseX);
+		double childMouseY = this.toChildY(pMouseY);
+
 		for (AbstractWidget widget : this.getChildren())
 		{
-			double childMouseX = this.toChildX(pMouseX);
-			double childMouseY = this.toChildY(pMouseY);
-
 			if (widget.isMouseOver(childMouseX, childMouseY))
 			{
 				return widget;
@@ -52,6 +62,38 @@ public class ContainerWidget extends AbstractWidget
 		}
 
 		return null;
+	}
+
+	public List<Component> getTooltip(double pMouseX, double pMouseY)
+	{
+		if (this.isMouseOver(pMouseX, pMouseY))
+		{
+			double childMouseX = this.toChildX(pMouseX);
+			double childMouseY = this.toChildY(pMouseY);
+
+			for (AbstractWidget widget : this.getChildren())
+			{
+				if (widget.isMouseOver(childMouseX, childMouseY))
+				{
+					if (widget instanceof ElementWidget elementWidget)
+					{
+						List<Component> tooltip = elementWidget.getTooltip(childMouseX, childMouseY);
+
+						if (tooltip.size() > 0)
+						{
+							return tooltip;
+						}
+
+					}
+
+				}
+
+			}
+
+			return this.getTooltipMessage();
+		}
+
+		return Collections.emptyList();
 	}
 
 	public List<AbstractWidget> getChildren()
@@ -82,11 +124,20 @@ public class ContainerWidget extends AbstractWidget
 
 	protected void onChildAdded(AbstractWidget widget)
 	{
+		if (widget instanceof ElementWidget elementWidget)
+		{
+			elementWidget.onParentChanged(this);
+		}
 
 	}
 
 	protected void onChildRemoved(AbstractWidget widget)
 	{
+		if (widget instanceof ElementWidget elementWidget)
+		{
+			elementWidget.onParentChanged(null);
+		}
+
 		if (this.getFocused() == widget)
 		{
 			this.focused = null;
@@ -97,56 +148,6 @@ public class ContainerWidget extends AbstractWidget
 	public void clearChildren()
 	{
 		new ArrayList<>(this.getChildren()).forEach(this::removeChild);
-	}
-
-	public List<AbstractWidget> getFunctionWidgets()
-	{
-		return this.unmodifiableFunctionWidgets;
-	}
-
-	public <WIDGET extends AbstractWidget> WIDGET addFunctionWidget(WIDGET widget)
-	{
-		this.functionWidgets.add(widget);
-		this.onFunctionWidgetAdded(widget);
-		return widget;
-	}
-
-	public boolean removeFunctionWidget(AbstractWidget widget)
-	{
-		if (this.functionWidgets.remove(widget))
-		{
-			this.onFunctionWidgetRemoved(widget);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-
-	}
-
-	protected void onFunctionWidgetAdded(AbstractWidget widget)
-	{
-
-	}
-
-	protected void onFunctionWidgetRemoved(AbstractWidget widget)
-	{
-		if (this.getFocused() == widget)
-		{
-			this.focused = null;
-		}
-
-	}
-
-	public void clearFunctionWidgets()
-	{
-		new ArrayList<>(this.getFunctionWidgets()).forEach(this::removeFunctionWidget);
-	}
-
-	public List<List<AbstractWidget>> getFunctionableWidgets()
-	{
-		return Arrays.asList(this.getChildren(), this.getFunctionWidgets());
 	}
 
 	public AbstractWidget getFocused()
@@ -195,7 +196,6 @@ public class ContainerWidget extends AbstractWidget
 	protected void onHeightChanged()
 	{
 		this.onSizeChanged();
-
 	}
 
 	protected void onSizeChanged()
@@ -230,13 +230,14 @@ public class ContainerWidget extends AbstractWidget
 			int childMouseX = (int) this.toChildX(pMouseX);
 			int childMouseY = (int) this.toChildY(pMouseY);
 
-			for (List<AbstractWidget> widgets : this.getFunctionableWidgets())
+			for (AbstractWidget widget : this.getChildren())
 			{
-				for (AbstractWidget widget : widgets)
-				{
-					this.onRenderWidget(widgets, widget, pPoseStack, childMouseX, childMouseY, pPartialTicks);
-				}
+				this.onRenderWidgetBackground(widget, pPoseStack, childMouseX, childMouseY, pPartialTicks);
+			}
 
+			for (AbstractWidget widget : this.getChildren())
+			{
+				this.onRenderWidgetForeground(widget, pPoseStack, childMouseX, childMouseY, pPartialTicks);
 			}
 
 			pPoseStack.popPose();
@@ -244,7 +245,12 @@ public class ContainerWidget extends AbstractWidget
 
 	}
 
-	protected void onRenderWidget(List<AbstractWidget> widgets, AbstractWidget widget, PoseStack pPoseStack, int childMouseX, int childMouseY, float pPartialTicks)
+	protected void onRenderWidgetBackground(AbstractWidget widget, PoseStack pPoseStack, int childMouseX, int childMouseY, float pPartialTicks)
+	{
+
+	}
+
+	protected void onRenderWidgetForeground(AbstractWidget widget, PoseStack pPoseStack, int childMouseX, int childMouseY, float pPartialTicks)
 	{
 		widget.render(pPoseStack, childMouseX, childMouseY, pPartialTicks);
 	}
@@ -256,6 +262,22 @@ public class ContainerWidget extends AbstractWidget
 	}
 
 	@Override
+	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
+	{
+		if (this.visible && this.isHoveredOrFocused())
+		{
+			GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, this.getTooltipMessage());
+
+			for (AbstractWidget widget : this.getChildren())
+			{
+				widget.renderToolTip(pPoseStack, pMouseX, pMouseY);
+			}
+
+		}
+
+	}
+
+	@Override
 	public boolean mouseClicked(double pMouseX, double pMouseY, int pButton)
 	{
 		if (this.active && this.visible)
@@ -263,16 +285,12 @@ public class ContainerWidget extends AbstractWidget
 			double childMouseX = this.toChildX(pMouseX);
 			double childMouseY = this.toChildY(pMouseY);
 
-			for (List<AbstractWidget> widgets : this.getFunctionableWidgets())
+			for (AbstractWidget widget : this.getChildren())
 			{
-				for (AbstractWidget widget : widgets)
+				if (widget.mouseClicked(childMouseX, childMouseY, pButton))
 				{
-					if (widget.mouseClicked(childMouseX, childMouseY, pButton))
-					{
-						this.focused = widget;
-						return true;
-					}
-
+					this.focused = widget;
+					return true;
 				}
 
 			}
@@ -321,15 +339,11 @@ public class ContainerWidget extends AbstractWidget
 			double childMouseX = this.toChildX(pMouseX);
 			double childMouseY = this.toChildY(pMouseY);
 
-			for (List<AbstractWidget> widgets : this.getFunctionableWidgets())
+			for (AbstractWidget widget : this.getChildren())
 			{
-				for (AbstractWidget widget : widgets)
+				if (widget.mouseScrolled(childMouseX, childMouseY, pDelta))
 				{
-					if (widget.mouseScrolled(childMouseX, childMouseY, pDelta))
-					{
-						return true;
-					}
-
+					return true;
 				}
 
 			}
@@ -340,37 +354,72 @@ public class ContainerWidget extends AbstractWidget
 	}
 
 	@Override
-	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
-	{
-		super.renderToolTip(pPoseStack, pMouseX, pMouseY);
-
-		pPoseStack.pushPose();
-		this.transformClient(pPoseStack);
-		int childMouseX = (int) this.toChildX(pMouseX);
-		int childMouseY = (int) this.toChildY(pMouseY);
-
-		for (List<AbstractWidget> widgets : this.getFunctionableWidgets())
-		{
-			for (AbstractWidget widget : widgets)
-			{
-				widget.renderToolTip(pPoseStack, childMouseX, childMouseY);
-			}
-
-		}
-
-		pPoseStack.popPose();
-	}
-
-	@Override
 	public void playDownSound(SoundManager pHandler)
 	{
+		if (this.playDownSound)
+		{
+			super.playDownSound(pHandler);
+		}
 
+	}
+
+	protected void playDownSound()
+	{
+		super.playDownSound(Minecraft.getInstance().getSoundManager());
 	}
 
 	@Override
 	public void updateNarration(NarrationElementOutput pNarrationElementOutput)
 	{
 
+	}
+
+	public void onParentChanged(ElementWidget parent)
+	{
+		this.parent = parent;
+	}
+
+	public ElementWidget getParent()
+	{
+		return this.parent;
+	}
+
+	public void setTooltipMessage(Component... tooltip)
+	{
+		if (tooltip == null || tooltip.length == 0)
+		{
+			this.tooltipMessage = Collections.emptyList();
+		}
+		else
+		{
+			this.tooltipMessage = ImmutableList.copyOf(tooltip);
+		}
+
+		this.onTooltipMessageChanged();
+	}
+
+	public void setTooltipMessage(List<Component> tooltip)
+	{
+		if (tooltip == null || tooltip.size() == 0)
+		{
+			this.tooltipMessage = Collections.emptyList();
+		}
+		else
+		{
+			this.tooltipMessage = ImmutableList.copyOf(tooltip);
+		}
+
+		this.onTooltipMessageChanged();
+	}
+
+	protected void onTooltipMessageChanged()
+	{
+
+	}
+
+	public List<Component> getTooltipMessage()
+	{
+		return new ArrayList<>(this.tooltipMessage);
 	}
 
 }

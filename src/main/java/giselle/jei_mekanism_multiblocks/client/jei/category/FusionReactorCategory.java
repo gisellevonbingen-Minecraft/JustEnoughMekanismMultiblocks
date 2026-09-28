@@ -233,13 +233,13 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			{
 				int limitedInjectionRate = Math.min(this.getInjectionRate(), FusionReactorMultiblockData.MAX_INJECTION);
 				Component tooltip = Component.translatable("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate);
-				this.waterCooledCheckBox.setTooltip(tooltip);
-				this.injectionRateWidget.setTooltip(tooltip);
+				this.waterCooledCheckBox.setTooltipMessage(tooltip);
+				this.injectionRateWidget.setTooltipMessage(tooltip);
 			}
 			else
 			{
-				this.waterCooledCheckBox.setTooltip();
-				this.injectionRateWidget.setTooltip();
+				this.waterCooledCheckBox.setTooltipMessage();
+				this.injectionRateWidget.setTooltipMessage();
 			}
 
 		}
@@ -349,7 +349,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 			if (lasersCategory != null)
 			{
-				requiredLaserEnergyWidget.setTooltip(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_to_simulate", lasersCategory.getName()));
+				requiredLaserEnergyWidget.setTooltipMessage(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_to_simulate", lasersCategory.getName()));
 				requiredLaserEnergyWidget.addPressHandler(this::onResultWidgetPress);
 			}
 
@@ -360,10 +360,10 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			{
 				Component injectionRateTooltip = Component.translatable("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate);
 				ResultWidget watTankWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(waterTank));
-				watTankWidget.setTooltip(injectionRateTooltip);
+				watTankWidget.setTooltipMessage(injectionRateTooltip);
 				consumer.accept(watTankWidget);
 				ResultWidget steamTankWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(steamTank));
-				steamTankWidget.setTooltip(injectionRateTooltip);
+				steamTankWidget.setTooltipMessage(injectionRateTooltip);
 				consumer.accept(steamTankWidget);
 			}
 

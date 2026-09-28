@@ -8,17 +8,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector4f;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
+import giselle.jei_mekanism_multiblocks.client.gui.ElementWidget;
 import mekanism.common.util.text.TextUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class CostWidget extends AbstractWidget
+public class CostWidget extends ElementWidget
 {
 	private final ItemStack itemStack;
 	private final boolean hasCountExpressionComponent;
@@ -61,6 +60,8 @@ public class CostWidget extends AbstractWidget
 		this.countTotalComponent = Component.literal("=").append(TextUtils.format(count));
 		this.headTooltip = new Component[0];
 		this.tailTooltip = new Component[0];
+
+		this.updateTooltip();
 	}
 
 	@Override
@@ -94,25 +95,6 @@ public class CostWidget extends AbstractWidget
 
 	}
 
-	@Override
-	public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
-	{
-		super.renderToolTip(pPoseStack, pMouseX, pMouseY);
-
-		Minecraft minecraft = Minecraft.getInstance();
-
-		if (minecraft.screen != null && this.visible && this.isHoveredOrFocused())
-		{
-			List<Component> tooltip = new ArrayList<>();
-			tooltip.addAll(Arrays.asList(this.getHeadTooltip()));
-			tooltip.addAll(minecraft.screen.getTooltipFromItem(this.getItemStack()));
-			tooltip.addAll(Arrays.asList(this.getTailTooltip()));
-
-			GuiHelper.renderComponentTooltip(pPoseStack, pMouseX, pMouseY, tooltip);
-		}
-
-	}
-
 	public Rect2i getItemBounds()
 	{
 		int itemX = this.x + 2;
@@ -125,6 +107,16 @@ public class CostWidget extends AbstractWidget
 		return this.itemStack;
 	}
 
+	protected void updateTooltip()
+	{
+		Minecraft minecraft = Minecraft.getInstance();
+		List<Component> tooltip = new ArrayList<>();
+		tooltip.addAll(Arrays.asList(this.getHeadTooltip()));
+		tooltip.addAll(minecraft.screen.getTooltipFromItem(this.getItemStack()));
+		tooltip.addAll(Arrays.asList(this.getTailTooltip()));
+		this.setTooltipMessage(tooltip);
+	}
+
 	public Component[] getHeadTooltip()
 	{
 		return this.headTooltip.clone();
@@ -133,6 +125,7 @@ public class CostWidget extends AbstractWidget
 	public void setHeadTooltip(Component... tooltip)
 	{
 		this.headTooltip = tooltip.clone();
+		this.updateTooltip();
 	}
 
 	public Component[] getTailTooltip()
@@ -143,12 +136,7 @@ public class CostWidget extends AbstractWidget
 	public void setTailTooltip(Component... tooltip)
 	{
 		this.tailTooltip = tooltip.clone();
-	}
-
-	@Override
-	public void updateNarration(NarrationElementOutput pNarrationElementOutput)
-	{
-
+		this.updateTooltip();
 	}
 
 }

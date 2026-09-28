@@ -2,7 +2,6 @@ package giselle.jei_mekanism_multiblocks.client.jei;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.world.item.ItemStack;
@@ -14,26 +13,9 @@ public class CostList extends ListLineWidget
 		super(pX, pY, pWidth, pHeight, itemHeight);
 	}
 
-	public Optional<Object> getIngredientUnderMouse(double pMouseX, double pMouseY)
-	{
-		for (AbstractWidget widget : this.getChildren())
-		{
-			double childMouseX = this.toChildX(pMouseX);
-			double childMouseY = this.toChildY(pMouseY);
-
-			if (widget instanceof CostWidget cost && widget.isMouseOver(childMouseX, childMouseY))
-			{
-				return Optional.ofNullable(cost.getItemStack());
-			}
-
-		}
-
-		return Optional.empty();
-	}
-
 	public void updateCosts(List<CostWidget> widgets)
 	{
-		this.clearChildren();
+		this.getItems().clearChildren();
 
 		for (CostWidget widget : widgets)
 		{
@@ -42,7 +24,7 @@ public class CostList extends ListLineWidget
 				continue;
 			}
 
-			this.addChild(widget);
+			this.getItems().addChild(widget);
 		}
 
 	}
@@ -51,7 +33,7 @@ public class CostList extends ListLineWidget
 	{
 		List<ItemStack> costs = new ArrayList<>();
 
-		for (AbstractWidget widget : this.getChildren())
+		for (AbstractWidget widget : this.getItems().getChildren())
 		{
 			if (widget instanceof CostWidget cost)
 			{

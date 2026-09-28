@@ -117,7 +117,12 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 		float partialTicks = minecraft.getDeltaFrameTime();
 		widget.updateInput(mouseX, mouseY);
 		widget.render(pPoseStack, (int) mouseX, (int) mouseY, partialTicks);
-		widget.renderToolTip(pPoseStack, (int) mouseX, (int) mouseY);
+	}
+
+	@Override
+	public List<Component> getTooltipStrings(WIDGET widget, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY)
+	{
+		return widget.getTooltip(mouseX, mouseY);
 	}
 
 	@Override
