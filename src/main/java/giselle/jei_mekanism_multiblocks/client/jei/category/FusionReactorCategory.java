@@ -13,6 +13,9 @@ import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.category.LasersCategory.LaserWidget;
+import giselle.jei_mekanism_multiblocks.client.preview.IPreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelector;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelectors;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.Chemical;
@@ -31,6 +34,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet.Named;
 import net.minecraft.nbt.CompoundTag;
@@ -38,6 +42,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidType;
 
 public class FusionReactorCategory extends MultiblockCategory<FusionReactorCategory.FusionReactorCategoryWidget>
@@ -71,6 +76,14 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 	public static class FusionReactorCategoryWidget extends MultiblockWidget
 	{
+		private static final byte[][] PREVIEW_SHELL_PATTERN = {//
+				{0, 0, 1, 0, 0}, //
+				{0, 1, 2, 1, 0}, //
+				{1, 2, 2, 2, 1}, //
+				{0, 1, 2, 1, 0}, //
+				{0, 0, 1, 0, 0}//
+		};
+
 		private static final double burnTemperature = 100_000_000.0D;
 		private static final double plasmaHeatCapacity = 100.0D;
 		private static final double noBurningFactor = 10.0D;
@@ -231,6 +244,34 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 				this.injectionRateWidget.setTooltip(null);
 			}
 
+		}
+
+		@Override
+		public boolean canCreatePreview()
+		{
+			return true;
+		}
+
+		@Override
+		protected void fillPreview(IPreviewBuilder builder)
+		{
+			super.fillPreview(builder);
+
+			BlockPos controllerPos = new BlockPos(2, 4, 2);
+			BlockPos laserFocusMatrixPos = new BlockPos(2, 2, 4);
+
+			BlockState frameState = GeneratorsBlocks.FUSION_REACTOR_FRAME.defaultState();
+			BlockState sideState = this.isUseGlass() ? this.getGlassBlock().defaultBlockState() : frameState;
+			PreviewSelector framePositions = PreviewSelectors.shellPattern(PREVIEW_SHELL_PATTERN, value -> value == 1);
+			PreviewSelector sidePositions = PreviewSelectors.shellPattern(PREVIEW_SHELL_PATTERN, value -> value == 2);
+			PreviewSelector portPositions = PreviewSelectors.shellSidesCCW().and(sidePositions);
+
+			builder.setBlock(framePositions, frameState);
+			builder.setBlock(sidePositions, sideState);
+			builder.setBlock(controllerPos, GeneratorsBlocks.FUSION_REACTOR_CONTROLLER.defaultState());
+			builder.setBlock(laserFocusMatrixPos, GeneratorsBlocks.LASER_FOCUS_MATRIX.defaultState());
+			builder.replaceBlock(portPositions, sideState, GeneratorsBlocks.FUSION_REACTOR_PORT.defaultState(), this.getPortCount());
+			builder.replaceBlock(portPositions, sideState, GeneratorsBlocks.FUSION_REACTOR_LOGIC_ADAPTER.defaultState(), this.getLogicAdapterCount());
 		}
 
 		@Override

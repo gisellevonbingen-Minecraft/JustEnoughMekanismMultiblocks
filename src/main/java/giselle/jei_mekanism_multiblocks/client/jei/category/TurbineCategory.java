@@ -9,6 +9,9 @@ import giselle.jei_mekanism_multiblocks.client.jei.CostWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import giselle.jei_mekanism_multiblocks.client.preview.IPreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelector;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelectors;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.api.math.MathUtils;
 import mekanism.common.config.MekanismConfig;
@@ -26,12 +29,15 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineWidget>
 {
@@ -222,6 +228,40 @@ public class TurbineCategory extends MultiblockCategory<TurbineCategory.TurbineW
 		protected void onValvesChanged(int valves)
 		{
 			this.markNeedUpdate();
+		}
+
+		@Override
+		public boolean canCreatePreview()
+		{
+			return true;
+		}
+
+		@Override
+		protected void fillPreview(IPreviewBuilder builder)
+		{
+			super.fillPreview(builder);
+
+			int rotorCount = this.getRotorCount();
+			int complexY = rotorCount + 1;
+			int upperInnerY = complexY + 1;
+
+			Vec3i dimension = this.getDimension();
+			int centerX = dimension.getX() / 2;
+			int centerZ = dimension.getZ() / 2;
+			BlockPos complexPos = new BlockPos(centerX, complexY, centerZ);
+
+			BlockState casingState = GeneratorsBlocks.TURBINE_CASING.defaultState();
+			BlockState sideState = this.isUseGlass() ? this.getGlassBlock().defaultBlockState() : casingState;
+			PreviewSelector shellSides = PreviewSelectors.shellSidesCCW();
+
+			builder.setBlockShell(casingState, sideState);
+			builder.replaceBlock(shellSides.and(PreviewSelectors.toTop(context -> complexY)), sideState, GeneratorsBlocks.TURBINE_VENT.defaultState(), this.getVentCount());
+			builder.replaceBlock(shellSides, sideState, GeneratorsBlocks.TURBINE_VALVE.defaultState(), this.getValveCount());
+			builder.setBlock(PreviewSelectors.column(context -> new BlockPos(centerX, 1, centerZ), context -> rotorCount), GeneratorsBlocks.TURBINE_ROTOR.defaultState());
+			builder.setBlock(PreviewSelectors.innerPlane(context -> complexY), MekanismBlocks.PRESSURE_DISPERSER.defaultState());
+			builder.setBlock(complexPos, GeneratorsBlocks.ROTATIONAL_COMPLEX.defaultState());
+			builder.setBlock(PreviewSelectors.planeSpiralCCW(context -> new BlockPos(centerX, upperInnerY, centerZ), context -> this.getNeededCoilCount(this.getBladeCount(rotorCount))), GeneratorsBlocks.ELECTROMAGNETIC_COIL.defaultState());
+			builder.replaceBlock(PreviewSelectors.innerCube(context -> upperInnerY, context -> dimension.getY() - rotorCount - 3), Blocks.AIR.defaultBlockState(), GeneratorsBlocks.SATURATING_CONDENSER.defaultState(), this.getCondenserCount());
 		}
 
 		@Override

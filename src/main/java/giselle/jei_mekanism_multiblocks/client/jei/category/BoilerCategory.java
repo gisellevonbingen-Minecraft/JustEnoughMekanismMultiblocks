@@ -12,6 +12,8 @@ import giselle.jei_mekanism_multiblocks.client.jei.CostWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import giselle.jei_mekanism_multiblocks.client.preview.IPreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelectors;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.api.datamaps.IMekanismDataMapTypes;
 import mekanism.api.datamaps.chemical.attribute.HeatedCoolant;
@@ -34,6 +36,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -230,6 +233,31 @@ public class BoilerCategory extends MultiblockCategory<BoilerCategory.BoilerWidg
 			}
 
 			this.markNeedUpdate();
+		}
+
+		@Override
+		public boolean canCreatePreview()
+		{
+			return true;
+		}
+
+		@Override
+		protected void fillPreview(IPreviewBuilder builder)
+		{
+			super.fillPreview(builder);
+
+			Vec3i dimension = this.getDimension();
+			int pressureDispenserY = dimension.getY() - 1 - this.getSteamHeight();
+			int superheatingElementY = dimension.getY() - 2 - this.getSteamHeight();
+
+			BlockState edgeState = MekanismBlocks.BOILER_CASING.defaultState();
+			BlockState valveState = MekanismBlocks.BOILER_VALVE.defaultState();
+			BlockState sideState = this.isUseGlass() ? this.getGlassBlock().defaultBlockState() : edgeState;
+
+			builder.setBlockShell(edgeState, sideState);
+			builder.replaceBlock(PreviewSelectors.shellSidesCCW(), sideState, valveState, this.getValveCount());
+			builder.setBlock(PreviewSelectors.innerPlane(context -> pressureDispenserY), MekanismBlocks.PRESSURE_DISPERSER.defaultState());
+			builder.setBlock(PreviewSelectors.innerCube(context -> 1, context -> superheatingElementY), MekanismBlocks.SUPERHEATING_ELEMENT.defaultState(), this.getHeatingElementCount());
 		}
 
 		@Override

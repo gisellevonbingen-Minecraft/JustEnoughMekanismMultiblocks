@@ -6,20 +6,27 @@ import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import giselle.jei_mekanism_multiblocks.client.preview.IPreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelector;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelectors;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.api.math.MathUtils;
 import mekanism.common.Mekanism;
 import mekanism.common.MekanismLang;
+import mekanism.common.block.attribute.Attribute;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.util.text.EnergyDisplay;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 {
@@ -42,6 +49,16 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 
 	public static class SPSWidget extends MultiblockWidget
 	{
+		private static final byte[][] PREVIEW_SHELL_PATTERN = {//
+				{0, 0, 1, 1, 1, 0, 0}, //
+				{0, 1, 2, 2, 2, 1, 0}, //
+				{1, 2, 2, 2, 2, 2, 1}, //
+				{1, 2, 2, 2, 2, 2, 1}, //
+				{1, 2, 2, 2, 2, 2, 1}, //
+				{0, 1, 2, 2, 2, 1, 0}, //
+				{0, 0, 1, 1, 1, 0, 0}//
+		};
+
 		protected IntSliderWithButtons portsWidget;
 
 		public SPSWidget()
@@ -72,6 +89,34 @@ public class SPSCategory extends MultiblockCategory<SPSCategory.SPSWidget>
 			super.save(tag);
 
 			tag.putInt("PortCount", this.getPortCount());
+		}
+
+		@Override
+		public boolean canCreatePreview()
+		{
+			return true;
+		}
+
+		@Override
+		protected void fillPreview(IPreviewBuilder builder)
+		{
+			super.fillPreview(builder);
+
+			BlockPos superchargedPortPos = new BlockPos(0, 3, 3);
+			BlockPos superchangedCoilPos = new BlockPos(1, 3, 3);
+
+			BlockState casingState = MekanismBlocks.SPS_CASING.defaultState();
+			BlockState sideState = this.isUseGlass() ? this.getGlassBlock().defaultBlockState() : casingState;
+			BlockState portState = MekanismBlocks.SPS_PORT.defaultState();
+			PreviewSelector casingPositions = PreviewSelectors.shellPattern(PREVIEW_SHELL_PATTERN, value -> value == 1);
+			PreviewSelector sidePositions = PreviewSelectors.shellPattern(PREVIEW_SHELL_PATTERN, value -> value == 2);
+			PreviewSelector portPositions = PreviewSelectors.shellSidesCCW().and(sidePositions);
+
+			builder.setBlock(casingPositions, casingState);
+			builder.setBlock(sidePositions, sideState);
+			builder.setBlock(superchargedPortPos, portState);
+			builder.setBlock(superchangedCoilPos, Attribute.setFacing(MekanismBlocks.SUPERCHARGED_COIL.defaultState(), Direction.EAST));
+			builder.replaceBlock(portPositions, sideState, portState, Math.max(0, this.getPortCount() - 1));
 		}
 
 		@Override
