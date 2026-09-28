@@ -7,6 +7,8 @@ import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import giselle.jei_mekanism_multiblocks.client.preview.IPreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelectors;
 import mekanism.common.Mekanism;
 import mekanism.common.MekanismLang;
 import mekanism.common.registries.MekanismBlocks;
@@ -18,6 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidget>
 {
@@ -80,6 +83,25 @@ public class MatrixCategory extends MultiblockCategory<MatrixCategory.MatrixWidg
 			super.save(tag);
 
 			tag.putInt("PortCount", this.getPortCount());
+		}
+
+		@Override
+		public boolean canCreatePreview()
+		{
+			return true;
+		}
+
+		@Override
+		protected void fillPreview(IPreviewBuilder builder)
+		{
+			super.fillPreview(builder);
+
+			BlockState edgeState = MekanismBlocks.INDUCTION_CASING.getBlock().defaultBlockState();
+			BlockState valveState = MekanismBlocks.INDUCTION_PORT.getBlock().defaultBlockState();
+			BlockState sideState = this.isUseGlass() ? this.getGlassBlock().defaultBlockState() : edgeState;
+
+			builder.setBlockShell(edgeState, sideState);
+			builder.replaceBlock(PreviewSelectors.shellSidesCCW(), sideState, valveState, this.getPortCount());
 		}
 
 		@Override
