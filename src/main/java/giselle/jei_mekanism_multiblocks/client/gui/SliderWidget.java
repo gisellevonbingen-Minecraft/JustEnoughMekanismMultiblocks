@@ -83,11 +83,11 @@ public class SliderWidget extends AbstractWidget
 			RenderSystem.defaultBlendFunc();
 			RenderSystem.enableDepthTest();
 			GuiHelper.blitButton(pGuiGraphics, cursorX, cursorY, cursorWidth, cursorHeight, true, this.isHoveredOrFocused());
-
 		}
 
 		int j = this.getFGColor();
-		GuiHelper.drawScaledText(pGuiGraphics, this.getMessage(), this.getX() + 2, this.getY() + 1, this.width - 4, j, true, TextAlignment.CENTER);
+		int lineHeight = Minecraft.getInstance().font.lineHeight;
+		GuiHelper.drawScaledText(pGuiGraphics, this.getMessage(), this.getX() + 2, this.getY() + 1 + (this.height - lineHeight) / 2, this.width - 4, j, true, TextAlignment.CENTER);
 	}
 
 	protected void setRatioFromMouse(double pMouseX, double pMouseY)
