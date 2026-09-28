@@ -2,13 +2,10 @@ package giselle.jei_mekanism_multiblocks.client.gui;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
-public class LabelWidget extends AbstractWidget
+public class LabelWidget extends ElementWidget
 {
 	private boolean shadow;
 	private TextAlignment alignment;
@@ -31,12 +28,6 @@ public class LabelWidget extends AbstractWidget
 		int color = this.getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24;
 		Component message = this.getMessage();
 		GuiHelper.drawScaledText(pGuiGraphics, message, this.getX(), this.getY(), this.width, color, this.isShadow(), this.getAlignment());
-	}
-
-	@Override
-	public void playDownSound(SoundManager pHandler)
-	{
-
 	}
 
 	public boolean isShadow()
@@ -62,12 +53,6 @@ public class LabelWidget extends AbstractWidget
 		}
 
 		this.alignment = alignment;
-	}
-
-	@Override
-	protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput)
-	{
-
 	}
 
 }

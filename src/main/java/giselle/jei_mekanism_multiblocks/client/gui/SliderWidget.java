@@ -9,15 +9,13 @@ import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import it.unimi.dsi.fastutil.doubles.DoubleConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 
-public class SliderWidget extends AbstractWidget
+public class SliderWidget extends ElementWidget
 {
 	private final List<DoubleConsumer> ratioChangeHandlers;
 	private double ratio;
@@ -193,17 +191,11 @@ public class SliderWidget extends AbstractWidget
 	}
 
 	@Override
-	public void playDownSound(SoundManager pHandler)
-	{
-
-	}
-
-	@Override
 	public void onRelease(double pMouseX, double pMouseY)
 	{
 		super.onRelease(pMouseX, pMouseY);
 
-		super.playDownSound(Minecraft.getInstance().getSoundManager());
+		this.playDownSound();
 	}
 
 	@Override

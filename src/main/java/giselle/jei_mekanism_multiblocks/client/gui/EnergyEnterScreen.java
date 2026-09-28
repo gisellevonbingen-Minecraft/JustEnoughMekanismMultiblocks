@@ -10,10 +10,9 @@ import mekanism.common.util.UnitDisplayUtils;
 import mekanism.common.util.UnitDisplayUtils.EnergyUnit;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public class EnergyEnterScreen extends Screen
+public class EnergyEnterScreen extends WidgetScreen
 {
 	private static final Component COMPONENT_ENTER = Component.translatable("text.jei_mekanism_multiblocks.enter");
 	private static final Component COMPONENT_EXAMPLE = Component.translatable("text.jei_mekanism_multiblocks.example");
@@ -170,9 +169,9 @@ public class EnergyEnterScreen extends Screen
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick)
+	public void renderForeground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick)
 	{
-		super.render(guiGraphics, mouseX, mouseY, partialTick);
+		super.renderForeground(guiGraphics, mouseX, mouseY, partialTick);
 
 		if (this.displayText == null || this.lastJules != this.jules || this.lastUnit != this.displayUnit)
 		{

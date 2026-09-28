@@ -1,7 +1,6 @@
 package giselle.jei_mekanism_multiblocks.client.gui;
 
 import java.text.DecimalFormat;
-import java.util.Arrays;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,14 +20,12 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import mekanism.generators.common.GeneratorsLang;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
-public class FissionLayoutScreen extends Screen
+public class FissionLayoutScreen extends WidgetScreen
 {
 	private static final ResourceLocation TEXTURE = JEI_MekanismMultiblocks.rl("textures/gui/fission_layout.png");
 	private static final Int2ObjectMap<Component> PILLAR_COMPONENT_CACHE = new Int2ObjectOpenHashMap<>();
@@ -163,9 +160,9 @@ public class FissionLayoutScreen extends Screen
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick)
+	public void renderForeground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick)
 	{
-		super.render(guiGraphics, mouseX, mouseY, partialTick);
+		super.renderForeground(guiGraphics, mouseX, mouseY, partialTick);
 
 		Layout layout = this.layout;
 
@@ -236,24 +233,19 @@ public class FissionLayoutScreen extends Screen
 		if (this.resultDirty)
 		{
 			this.resultDirty = false;
-			this.resultsList.clearChildren();
-			this.resultsList.addChild(new ResultWidget(COMPONENT_BOIL_EFFICIENCY, Component.literal(String.valueOf(Math.round(this.simulation.getBoilEfficiency() * 1000.0D) / 1000.0D))));
-			this.resultsList.addChild(new ResultWidget(COMPONENT_MAX_BURN_RATE, VolumeTextHelper.formatMBt(this.burnRateSlider.getSlider().getMaxValue())));
-			this.simulation.createStableTempWidgets(this.resultsList::addChild);
+			ElementWidget resultsItems = this.resultsList.getItems();
+			resultsItems.clearChildren();
+			resultsItems.addChild(new ResultWidget(COMPONENT_BOIL_EFFICIENCY, Component.literal(String.valueOf(Math.round(this.simulation.getBoilEfficiency() * 1000.0D) / 1000.0D))));
+			resultsItems.addChild(new ResultWidget(COMPONENT_MAX_BURN_RATE, VolumeTextHelper.formatMBt(this.burnRateSlider.getSlider().getMaxValue())));
+			this.simulation.createStableTempWidgets(resultsItems::addChild);
 
 			long coolantCapacity = this.simulation.getCooledCoolantCapacity();
 			long heatedCoolantCapacity = this.simulation.getHeatedCoolantCapacity();
 			long fuelCapacity = this.simulation.getFuelCapacity();
-			this.resultsList.addChild(new ResultWidget(GeneratorsLang.FISSION_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(coolantCapacity)));
-			this.resultsList.addChild(new ResultWidget(GeneratorsLang.FISSION_FUEL_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
-			this.resultsList.addChild(new ResultWidget(GeneratorsLang.FISSION_HEATED_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(heatedCoolantCapacity)));
-			this.resultsList.addChild(new ResultWidget(GeneratorsLang.FISSION_WASTE_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
-		}
-
-		if (this.resultsList.getChildUnderMouse(mouseX, mouseY) instanceof ResultWidget result)
-		{
-			Component[] tooltip = result.getJeiTooltip();
-			guiGraphics.renderComponentTooltip(this.font, Arrays.asList(tooltip), mouseX, mouseY);
+			resultsItems.addChild(new ResultWidget(GeneratorsLang.FISSION_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(coolantCapacity)));
+			resultsItems.addChild(new ResultWidget(GeneratorsLang.FISSION_FUEL_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
+			resultsItems.addChild(new ResultWidget(GeneratorsLang.FISSION_HEATED_COOLANT_TANK.translate(), VolumeTextHelper.formatMB(heatedCoolantCapacity)));
+			resultsItems.addChild(new ResultWidget(GeneratorsLang.FISSION_WASTE_TANK.translate(), VolumeTextHelper.formatMB(fuelCapacity)));
 		}
 
 	}
@@ -402,7 +394,7 @@ public class FissionLayoutScreen extends Screen
 		this.layoutDirty = true;
 	}
 
-	private void onButtonPress(AbstractButton button)
+	private void onButtonPress(ButtonWidget button)
 	{
 		if (button == this.resetButton)
 		{

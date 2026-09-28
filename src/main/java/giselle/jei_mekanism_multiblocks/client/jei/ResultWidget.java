@@ -3,19 +3,17 @@ package giselle.jei_mekanism_multiblocks.client.jei;
 import java.util.ArrayList;
 import java.util.List;
 
-import giselle.jei_mekanism_multiblocks.client.gui.ContainerWidget;
+import giselle.jei_mekanism_multiblocks.client.gui.ElementWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.TextAlignment;
 import net.minecraft.network.chat.Component;
 
-public class ResultWidget extends ContainerWidget
+public class ResultWidget extends ElementWidget
 {
 	private final LabelWidget textLabel;
 	private final LabelWidget valueLabel;
 
 	private final List<IPressHandler> pressHandlers;
-
-	private Component[] jeiTooltip;
 
 	public ResultWidget(Component text, Component value)
 	{
@@ -37,8 +35,6 @@ public class ResultWidget extends ContainerWidget
 
 		this.updateChildrenHorizontal();
 		this.updateChildrenVertical();
-
-		this.jeiTooltip = new Component[0];
 	}
 
 	public void addPressHandler(IPressHandler handler)
@@ -112,16 +108,6 @@ public class ResultWidget extends ContainerWidget
 	public LabelWidget getValueLabel()
 	{
 		return this.valueLabel;
-	}
-
-	public Component[] getJeiTooltip()
-	{
-		return jeiTooltip;
-	}
-
-	public void setJeiTooltip(Component... jeiTooltip)
-	{
-		this.jeiTooltip = jeiTooltip.clone();
 	}
 
 	public interface IPressHandler

@@ -9,12 +9,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
-public class CheckBoxWidget extends AbstractButton
+public class CheckBoxWidget extends ButtonWidget
 {
 	private final List<Consumer<Boolean>> selectedChangedHandlers;
 	private boolean selected;
@@ -38,6 +36,8 @@ public class CheckBoxWidget extends AbstractButton
 	public void onPress()
 	{
 		this.setSelected(!this.isSelected());
+
+		super.onPress();
 	}
 
 	public boolean isSelected()
@@ -74,13 +74,6 @@ public class CheckBoxWidget extends AbstractButton
 
 		int j = getFGColor();
 		GuiHelper.drawScaledText(pGuiGraphics, this.getMessage(), this.getX() + checkerLength + 1, this.getY(), this.width - checkerLength - 1, j | Mth.ceil(this.alpha * 255.0F) << 24, this.isShadow());
-	}
-
-	@Override
-	protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput)
-	{
-		this.defaultButtonNarrationText(pNarrationElementOutput);
-
 	}
 
 	public boolean isShadow()
