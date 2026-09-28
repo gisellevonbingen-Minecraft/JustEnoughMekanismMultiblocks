@@ -13,26 +13,9 @@ public class CostList extends ListLineWidget
 		super(pX, pY, pWidth, pHeight, itemHeight);
 	}
 
-	public CostWidget getCostUnderMouse(double pMouseX, double pMouseY)
-	{
-		for (AbstractWidget widget : this.getChildren())
-		{
-			double childMouseX = this.toChildX(pMouseX);
-			double childMouseY = this.toChildY(pMouseY);
-
-			if (widget instanceof CostWidget cost && widget.isMouseOver(childMouseX, childMouseY))
-			{
-				return cost;
-			}
-
-		}
-
-		return null;
-	}
-
 	public void updateCosts(List<CostWidget> widgets)
 	{
-		this.clearChildren();
+		this.getItems().clearChildren();
 
 		for (CostWidget widget : widgets)
 		{
@@ -41,7 +24,7 @@ public class CostList extends ListLineWidget
 				continue;
 			}
 
-			this.addChild(widget);
+			this.getItems().addChild(widget);
 		}
 
 	}
@@ -50,7 +33,7 @@ public class CostList extends ListLineWidget
 	{
 		List<ItemStack> costs = new ArrayList<>();
 
-		for (AbstractWidget widget : this.getChildren())
+		for (AbstractWidget widget : this.getItems().getChildren())
 		{
 			if (widget instanceof CostWidget cost)
 			{

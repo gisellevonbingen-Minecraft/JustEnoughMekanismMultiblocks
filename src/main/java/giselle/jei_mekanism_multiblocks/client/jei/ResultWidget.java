@@ -3,13 +3,12 @@ package giselle.jei_mekanism_multiblocks.client.jei;
 import java.util.ArrayList;
 import java.util.List;
 
-import giselle.jei_mekanism_multiblocks.client.gui.ContainerWidget;
+import giselle.jei_mekanism_multiblocks.client.gui.ElementWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.TextAlignment;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
-public class ResultWidget extends ContainerWidget
+public class ResultWidget extends ElementWidget
 {
 	private final LabelWidget textLabel;
 	private final LabelWidget valueLabel;
@@ -109,13 +108,6 @@ public class ResultWidget extends ContainerWidget
 	public LabelWidget getValueLabel()
 	{
 		return this.valueLabel;
-	}
-
-	@Override
-	public void setTooltip(Tooltip tooltip)
-	{
-		this.getTextLabel().setTooltip(tooltip);
-		this.getValueLabel().setTooltip(tooltip);
 	}
 
 	public interface IPressHandler

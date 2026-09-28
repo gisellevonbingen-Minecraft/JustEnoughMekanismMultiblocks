@@ -1,14 +1,12 @@
 package giselle.jei_mekanism_multiblocks.client.jei;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -19,7 +17,6 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -123,22 +120,9 @@ public abstract class MultiblockCategory<WIDGET extends MultiblockWidget> implem
 	}
 
 	@Override
-	public void getTooltip(ITooltipBuilder tooltip, WIDGET widget, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY)
+	public List<Component> getTooltipStrings(WIDGET widget, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY)
 	{
-		if (widget.costsButton.isSelected())
-		{
-			CostWidget cost = widget.getCostUnderMouse(mouseX, mouseY);
-
-			if (cost != null)
-			{
-				Minecraft minecraft = Minecraft.getInstance();
-				tooltip.addAll(Arrays.asList(cost.getHeadTooltip()));
-				tooltip.addAll(Screen.getTooltipFromItem(minecraft, cost.getItemStack()));
-				tooltip.addAll(Arrays.asList(cost.getTailTooltip()));
-			}
-
-		}
-
+		return widget.getTooltip(mouseX, mouseY);
 	}
 
 	@Override

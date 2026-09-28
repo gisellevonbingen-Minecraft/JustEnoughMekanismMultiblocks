@@ -1,17 +1,21 @@
 package giselle.jei_mekanism_multiblocks.client.jei;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
+import giselle.jei_mekanism_multiblocks.client.gui.ElementWidget;
 import mekanism.common.util.text.TextUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class CostWidget extends AbstractWidget
+public class CostWidget extends ElementWidget
 {
 	private final ItemStack itemStack;
 	private final boolean hasCountExpressionComponent;
@@ -54,6 +58,8 @@ public class CostWidget extends AbstractWidget
 		this.countTotalComponent = Component.literal("=").append(TextUtils.format(count));
 		this.headTooltip = new Component[0];
 		this.tailTooltip = new Component[0];
+
+		this.updateTooltip();
 	}
 
 	@Override
@@ -96,6 +102,16 @@ public class CostWidget extends AbstractWidget
 		return this.itemStack;
 	}
 
+	protected void updateTooltip()
+	{
+		Minecraft minecraft = Minecraft.getInstance();
+		List<Component> tooltip = new ArrayList<>();
+		tooltip.addAll(Arrays.asList(this.getHeadTooltip()));
+		tooltip.addAll(Screen.getTooltipFromItem(minecraft, this.getItemStack()));
+		tooltip.addAll(Arrays.asList(this.getTailTooltip()));
+		this.setTooltipMessage(tooltip);
+	}
+
 	public Component[] getHeadTooltip()
 	{
 		return this.headTooltip.clone();
@@ -104,6 +120,7 @@ public class CostWidget extends AbstractWidget
 	public void setHeadTooltip(Component... tooltip)
 	{
 		this.headTooltip = tooltip.clone();
+		this.updateTooltip();
 	}
 
 	public Component[] getTailTooltip()
@@ -114,12 +131,7 @@ public class CostWidget extends AbstractWidget
 	public void setTailTooltip(Component... tooltip)
 	{
 		this.tailTooltip = tooltip.clone();
-	}
-
-	@Override
-	protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput)
-	{
-
+		this.updateTooltip();
 	}
 
 }

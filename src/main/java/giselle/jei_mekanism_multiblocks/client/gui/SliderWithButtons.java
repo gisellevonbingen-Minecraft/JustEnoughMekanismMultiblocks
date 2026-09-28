@@ -6,16 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.Nullable;
-
 import com.ibm.icu.text.DecimalFormat;
 
-import giselle.jei_mekanism_multiblocks.client.TooltipHelper;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends ContainerWidget
+public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends ElementWidget
 {
 	public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("+#;-#");
 	public static int SHIFT_DELTA = 5;
@@ -43,9 +39,11 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 	}
 
 	@Override
-	public void setTooltip(@Nullable Tooltip pTooltip)
+	protected void onTooltipMessageChanged()
 	{
-		this.getSlider().setTooltip(pTooltip);
+		super.onTooltipMessageChanged();
+
+		this.getSlider().setTooltipMessage(this.getTooltipMessage());
 
 		for (Entry<ButtonWidget, Integer> entry : this.button2DirectionMap.entrySet())
 		{
@@ -77,10 +75,11 @@ public abstract class SliderWithButtons<SLIDER extends SliderWidget> extends Con
 
 	private void updateAdjustButtonTooltip(ButtonWidget button, int direction)
 	{
-		List<Component> elements = new ArrayList<>();
-		elements.add(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_normal", DECIMAL_FORMAT.format(direction * NORMAL_DELTA)));
-		elements.add(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_shift", DECIMAL_FORMAT.format(direction * SHIFT_DELTA)));
-		button.setTooltip(TooltipHelper.mergeMessage(this.getSlider().getTooltip(), elements));
+		List<Component> tooltip = new ArrayList<>();
+		tooltip.addAll(this.getSlider().getTooltipMessage());
+		tooltip.add(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_normal", DECIMAL_FORMAT.format(direction * NORMAL_DELTA)));
+		tooltip.add(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_shift", DECIMAL_FORMAT.format(direction * SHIFT_DELTA)));
+		button.setTooltipMessage(tooltip);
 	}
 
 	protected void onAdjustButtonPress(int delta)

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-import giselle.jei_mekanism_multiblocks.client.TooltipHelper;
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
@@ -34,7 +33,6 @@ import mekanism.generators.common.registries.GeneratorsItems;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -234,14 +232,14 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			if (this.isWaterCooled())
 			{
 				int limitedInjectionRate = Math.min(this.getInjectionRate(), FusionReactorMultiblockData.MAX_INJECTION);
-				Tooltip tooltip = Tooltip.create(Component.translatable("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate));
-				this.waterCooledCheckBox.setTooltip(tooltip);
-				this.injectionRateWidget.setTooltip(tooltip);
+				Component tooltip = Component.translatable("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate);
+				this.waterCooledCheckBox.setTooltipMessage(tooltip);
+				this.injectionRateWidget.setTooltipMessage(tooltip);
 			}
 			else
 			{
-				this.waterCooledCheckBox.setTooltip(null);
-				this.injectionRateWidget.setTooltip(null);
+				this.waterCooledCheckBox.setTooltipMessage();
+				this.injectionRateWidget.setTooltipMessage();
 			}
 
 		}
@@ -351,7 +349,7 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 
 			if (lasersCategory != null)
 			{
-				requiredLaserEnergyWidget.setTooltip(TooltipHelper.createMessageOnly(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_to_simulate", lasersCategory.getName())));
+				requiredLaserEnergyWidget.setTooltipMessage(Component.translatable("text.jei_mekanism_multiblocks.tooltip.click_to_simulate", lasersCategory.getName()));
 				requiredLaserEnergyWidget.addPressHandler(this::onResultWidgetPress);
 			}
 
@@ -362,10 +360,10 @@ public class FusionReactorCategory extends MultiblockCategory<FusionReactorCateg
 			{
 				Component injectionRateTooltip = Component.translatable("text.jei_mekanism_multiblocks.tooltip.need_set_injection_rate", limitedInjectionRate);
 				ResultWidget watTankWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.water_tank"), VolumeTextHelper.formatMB(waterTank));
-				watTankWidget.setTooltip(TooltipHelper.createMessageOnly(injectionRateTooltip));
+				watTankWidget.setTooltipMessage(injectionRateTooltip);
 				consumer.accept(watTankWidget);
 				ResultWidget steamTankWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.steam_tank"), VolumeTextHelper.formatMB(steamTank));
-				steamTankWidget.setTooltip(TooltipHelper.createMessageOnly(injectionRateTooltip));
+				steamTankWidget.setTooltipMessage(injectionRateTooltip);
 				consumer.accept(steamTankWidget);
 			}
 

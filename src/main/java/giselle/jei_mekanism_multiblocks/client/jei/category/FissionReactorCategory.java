@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import giselle.jei_mekanism_multiblocks.client.TooltipHelper;
 import giselle.jei_mekanism_multiblocks.client.gui.ButtonWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.FissionLayoutScreen;
@@ -38,7 +37,6 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -112,11 +110,11 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		{
 			this.advancedCheckBox = new CheckBoxWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.advanced"), false);
 			this.advancedCheckBox.addSelectedChangedHandler(this::onAdvancedChanged);
-			this.configsList.addChild(this.advancedCheckBox);
+			this.configsList.getItems().addChild(this.advancedCheckBox);
 
 			this.layoutButton = new ButtonWidget(0, 0, 0, 0, Component.translatable("text.jei_mekanism_multiblocks.specs.layout"));
 			this.layoutButton.addPressHandler(this::onLayoutButtonClick);
-			this.configsList.addChild(this.layoutButton);
+			this.configsList.getItems().addChild(this.layoutButton);
 
 			super.createSpecDimension();
 
@@ -198,7 +196,7 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			this.configsList.setVisible(this.layoutButton, advanced);
 		}
 
-		protected void onLayoutButtonClick(AbstractButton button)
+		protected void onLayoutButtonClick(ButtonWidget button)
 		{
 			Minecraft minecraft = Minecraft.getInstance();
 			minecraft.pushGuiLayer(new FissionLayoutScreen(Component.empty(), this));
@@ -478,20 +476,20 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 			{
 				int maxDamageTicks = this.getMaxDamageTicks(HeatUtils.BASE_BOIL_TEMP, conductivity, thermalEnthalpy);
 				tempWidget.getValueLabel().setMessage(Component.translatable("※ %s", tempWidget.getValueLabel().getMessage()));
-				tempWidget.setTooltip(TooltipHelper.createMessageOnly(//
+				tempWidget.setTooltipMessage(//
 						burnRateTooltip, //
 						Component.translatable("text.jei_mekanism_multiblocks.tooltip.warning").withStyle(ChatFormatting.RED), //
 						Component.translatable("text.jei_mekanism_multiblocks.tooltip.reactor_will_damage").withStyle(ChatFormatting.RED), //
-						Component.translatable("text.jei_mekanism_multiblocks.tooltip.max_damage_ticks", DurationTextHelper.duration(maxDamageTicks)).withStyle(ChatFormatting.RED)));
+						Component.translatable("text.jei_mekanism_multiblocks.tooltip.max_damage_ticks", DurationTextHelper.duration(maxDamageTicks)).withStyle(ChatFormatting.RED));
 			}
 			else
 			{
-				tempWidget.setTooltip(TooltipHelper.createMessageOnly(burnRateTooltip));
+				tempWidget.setTooltipMessage(burnRateTooltip);
 			}
 
 			long heatedCoolant = this.getHeatedCoolant(stableTemp, conductivity, thermalEnthalpy);
 			ResultWidget heatingRateWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.heating_rate_with", with), VolumeTextHelper.formatMBt(heatedCoolant));
-			heatingRateWidget.setTooltip(TooltipHelper.createMessageOnly(burnRateTooltip));
+			heatingRateWidget.setTooltipMessage(burnRateTooltip);
 			consumer.accept(heatingRateWidget);
 		}
 

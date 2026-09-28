@@ -6,13 +6,14 @@ import java.util.List;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import giselle.jei_mekanism_multiblocks.client.GuiHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.navigation.CommonInputs;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
-public class ButtonWidget extends AbstractButton
+public class ButtonWidget extends ElementWidget
 {
 	private final List<IPressHandler> pressHandlers;
 
@@ -20,6 +21,7 @@ public class ButtonWidget extends AbstractButton
 	{
 		super(pX, pY, pWidth, pHeight, pMessage);
 		this.pressHandlers = new ArrayList<>();
+		this.playDownSound = true;
 	}
 
 	public void addPressHandler(IPressHandler handler)
@@ -27,7 +29,6 @@ public class ButtonWidget extends AbstractButton
 		this.pressHandlers.add(handler);
 	}
 
-	@Override
 	public void onPress()
 	{
 		for (IPressHandler handler : this.pressHandlers)
@@ -35,6 +36,29 @@ public class ButtonWidget extends AbstractButton
 			handler.onPress(this);
 		}
 
+	}
+
+	@Override
+	public void onClick(double pMouseX, double pMouseY)
+	{
+		this.onPress();
+	}
+
+	@Override
+	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers)
+	{
+		if (this.active && this.visible)
+		{
+			if (CommonInputs.selected(pKeyCode))
+			{
+				this.playDownSound(Minecraft.getInstance().getSoundManager());
+				this.onPress();
+				return true;
+			}
+
+		}
+
+		return false;
 	}
 
 	@Override
@@ -58,7 +82,7 @@ public class ButtonWidget extends AbstractButton
 
 	public interface IPressHandler
 	{
-		void onPress(AbstractButton pButton);
+		void onPress(ButtonWidget pButton);
 	}
 
 }

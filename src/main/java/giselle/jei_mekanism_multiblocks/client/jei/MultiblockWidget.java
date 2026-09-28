@@ -9,7 +9,7 @@ import giselle.jei_mekanism_multiblocks.client.IRecipeLogicStateListener;
 import giselle.jei_mekanism_multiblocks.client.JEI_MekanismMultiblocks_Client;
 import giselle.jei_mekanism_multiblocks.client.gui.ButtonWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.CheckBoxWidget;
-import giselle.jei_mekanism_multiblocks.client.gui.ContainerWidget;
+import giselle.jei_mekanism_multiblocks.client.gui.ElementWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.gui.LabelWidget;
@@ -26,7 +26,6 @@ import mekanism.common.util.UnitDisplayUtils.EnergyUnit;
 import mekanism.common.util.UnitDisplayUtils.TemperatureUnit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
@@ -34,7 +33,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-public abstract class MultiblockWidget extends ContainerWidget
+public abstract class MultiblockWidget extends ElementWidget
 {
 	private final List<Consumer<MultiblockWidget>> changedHandlers = new ArrayList<>();
 
@@ -88,7 +87,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 		if (otherWidgets.size() > 0)
 		{
-			otherWidgets.forEach(this.configsList::addChild);
+			otherWidgets.forEach(this.configsList.getItems()::addChild);
 		}
 
 		this.needNotifyStateChange = true;
@@ -100,7 +99,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 		this.changedHandlers.add(handler);
 	}
 
-	private void onPreviewButtonPress(AbstractButton button)
+	private void onPreviewButtonPress(ButtonWidget button)
 	{
 		PreviewLevel level = this.createPreview();
 		Minecraft.getInstance().pushGuiLayer(new PreviewScreen(this.previewButton.getMessage(), level));
@@ -148,12 +147,12 @@ public abstract class MultiblockWidget extends ContainerWidget
 		this.showRightPanel(false);
 	}
 
-	private void onCostsButtonClick(AbstractButton button)
+	private void onCostsButtonClick(ButtonWidget button)
 	{
 		this.showCostPanel();
 	}
 
-	private void onResultsButtonClick(AbstractButton button)
+	private void onResultsButtonClick(ButtonWidget button)
 	{
 		this.showResultPanel();
 	}
@@ -166,7 +165,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 		if (glassBlock != null)
 		{
-			this.configsList.addChild(this.useGlassCheckBox);
+			consumer.accept(this.useGlassCheckBox);
 		}
 
 	}
@@ -233,7 +232,7 @@ public abstract class MultiblockWidget extends ContainerWidget
 
 		if (list.size() > 0)
 		{
-			list.forEach(this.configsList::addChild);
+			list.forEach(this.configsList.getItems()::addChild);
 		}
 
 	}
@@ -299,8 +298,8 @@ public abstract class MultiblockWidget extends ContainerWidget
 		List<AbstractWidget> costs = new ArrayList<>();
 		this.collectResult(costs::add);
 
-		this.resultsList.clearChildren();
-		costs.forEach(this.resultsList::addChild);
+		this.resultsList.getItems().clearChildren();
+		costs.forEach(this.resultsList.getItems()::addChild);
 	}
 
 	protected void collectResult(Consumer<AbstractWidget> consumer)
@@ -411,11 +410,6 @@ public abstract class MultiblockWidget extends ContainerWidget
 	{
 		this.updateResults();
 		this.updateCosts();
-	}
-
-	public CostWidget getCostUnderMouse(double pMouseX, double pMouseY)
-	{
-		return this.costsList.getCostUnderMouse(this.toChildX(pMouseX), this.toChildY(pMouseY));
 	}
 
 	public void markNeedUpdate()

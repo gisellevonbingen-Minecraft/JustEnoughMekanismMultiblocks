@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 import com.folumo.mekanism_lasers_old.common.registry.BlockRegistry;
 import com.folumo.mekanism_lasers_old.common.tier.LaserTier;
 
-import giselle.jei_mekanism_multiblocks.client.TooltipHelper;
 import giselle.jei_mekanism_multiblocks.client.gui.ButtonWidget;
 import giselle.jei_mekanism_multiblocks.client.gui.EnergyEnterScreen;
 import giselle.jei_mekanism_multiblocks.client.gui.IntSliderWithButtons;
@@ -24,7 +23,6 @@ import mekanism.common.util.text.EnergyDisplay;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -121,7 +119,7 @@ public class LasersCategory extends MultiblockCategory<LasersCategory.LaserWidge
 			return widget;
 		}
 
-		private void onEnterButtonPress(AbstractButton button)
+		private void onEnterButtonPress(ButtonWidget button)
 		{
 			EnergyEnterScreen screen = new EnergyEnterScreen(this.enterButton.getMessage(), jules ->
 			{
@@ -207,7 +205,7 @@ public class LasersCategory extends MultiblockCategory<LasersCategory.LaserWidge
 
 			long ticks = ept.isZero() ? 0L : FloatingLong.create(this.targetEnergy).divide(ept).ceil().longValue();
 			ResultWidget mergeTimeWidget = new ResultWidget(Component.translatable("text.jei_mekanism_multiblocks.result.merge_time"), DurationTextHelper.duration(ticks));
-			mergeTimeWidget.setTooltip(TooltipHelper.createMessageOnly(DurationTextHelper.ticks(ticks)));
+			mergeTimeWidget.setTooltipMessage(DurationTextHelper.ticks(ticks));
 			consumer.accept(mergeTimeWidget);
 		}
 
