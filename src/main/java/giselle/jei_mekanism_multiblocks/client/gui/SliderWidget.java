@@ -67,7 +67,8 @@ public class SliderWidget extends AbstractWidget
 
 		this.renderBg(pPoseStack, minecraft, pMouseX, pMouseY);
 		int j = this.getFGColor();
-		GuiHelper.drawScaledText(pPoseStack, this.getMessage(), this.x + 2, this.y + 1, this.width - 4, j, true, TextAlignment.CENTER);
+		int lineHeight = Minecraft.getInstance().font.lineHeight;
+		GuiHelper.drawScaledText(pPoseStack, this.getMessage(), this.x + 2, this.y + 1 + (this.height - lineHeight) / 2, this.width - 4, j, true, TextAlignment.CENTER);
 	}
 
 	@Override
