@@ -23,6 +23,8 @@
 	"text.jei_mekanism_multiblocks.duration.seconds": "%s초",
 	"text.jei_mekanism_multiblocks.duration.ticks": "%s틱",
 	"text.jei_mekanism_multiblocks.example": "예시",
+	"text.jei_mekanism_multiblocks.preview": "미리보기",
+	"text.jei_mekanism_multiblocks.preview.layers": "레이어: %1$s/%2$s",
 	
 	"text.jei_mekanism_multiblocks.specs.width": "가로: %s",
 	"text.jei_mekanism_multiblocks.specs.width_length": "가로, 세로: %s",

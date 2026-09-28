@@ -25,6 +25,8 @@
 	"text.jei_mekanism_multiblocks.duration.seconds": "%ss",
 	"text.jei_mekanism_multiblocks.duration.ticks": "%st",
 	"text.jei_mekanism_multiblocks.example": "Example",
+	"text.jei_mekanism_multiblocks.preview": "Preview",
+	"text.jei_mekanism_multiblocks.preview.layers": "Layers: %1$s/%2$s",
 	
 	"text.jei_mekanism_multiblocks.specs.width": "Width: %s",
 	"text.jei_mekanism_multiblocks.specs.width_length": "Width, Length: %s",

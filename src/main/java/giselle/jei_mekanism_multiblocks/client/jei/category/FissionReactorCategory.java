@@ -1,5 +1,7 @@
 package giselle.jei_mekanism_multiblocks.client.jei.category;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 import giselle.jei_mekanism_multiblocks.client.gui.ButtonWidget;
@@ -12,6 +14,9 @@ import giselle.jei_mekanism_multiblocks.client.gui.LongSliderWithButtons;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockCategory;
 import giselle.jei_mekanism_multiblocks.client.jei.MultiblockWidget;
 import giselle.jei_mekanism_multiblocks.client.jei.ResultWidget;
+import giselle.jei_mekanism_multiblocks.client.preview.IPreviewBuilder;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelector;
+import giselle.jei_mekanism_multiblocks.client.preview.PreviewSelectors;
 import giselle.jei_mekanism_multiblocks.common.util.DurationTextHelper;
 import giselle.jei_mekanism_multiblocks.common.util.VolumeTextHelper;
 import mekanism.api.chemical.gas.attribute.GasAttributes.Coolant;
@@ -34,12 +39,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -312,6 +319,72 @@ public class FissionReactorCategory extends MultiblockCategory<FissionReactorCat
 		protected void onBurnRateChanged(long burnRate)
 		{
 			this.markNeedUpdate();
+		}
+
+		@Override
+		public boolean canCreatePreview()
+		{
+			return true;
+		}
+
+		@Override
+		protected void fillPreview(IPreviewBuilder builder)
+		{
+			super.fillPreview(builder);
+
+			Layout layout = this.getCurrentLayout();
+			PreviewSelector fuelAssemblies = context ->
+			{
+				List<BlockPos> positions = new ArrayList<>();
+
+				for (int z = 1; z < layout.getLength() - 1; z++)
+				{
+					for (int x = 1; x < layout.getWidth() - 1; x++)
+					{
+						int pillar = layout.getPillar(x, z);
+
+						for (int y = 1; y <= pillar; y++)
+						{
+							positions.add(new BlockPos(x, y, z));
+						}
+
+					}
+
+				}
+
+				return positions;
+			};
+			PreviewSelector controlRods = context ->
+			{
+				List<BlockPos> positions = new ArrayList<>();
+
+				for (int z = 1; z < layout.getLength() - 1; z++)
+				{
+					for (int x = 1; x < layout.getWidth() - 1; x++)
+					{
+						int pillar = layout.getPillar(x, z);
+
+						if (pillar > 0)
+						{
+							positions.add(new BlockPos(x, pillar + 1, z));
+						}
+
+					}
+
+				}
+
+				return positions;
+			};
+
+			BlockState casingState = GeneratorsBlocks.FISSION_REACTOR_CASING.getBlock().defaultBlockState();
+			BlockState sideState = this.isUseGlass() ? this.getGlassBlock().defaultBlockState() : casingState;
+			PreviewSelector shellSides = PreviewSelectors.shellSidesCCW();
+
+			builder.setBlockShell(casingState, sideState);
+			builder.replaceBlock(shellSides, sideState, GeneratorsBlocks.FISSION_REACTOR_PORT.getBlock().defaultBlockState(), this.getPortCount());
+			builder.replaceBlock(shellSides, sideState, GeneratorsBlocks.FISSION_REACTOR_LOGIC_ADAPTER.getBlock().defaultBlockState(), this.getLogicAdapterCount());
+			builder.setBlock(fuelAssemblies, GeneratorsBlocks.FISSION_FUEL_ASSEMBLY.getBlock().defaultBlockState());
+			builder.setBlock(controlRods, GeneratorsBlocks.CONTROL_ROD_ASSEMBLY.getBlock().defaultBlockState());
 		}
 
 		@Override
