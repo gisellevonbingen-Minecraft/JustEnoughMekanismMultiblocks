@@ -118,7 +118,7 @@ public class GuiHelper
 		int textureInW = textureInR - textureInL;
 		int textureInH = textureInB - textureInT;
 
-		// Left -Top
+		// Left - Top
 		AbstractGui.blit(pMatrixStack, x, y, uL, vT, textureX, textureY, uL, vT, textureWidth, textureHeight);
 		// Right - Top
 		AbstractGui.blit(pMatrixStack, inR, y, uR, vT, textureInR, textureY, uR, vT, textureWidth, textureHeight);
