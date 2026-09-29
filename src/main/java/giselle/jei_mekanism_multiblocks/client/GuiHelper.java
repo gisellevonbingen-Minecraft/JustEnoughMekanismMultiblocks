@@ -111,7 +111,7 @@ public class GuiHelper
 		int textureInW = textureInR - textureInL;
 		int textureInH = textureInB - textureInT;
 
-		// Left -Top
+		// Left - Top
 		pGuiGraphics.blit(pAtlasLocation, x, y, uL, vT, textureX, textureY, uL, vT, textureWidth, textureHeight);
 		// Right - Top
 		pGuiGraphics.blit(pAtlasLocation, inR, y, uR, vT, textureInR, textureY, uR, vT, textureWidth, textureHeight);
