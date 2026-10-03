@@ -1,13 +1,11 @@
 package giselle.jei_mekanism_multiblocks.client.preview;
 
-import java.nio.ByteBuffer;
 import java.util.Random;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexBuffer;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector4f;
 
@@ -27,8 +25,9 @@ public class PreviewMesh implements AutoCloseable
 	private final BlockPos renderMax;
 	private final Random randomSource;
 
+	private BufferBuilder builder;
 	private VertexBuffer vertexBuffer;
-	private ByteBuffer vertexData;
+	private BufferBuilder.SortState sortState;
 	private Matrix4f sortedPose;
 	private int compiledHeight = -1;
 
@@ -75,7 +74,7 @@ public class PreviewMesh implements AutoCloseable
 	{
 		this.close();
 
-		BufferBuilder builder = new BufferBuilder(RENDER_TYPE.bufferSize());
+		BufferBuilder builder = this.builder = new BufferBuilder(RENDER_TYPE.bufferSize());
 		builder.begin(RENDER_TYPE.mode(), RENDER_TYPE.format());
 		PoseStack blockPose = new PoseStack();
 
@@ -87,36 +86,32 @@ public class PreviewMesh implements AutoCloseable
 			blockPose.popPose();
 		}
 
+		Vector4f sortOrigin = this.sortOrigin(pose);
+		builder.setQuadSortOrigin(sortOrigin.x(), sortOrigin.y(), sortOrigin.z());
+		this.sortState = builder.getSortState();
 		builder.end();
-		Pair<BufferBuilder.DrawState, ByteBuffer> rendered = builder.popNextBuffer();
-		ByteBuffer vertices = rendered.getSecond();
-		vertices.limit(rendered.getFirst().vertexBufferSize());
-		this.vertexData = ByteBuffer.allocate(vertices.remaining());
-		this.vertexData.put(vertices);
-		this.vertexData.flip();
-		this.uploadSorted(pose);
+		this.upload(builder, pose);
 		this.compiledHeight = this.level.getRenderHeight();
 	}
 
 	private void resortIfNeeded(Matrix4f pose)
 	{
-		if (this.vertexData == null || pose.equals(this.sortedPose))
+		if (this.sortState == null || pose.equals(this.sortedPose))
 		{
 			return;
 		}
 
-		this.uploadSorted(pose);
-	}
-
-	private void uploadSorted(Matrix4f pose)
-	{
-		BufferBuilder builder = new BufferBuilder(RENDER_TYPE.bufferSize());
+		BufferBuilder builder = this.builder;
 		builder.begin(RENDER_TYPE.mode(), RENDER_TYPE.format());
-		builder.putBulkData(this.vertexData.duplicate());
+		builder.restoreSortState(this.sortState);
 		Vector4f sortOrigin = this.sortOrigin(pose);
 		builder.setQuadSortOrigin(sortOrigin.x(), sortOrigin.y(), sortOrigin.z());
 		builder.end();
+		this.upload(builder, pose);
+	}
 
+	private void upload(BufferBuilder builder, Matrix4f pose)
+	{
 		try
 		{
 			if (this.vertexBuffer == null)
@@ -155,7 +150,8 @@ public class PreviewMesh implements AutoCloseable
 			this.vertexBuffer = null;
 		}
 
-		this.vertexData = null;
+		this.builder = null;
+		this.sortState = null;
 		this.sortedPose = null;
 		this.compiledHeight = -1;
 	}
