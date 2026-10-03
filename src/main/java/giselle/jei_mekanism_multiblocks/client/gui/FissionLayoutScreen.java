@@ -68,7 +68,7 @@ public class FissionLayoutScreen extends Screen
 	private Result importResult;
 	private Result exportResult;
 
-	private boolean keepBurnRate = true;
+	private boolean keepBurnRate;
 	private boolean layoutDirty;
 	private boolean resultDirty;
 	private FissionReactorCategoryWidget.Layout layout;
@@ -158,6 +158,7 @@ public class FissionLayoutScreen extends Screen
 		this.addRenderableWidget(this.saveButton);
 		widgetY += this.saveButton.getHeight() + widgetOffset;
 
+		this.keepBurnRate = true;
 		this.layoutDirty = true;
 	}
 
@@ -221,7 +222,17 @@ public class FissionLayoutScreen extends Screen
 			this.updateLayout();
 
 			LongSliderWidget burnRateSlider = this.burnRateSlider.getSlider();
-			burnRateSlider.setValue(this.keepBurnRate ? burnRateFirst : burnRateSlider.getMaxValue());
+			long burnRate = this.keepBurnRate ? burnRateFirst : burnRateSlider.getMaxValue();
+
+			if (burnRateSlider.getValue() != burnRate)
+			{
+				burnRateSlider.setValue(burnRate);
+			}
+			else
+			{
+				this.onBurnRateChanged(burnRate);
+			}
+
 			this.keepBurnRate = false;
 		}
 
