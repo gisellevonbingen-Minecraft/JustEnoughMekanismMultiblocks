@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.Unique;
 import giselle.jei_mekanism_multiblocks.client.IRecipeLogicStateListener;
 import giselle.jei_mekanism_multiblocks.common.JEI_MekanismMultiblocks;
 import mezz.jei.gui.recipes.IRecipeGuiLogic;
-import mezz.jei.gui.recipes.RecipeGuiLayouts;
 import mezz.jei.gui.recipes.RecipesGui;
 import mezz.jei.gui.recipes.lookups.ILookupState;
 
@@ -16,9 +15,6 @@ public abstract class RecipesGuiMixin implements IRecipeLogicStateListener
 {
 	@Shadow
 	private IRecipeGuiLogic logic;
-
-	@Shadow
-	private RecipeGuiLayouts layouts;
 
 	@Unique
 	private boolean jei_mekanism_multiblocks$onStateChangeWasCaught;

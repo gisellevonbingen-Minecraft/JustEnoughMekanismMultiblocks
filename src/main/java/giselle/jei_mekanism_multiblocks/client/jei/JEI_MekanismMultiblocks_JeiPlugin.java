@@ -177,7 +177,6 @@ public class JEI_MekanismMultiblocks_JeiPlugin implements IModPlugin
 			@SuppressWarnings("unchecked")
 			RecipeType<MultiblockWidget> recipeType = (RecipeType<MultiblockWidget>) category.getRecipeType();
 			registration.addRecipes(recipeType, Arrays.asList(this.createWidget(category)));
-
 		}
 
 	}

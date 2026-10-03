@@ -122,7 +122,6 @@ public class PreviewScreen extends WidgetScreen
 		super.renderForeground(guiGraphics, mouseX, mouseY, partialTick);
 
 		Vec3i dimension = this.level.getDimension();
-		guiGraphics.flush();
 		RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX);
 
 		PoseStack pose = guiGraphics.pose();
