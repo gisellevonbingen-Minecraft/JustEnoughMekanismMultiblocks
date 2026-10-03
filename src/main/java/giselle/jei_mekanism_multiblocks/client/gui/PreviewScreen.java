@@ -181,6 +181,7 @@ public class PreviewScreen extends WidgetScreen
 			this.rotationX = Mth.clamp(this.rotationX + (float) dragY, 0.0F, 90.0F);
 			this.rotationY += (float) dragX;
 		}
+
 		return false;
 	}
 
