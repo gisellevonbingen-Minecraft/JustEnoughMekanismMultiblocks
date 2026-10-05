@@ -29,8 +29,8 @@ public class PreviewScreen extends WidgetScreen
 	private final PreviewLevel level;
 	private final PreviewMesh mesh;
 
-	private IntSliderWithButtons renderHeightSilder;
 	private ButtonWidget resetButton;
+	private IntSliderWithButtons renderHeightSilder;
 
 	private float scale;
 	private float rotationY;
@@ -65,11 +65,16 @@ public class PreviewScreen extends WidgetScreen
 	{
 		super.init();
 
-		int sliderWidth = 100;
-		int sliderHeight = 15;
-		int sliderX = this.width - sliderWidth - 5;
-		int sliderY = this.height / 2 - sliderHeight;
-		this.renderHeightSilder = new IntSliderWithButtons(sliderX, sliderY, sliderWidth, sliderHeight, "", this.level.getRenderHeight(), 1, this.level.getDimension().getY())
+		int sliderWidth = 120;
+		int widgetHeight = 20;
+		int resetWidth = 60;
+		int widgetX = (this.width - (resetWidth + 6 + sliderWidth)) / 2;
+		int widgetY = this.height - widgetHeight;
+
+		this.resetButton = new ButtonWidget(widgetX, widgetY, resetWidth, widgetHeight, Component.translatable("text.jei_mekanism_multiblocks.reset"));
+		this.resetButton.addPressHandler(this::onButtonPress);
+
+		this.renderHeightSilder = new IntSliderWithButtons(widgetX + resetWidth + 3, widgetY, sliderWidth, widgetHeight, "", this.level.getRenderHeight(), 1, this.level.getDimension().getY())
 		{
 			@Override
 			protected void updateMessage()
@@ -80,8 +85,6 @@ public class PreviewScreen extends WidgetScreen
 		this.renderHeightSilder.getSlider().addValueChangeHanlder(this::onRenderHeightChanged);
 		this.addRenderableWidget(this.renderHeightSilder);
 
-		this.resetButton = new ButtonWidget(sliderX, sliderY + sliderHeight, sliderWidth, sliderHeight, Component.translatable("text.jei_mekanism_multiblocks.reset"));
-		this.resetButton.addPressHandler(this::onButtonPress);
 		this.addRenderableWidget(this.resetButton);
 
 		this.resetView();
@@ -90,11 +93,11 @@ public class PreviewScreen extends WidgetScreen
 	private void resetView()
 	{
 		Vec3i dimension = this.level.getDimension();
-		float scaleByHeight = this.height / (float) Math.sqrt(dimension.distSqr(BlockPos.ZERO));
-		float scaleByWidth = this.renderHeightSilder.x / (float) Math.sqrt(dimension.distSqr(BlockPos.ZERO.above(dimension.getY())));
+		float scaleByHeight = this.resetButton.y / (float) Math.sqrt(dimension.distSqr(BlockPos.ZERO));
+		float scaleByWidth = this.width / (float) Math.sqrt(dimension.distSqr(BlockPos.ZERO.above(dimension.getY())));
 		this.scale = Math.min(scaleByHeight, scaleByWidth);
-		this.translationX = (this.renderHeightSilder.x - this.width) / 2;
-		this.translationY = 0.0F;
+		this.translationX = 0;
+		this.translationY = (this.height - this.resetButton.y) / 2;
 		this.rotationY = -22.5F;
 		this.rotationX = 22.5F;
 		this.renderHeightSilder.getSlider().setValue(this.renderHeightSilder.getSlider().getMaxValue());
