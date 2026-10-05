@@ -61,8 +61,6 @@ public class CostWidget extends ElementWidget
 		this.countTotalComponent = new StringTextComponent("=").append(TextUtils.format(count));
 		this.headTooltip = new ITextComponent[0];
 		this.tailTooltip = new ITextComponent[0];
-
-		this.updateTooltip();
 	}
 
 	@Override
@@ -108,14 +106,16 @@ public class CostWidget extends ElementWidget
 		return this.itemStack;
 	}
 
-	protected void updateTooltip()
+	@Override
+	public List<ITextComponent> getTooltipMessage()
 	{
 		Minecraft minecraft = Minecraft.getInstance();
 		List<ITextComponent> tooltip = new ArrayList<>();
 		tooltip.addAll(Arrays.asList(this.getHeadTooltip()));
 		tooltip.addAll(minecraft.screen.getTooltipFromItem(this.getItemStack()));
+		tooltip.addAll(super.getTooltipMessage());
 		tooltip.addAll(Arrays.asList(this.getTailTooltip()));
-		this.setTooltipMessage(tooltip);
+		return tooltip;
 	}
 
 	public ITextComponent[] getHeadTooltip()
@@ -126,7 +126,6 @@ public class CostWidget extends ElementWidget
 	public void setHeadTooltip(ITextComponent... tooltip)
 	{
 		this.headTooltip = tooltip.clone();
-		this.updateTooltip();
 	}
 
 	public ITextComponent[] getTailTooltip()
@@ -137,7 +136,6 @@ public class CostWidget extends ElementWidget
 	public void setTailTooltip(ITextComponent... tooltip)
 	{
 		this.tailTooltip = tooltip.clone();
-		this.updateTooltip();
 	}
 
 }
